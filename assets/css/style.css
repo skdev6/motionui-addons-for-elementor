@@ -37,3 +37,6 @@
 .th-das-navbar li{
     margin: 0;
 }
+.th-das-navbar li.current-menu-item>a i, .th-das-navbar li.current-menu-parent>a i{
+    font-weight: 900;
+}

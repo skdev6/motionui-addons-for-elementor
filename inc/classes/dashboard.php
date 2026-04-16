@@ -27,14 +27,6 @@ class Dashboard{
             $page_slug,
             [__CLASS__, "init_page"]
         );
-        add_submenu_page(
-            $page_slug,
-            esc_html__("Dashboard", "themeic-core"),
-            esc_html__("Dashboard", "themeic-core"),
-            "manage_options",
-            "themeic-thesme-admin",
-            [__CLASS__, "init_page"]
-        );
     }
     public static function enqueue_scripts($hook){
         $screen = get_admin_page_parent();
@@ -51,6 +43,12 @@ class Dashboard{
             wp_enqueue_style(
                 'themeic-das-main', 
                 THEMEIC_MUIA_ASSETS . 'css/style.css', 
+                null, 
+                THEMEIC_MUIA_VERSION
+            );
+            wp_enqueue_style(
+                'th-icon-basic', 
+                THEMEIC_MUIA_ASSETS . 'fonts/th-icon-basic.css', 
                 null, 
                 THEMEIC_MUIA_VERSION
             );

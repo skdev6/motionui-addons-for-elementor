@@ -1,0 +1,113 @@
+@font-face {
+  font-family: 'Themeic-icon-basic';
+  src:  url('./Themeic-icon-basic.eot?qeht7l');
+  src:  url('./Themeic-icon-basic.eot?qeht7l#iefix') format('embedded-opentype'),
+    url('./Themeic-icon-basic.ttf?qeht7l') format('truetype'),
+    url('./Themeic-icon-basic.woff?qeht7l') format('woff'),
+    url('./Themeic-icon-basic.svg?qeht7l#Themeic-icon-basic') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+[class^="th-icon-"]{
+  font-family: 'Themeic-icon-basic' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.th-icon-angle-left:before {
+  content: "\e900";
+}
+.th-icon-angle-right:before {
+  content: "\e901";
+}
+.th-icon-angle-up:before {
+  content: "\e902";
+}
+.th-icon-btn:before {
+  content: "\e903";
+}
+.th-icon-card:before {
+  content: "\e904";
+}
+.th-icon-desktop:before {
+  content: "\e905";
+}
+.th-icon-download:before {
+  content: "\e906";
+}
+.th-icon-element-2:before {
+  content: "\e907";
+}
+.th-icon-elements:before {
+  content: "\e908";
+}
+.th-icon-envelop:before {
+  content: "\e909";
+}
+.th-icon-filter:before {
+  content: "\e90a";
+}
+.th-icon-grid:before {
+  content: "\e90b";
+}
+.th-icon-home:before {
+  content: "\e90c";
+}
+.th-icon-link:before {
+  content: "\e90d";
+}
+.th-icon-marketing:before {
+  content: "\e90e";
+}
+.th-icon-mouse-click:before {
+  content: "\e90f";
+}
+.th-icon-phone:before {
+  content: "\e910";
+}
+.th-icon-product-slide:before {
+  content: "\e911";
+}
+.th-icon-search:before {
+  content: "\e912";
+}
+.th-icon-settings:before {
+  content: "\e913";
+}
+.th-icon-settings-2:before {
+  content: "\e914";
+}
+.th-icon-slide-horizontal:before {
+  content: "\e915";
+}
+.th-icon-slide-vertical:before {
+  content: "\e916";
+}
+.th-icon-slide-vertical-2:before {
+  content: "\e917";
+}
+.th-icon-trust:before {
+  content: "\e918";
+}
+.th-icon-user:before {
+  content: "\e919";
+}
+.th-icon-users:before {
+  content: "\e91a";
+}
+.th-icon-video:before {
+  content: "\e91b";
+}
+.th-icon-world:before {
+  content: "\e91c";
+}
+.th-icon-angle-down:before {
+  content: "\e91d";
+}
