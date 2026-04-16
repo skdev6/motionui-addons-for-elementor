@@ -1,0 +1,39 @@
+.sticky-das-nav-top-30 {
+    top: 33px;
+}
+.th-das-content-wrapper .th-left-nav {
+    top: 53px;
+    padding-top: 20px;
+    padding-inline: 20px;
+    flex-direction: column;
+    padding-bottom: 20px;
+}
+.logo-text2{
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-bottom: 15px;
+    display: block;
+}
+.th-das-btn:hover,.th-das-btn:focus{
+    color: #fff;
+} 
+.th-das-btn:hover,.th-das-btn:focus,.th-das-navbar li>a:focus {
+    box-shadow: none;
+    outline: none !important;
+} 
+.nav-left-footer {
+    margin-top: auto;
+    position: sticky;
+    bottom: 20px;
+    z-index: 55;
+}
+.th-das-btn{
+    justify-content: center;
+} 
+.themeic-das-wrap {
+    margin-top: 20px;
+    margin-right: 20px;
+}   
+.th-das-navbar li{
+    margin: 0;
+}

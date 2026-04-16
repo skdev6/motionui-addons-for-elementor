@@ -1,4 +1,4 @@
-<div class="th-das-header-sm flex-wrap sticky-nav d-flex align-items-center gap-2 justify-content-between">
+<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
     <ul class="th-das-navbar inline-nav">
         <li class="current-menu-item">
             <a href="#">
@@ -28,6 +28,7 @@
     </div>
 </div>
 <div class="widget-card-wrap">
+    <?php for ($i=0; $i < 60; $i++) { ?>
     <div class="th-widget-card">
         <div class="icon-wrap">
             <i class="th-icon">
@@ -61,5 +62,5 @@
             <label class="switch-label" for="toggle-btn-widget"></label>
         </div>
     </div>
-    
+     <?php } ?>
 </div>

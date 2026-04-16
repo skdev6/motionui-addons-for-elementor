@@ -48,6 +48,12 @@ class Dashboard{
                 null, 
                 THEMEIC_MUIA_VERSION
             );
+            wp_enqueue_style(
+                'themeic-das-main', 
+                THEMEIC_MUIA_ASSETS . 'css/style.css', 
+                null, 
+                THEMEIC_MUIA_VERSION
+            );
             
             // If you have JS for the dashboard:
             // wp_enqueue_script('themeic-das-motionui-js', THEMEIC_MUIA_ASSETS . 'js/dashboard.js', ['jquery'], THEMEIC_MUIA_VERSION, true);
