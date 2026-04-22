@@ -25,5 +25,11 @@ class Motionui {
     public static function get_admin_name() {
         return __( 'MotionUI Addons', 'motionui-addons' );
     }
+    /**
+     * The display name of the plugin
+     */
+    public static function get_extention_logo() {
+        return __( 'MotionUI Addons', 'motionui-addons' );
+    }
 
 }
