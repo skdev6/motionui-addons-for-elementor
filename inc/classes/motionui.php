@@ -31,5 +31,5 @@ class Motionui {
     public static function get_extention_logo() {
         return __( 'MotionUI Addons', 'motionui-addons' );
     }
-
+    
 }

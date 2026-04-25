@@ -37,10 +37,10 @@ class Base {
      * * Sets up autoloading, file inclusion, and main WordPress/Elementor hooks.
      */
     private function __construct(){
-        $this->autoload();
-        $this->include();
-
+        // Load Text Domain for Translations
         add_action('init', [$this, 'i18n']);
+        // Include Essential Files
+        $this->autoload();
         $this->init();
     }
 
@@ -57,8 +57,13 @@ class Base {
      * * Registers actions specifically for Elementor categories and controls.
      */
     public function init(){
+        // Elementor Hooks
         add_action( 'elementor/elements/categories_registered', [ $this, 'add_category' ] );
         add_action( 'elementor/controls/controls_registered', [ $this, 'register_controls' ] );
+        // Hook Manager
+        $this->hook_manager();
+        // Initialize Extensions Manager
+        MotionUiClasses\Extensions_Manager::init();
     }
 
     /**
@@ -80,9 +85,15 @@ class Base {
      * Hook Manager
      * * Centralized place to manage various WordPress hooks like admin menus.
      */
-    public function hook_manager(){ 
+    public function hook_manager(){    
+        // Admin Menu and Scripts
         add_action( 'admin_menu', [ MotionUiClasses\Dashboard::class, 'add_menu' ] );
         add_action('admin_enqueue_scripts', [MotionUiClasses\Dashboard::class, 'enqueue_scripts']);
+        // Frontend Scripts 
+        add_action('wp_enqueue_scripts', [MotionUiClasses\Assets::class, 'register_scripts']);
+        add_action('wp_enqueue_scripts', [MotionUiClasses\Assets::class, 'enqueue_scripts'], 20);
+        // Register Widgets
+        add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
     }
 
     /**
@@ -107,14 +118,6 @@ class Base {
             $class_name = $class_str;
         }
         return $class_name;
-    }
-    /**
-     * Include Essential Files and Class
-     * * Loads required components immediately during construction.
-     */
-    public function include(){
-        $this->hook_manager();
-        MotionUiClasses\Extensions_Manager::init();
     }
     /**
      * Include Class Files (Autoload Callback)
@@ -144,7 +147,14 @@ class Base {
             }
         }
         // Targeted include for extensions inside the inc/classes folder
-        if(strpos($class_name, 'Themeic\MotionUI_Addons\Extensions') === 0){
+        if(strpos($class_name, 'Themeic\MotionUI_Addons\Inc\Extensions') === 0){
+            $file_dir = THEMEIC_MUIA_DIR_PATH . '/' . $file_name . '.php';
+            if(!class_exists($class_name) && is_readable($file_dir)){
+                include_once $file_dir;
+            }
+        }
+        // Targeted include for extensions inside the inc/classes folder
+        if(strpos($class_name, 'Themeic\MotionUI_Addons\Widgets') === 0){
             $file_dir = THEMEIC_MUIA_DIR_PATH . '/' . $file_name . '.php';
             if(!class_exists($class_name) && is_readable($file_dir)){
                 include_once $file_dir;

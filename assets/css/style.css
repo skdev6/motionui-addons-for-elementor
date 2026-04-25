@@ -40,3 +40,19 @@
 .th-das-navbar li.current-menu-item>a i, .th-das-navbar li.current-menu-parent>a i{
     font-weight: 900;
 }
+[href="admin.php?page=motion-ui-addons"] .wp-menu-image img {
+    width: 19px;
+    margin-top: 1px;
+}
+[href="admin.php?page=motion-ui-addons"].current .wp-menu-image img {
+    opacity:1 !important; 
+} 
+.themeic-das-header .logo-wrap img {
+    width: 29px;
+}
+.themeic-das-header .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 18px;
+} 

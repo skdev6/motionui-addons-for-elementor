@@ -13,6 +13,12 @@
                 Animations
             </a>
         </li>
+        <li>
+            <a href="#">
+                <i class="th-icon-elements"></i>
+                Preloaders
+            </a>
+        </li>
     </ul>
     <div class="nav-left-footer">
         <a href="#" class="th-das-btn">View Demo</a>

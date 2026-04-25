@@ -1,15 +1,35 @@
-.themeic-muia-logo {
+.themeic-muia-logo::after{
     display: inline-block;
-    background-image: url('../img/mui-logo.svg');
-    font-size: 18px;
-    background-size: contain;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 100;
+    padding: 1px 2px;
+    background-image: url('../img/motionui-logo-black.svg');
+    height: 14px;
+    width: 14px;  
     background-position: center;
     background-repeat: no-repeat;
-    height: 1em;
-    width: 1em;
+    display: block;   
+    content: ""; 
+}
+.elementor-element .icon .themeic-muia-logo::after, .elementor-navigator__element__element-type .themeic-muia-logo::after {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    opacity: 0.7;
+}
+.elementor-navigator__element__element-type .themeic-muia-logo::after {
+    top: 8px;
+    right: 10px;
+    opacity: 0.3;
 }
 .el-editor-logo-wrap{
     display: flex;
     align-items: center;
-    gap: 8px;
-}
+    gap: 5px;
+}       
+@media (prefers-color-scheme: dark) {
+    .themeic-muia-logo::after{
+        background-image: url('../img/motionui-logo-white.svg');
+    }
+}   

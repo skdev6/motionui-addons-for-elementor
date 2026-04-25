@@ -16,7 +16,7 @@ class Dashboard{
             'manage_options',
             $page_slug,
             [__CLASS__, "init_page"],
-            THEMEIC_MUIA_ASSETS . "/img/themeic-icon.svg",
+            THEMEIC_MUIA_ASSETS . "/img/motionui-logo-white.svg",
             3
         );
         add_submenu_page(
@@ -41,12 +41,6 @@ class Dashboard{
                 THEMEIC_MUIA_VERSION
             );
             wp_enqueue_style(
-                'themeic-das-main', 
-                THEMEIC_MUIA_ASSETS . 'css/style.css', 
-                null, 
-                THEMEIC_MUIA_VERSION
-            );
-            wp_enqueue_style(
                 'th-icon-basic', 
                 THEMEIC_MUIA_ASSETS . 'fonts/th-icon-basic.css', 
                 null, 
@@ -56,6 +50,13 @@ class Dashboard{
             // If you have JS for the dashboard:
             // wp_enqueue_script('themeic-das-motionui-js', THEMEIC_MUIA_ASSETS . 'js/dashboard.js', ['jquery'], THEMEIC_MUIA_VERSION, true);
         }
+        wp_enqueue_style(
+            'themeic-das-main', 
+            THEMEIC_MUIA_ASSETS . 'css/style.css', 
+            null, 
+            THEMEIC_MUIA_VERSION
+        );
+
     }
     public static function init_page(){
 

@@ -1,17 +1,26 @@
 <?php 
 
-namespace Themeic\MotionUI_Addons\Extensions;
+namespace Themeic\MotionUI_Addons\Inc\Extensions;
 
 use Elementor\Element_Base;
 use Elementor\Controls_Manager;
 
 class Advance_Position{
 
+    /**
+     * Registers advanced positioning controls for Elementor elements.
+     *
+     * This method adds a new section in the Elementor's advanced tab that allows users
+     * to set custom positioning properties including position type (static, sticky, relative, fixed, absolute),
+     * and responsive controls for top, right, bottom, left, and from center positioning.
+     *
+     * @param Element_Base $element The Elementor element to add controls to.
+     */
     public static function register_controls(Element_Base $element){
         $element->start_controls_section(
             'mui_addons_advance_position',
             array(
-                'label' => sprintf('<div class="el-editor-logo-wrap">%s <i class="themeic-muia-logo"></i></div>', __('Advance Position', 'motionui-addons')),
+                'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Advance Position', 'motionui-addons')),
                 'tab' => Controls_Manager::TAB_ADVANCED,
             )
         );
