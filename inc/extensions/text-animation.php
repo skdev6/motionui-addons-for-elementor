@@ -17,7 +17,7 @@ class Text_Animation{
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => '',
 				'frontend_available' => true,  
-				'prefix_class' => 'has-muia-text-animation muia-text-',
+				'prefix_class' => 'has-muia-text-animation visibility__hidden muia-text-',
 				'options' => [
 					'' => esc_html__( 'None', 'motionui-addons' ),
 					'reveal' => esc_html__( 'Text Reveal', 'motionui-addons' ),

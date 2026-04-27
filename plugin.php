@@ -26,6 +26,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Define Versioning
  */
+define( 'THEMEIC_MUIA_DEV', true );
+
 if ( defined( 'THEMEIC_MUIA_DEV' ) && true == THEMEIC_MUIA_DEV ) {
     define( 'THEMEIC_MUIA_VERSION', '1.0.0.' . time() );
 } else {

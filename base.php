@@ -56,10 +56,9 @@ class Base {
      * Initialize Plugin Hooks
      * * Registers actions specifically for Elementor categories and controls.
      */
-    public function init(){
+    public function init(){     
         // Elementor Hooks
         add_action( 'elementor/elements/categories_registered', [ $this, 'add_category' ] );
-        add_action( 'elementor/controls/controls_registered', [ $this, 'register_controls' ] );
         // Hook Manager
         $this->hook_manager();
         // Initialize Extensions Manager
@@ -73,7 +72,7 @@ class Base {
      */
     public function add_category($manager){
         $manager->add_category(
-            'gsap_addons',
+            'motionui_addons',
             [
                 'title' => __( 'MotionUi Addons', 'motionui-addons' ),
                 'icon' => 'th-gsap-addons',
@@ -90,20 +89,13 @@ class Base {
         add_action( 'admin_menu', [ MotionUiClasses\Dashboard::class, 'add_menu' ] );
         add_action('admin_enqueue_scripts', [MotionUiClasses\Dashboard::class, 'enqueue_scripts']);
         // Frontend Scripts 
-        add_action('wp_enqueue_scripts', [MotionUiClasses\Assets::class, 'register_scripts']);
-        add_action('wp_enqueue_scripts', [MotionUiClasses\Assets::class, 'enqueue_scripts'], 20);
+        add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'register_scripts']);
+        add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'enqueue_scripts']);   
+        add_action('elementor/frontend/after_enqueue_styles', [MotionUiClasses\Assets::class, 'enqueue_styles']);    
         // Register Widgets
         add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
+        
     }
-
-    /**
-     * Register Custom Controls
-     * * Placeholder for registering custom Elementor controls.
-     */
-    public function register_controls(){
-        // Custom control logic goes here
-    }
-
     /**
      * Get Short Class Name
      * * Extracts the class name without the namespace.
@@ -153,8 +145,15 @@ class Base {
                 include_once $file_dir;
             }
         }
-        // Targeted include for extensions inside the inc/classes folder
+        // Targeted include for widgets inside the widgets folder
         if(strpos($class_name, 'Themeic\MotionUI_Addons\Widgets') === 0){
+            $file_dir = THEMEIC_MUIA_DIR_PATH . '/' . $file_name . '.php';
+            if(!class_exists($class_name) && is_readable($file_dir)){
+                include_once $file_dir;
+            }
+        }
+        // Targeted include for traits inside the traits folder
+        if(strpos($class_name, 'Themeic\MotionUI_Addons\Traits') === 0){
             $file_dir = THEMEIC_MUIA_DIR_PATH . '/' . $file_name . '.php';
             if(!class_exists($class_name) && is_readable($file_dir)){
                 include_once $file_dir;

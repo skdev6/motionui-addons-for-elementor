@@ -1,0 +1,102 @@
+.comments-area{
+    .comment-form{
+        >p{
+            margin-bottom:1.188rem;
+            > label{
+                margin-bottom: 4px;
+                display: block;
+            }
+        }
+        >p.comment-form-cookies-consent{
+            > label{
+                margin-bottom: 0;
+            }
+        }
+        .form-submit{
+            margin-bottom: 0; 
+            margin-top: 2.5rem;
+        }
+    }
+    .comment-respond{
+        a{
+            color: currentColor;
+            &:hover{
+                color: var(--themeic-color-content-primary);
+            }
+        }
+    }
+    .comment-reply-title{
+        small{
+            font-size: .5em;
+            display: inline-block;
+            margin-left: 5px;
+            font-family: var(--themeic-ff-base);
+            line-height: 1;
+            a{
+                 color: var(--themeic-color-content-primary);
+            }
+        }
+    }
+    .comment-respond{
+        margin-top: 2.5rem;
+    }
+    .comment-list,.children{
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        --avatar-space-left: 118px;
+        margin-top: 2.5rem;
+        margin-bottom: 2.5rem;
+        > .comment {
+            position: relative;
+            padding-left: var(--avatar-space-left);
+            &:not(:last-child){
+                border-bottom: 1px solid var(--themeic-border-muted);
+                padding-bottom: 2.188rem;
+                margin-bottom: 2.188rem;
+            }
+        }
+    }
+    .children{
+        margin-bottom: 0;
+    }
+    .comment-author{ 
+        font-family: var(--themeic-ff-headings);
+        a{
+            color: var(--themeic-color-content-primary);
+            text-decoration: none;
+        }
+        span.says{
+            display: none;
+        }
+       > .avatar {
+            position: absolute;
+            left: calc(-1*var(--avatar-space-left));
+            height: 80px;
+            width: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    }
+    .comment-edit-link {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+    }
+    .comment-meta{
+        position: relative;
+        margin-bottom: 0.625rem;
+    }
+    .comment-content {
+        margin-bottom: 23px;
+    }
+    .comment-metadata{
+        line-height: 1;
+        margin-top: 0.188rem;
+        > a{
+            color: var(--themeic-color-content-secondary);
+            text-decoration: none;
+        }
+    }
+}

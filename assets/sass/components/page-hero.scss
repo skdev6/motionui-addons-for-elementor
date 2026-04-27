@@ -1,0 +1,26 @@
+@use '../abstracts/mixins' as *;
+.page-hero{
+    --space-y:4rem;
+    --space-top-extra:0rem;
+    --space-bottom-extra:0rem;
+    @include xl{
+        --space-y:6.9rem;
+    }
+    @include max_md{
+        --space-y:3.3rem;
+    }
+    &:not(.bg-base){
+        background: var(--themeic-bg-gradient-muted);
+    }
+    padding-top: calc(var(--space-y) + var(--space-top-extra));
+    padding-bottom: calc(var(--space-y) + var(--space-bottom-extra));
+    .title{
+        margin-bottom: 4.4rem;
+    }
+    &.has-abs-header{
+        --space-top-extra:5rem;
+        @include max_lg{
+        --space-top-extra:2.7rem;
+        }
+    }
+}

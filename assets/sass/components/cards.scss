@@ -1,0 +1,40 @@
+@use '../abstracts/mixins' as *;
+.post-row-wrap{
+    row-gap: 3.125rem;
+}
+.blog-post-cart{
+    .card-title{
+        text-decoration: none;
+        margin-top:1.2rem;
+        margin-bottom:2.2rem;
+    }
+    .thumbnail {
+        margin-bottom: 1.8rem;
+        
+    }
+}
+.author__block{
+    line-height:150%; 
+    gap: 1rem; 
+    text-transform: capitalize;
+    > img{
+        height:1em;
+        width:1em;
+        min-width:1em; 
+        object-fit: cover;
+        object-position: center;
+        border-radius: 50%;
+        font-size:2.5rem; 
+    }
+    .author-info{
+        > a{
+            font-size:0.8rem;
+            color: var(--themeic-color-content-primary);
+            text-decoration: none; 
+            font-weight: 600;
+            @include lg{
+                font-size:0.875rem; 
+            }
+        }
+    }
+}  

@@ -5,7 +5,6 @@ class Widgets_Manager{
 
     const WIDGET_DB_KEY = 'muia_active_widgets';
 
-
     public static function get_inactive_widgets(){
         return get_option(self::WIDGET_DB_KEY, []);
     }
@@ -23,7 +22,7 @@ class Widgets_Manager{
                 'demo'=> '',
                 'tutorial'=> '',
             ],
-            'animate-slider'=>[
+            'themeic-button'=>[  
                 'title' => __('Animate Slider', 'motionui-addons'),
                 'category'=> 'general',
                 'is_active'=> true,

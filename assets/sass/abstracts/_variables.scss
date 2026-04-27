@@ -1,0 +1,22 @@
+// Prefix
+$prefix: "themeic-" !default;
+
+// Breakpoints
+$breakpoints: (
+  xs: 0,
+  sm: 576px,   // small phones
+  md: 768px,   // tablets
+  lg: 992px,   // small laptops
+  xl: 1200px,  // desktops
+  xxl: 1400px  // large screens
+);
+  
+// Spacing scale
+$spacers: (
+  0: var(--themeic-space-0),
+  1: var(--themeic-space-1),
+  2: var(--themeic-space-2),
+  3: var(--themeic-space-3),
+  4: var(--themeic-space-4),
+  5: var(--themeic-space-5)
+);
