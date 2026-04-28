@@ -17,10 +17,7 @@ use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use Elementor\Icons_Manager;
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 /**
  * Trait Button_Controls
@@ -77,37 +74,10 @@ trait Button_Controls {
 
     /**
 	 * Register common button style controls in an Elementor widget.
-	 *
-	 * Usage example inside a widget's register_controls() method:
-	 *
-	 *   $this->_register_muia_btn_style_controls(
-	 *       'my_btn',
-	 *       array(
-	 *           'title'       => esc_html__( 'Button Style', 'motionui-addons-for-elementor' ),
-	 *           'selectors'   => '.my-btn, .my-btn-alt',
-	 *           'active'      => true,
-	 *           'is_variable' => true,  // Output CSS custom properties instead of direct CSS.
-	 *       )
-	 *   );
-	 *
 	 * @since  1.0.0
 	 *
 	 * @param  string $id_prefix Unique prefix for control IDs. Default 'muia_btn'.
-	 * @param  array  $args {
-	 *     Optional. Configuration arguments.
-	 *
-	 *     @type string $title           Section label (must be pre-translated by caller). Default 'Button Style'.
-	 *     @type string $selectors       Comma-separated CSS selectors. Default '.muia-btn'.
-	 *     @type bool   $bg_color        Show background color controls. Default true.
-	 *     @type bool   $color           Show text color controls. Default true.
-	 *     @type bool   $padding         Show padding control. Default true.
-	 *     @type bool   $margin          Show margin control. Default false.
-	 *     @type bool   $border          Show border controls. Default true.
-	 *     @type bool   $active          Show active-state tab. Default false.
-	 *     @type string $active_selector Custom selector for active state. Default ''.
-	 *     @type bool   $is_variable     Output CSS custom properties (--property) instead of
-	 *                                   direct CSS declarations. Default true.
-	 * }
+	 * @param  array  $args
 	 * @return void
 	 */
 	public function _register_muia_btn_style_controls( $id_prefix = 'muia_btn', $args = array() ) {
@@ -406,7 +376,7 @@ trait Button_Controls {
 	 * @param  string $title     Section title. Default 'Animated Button'.
 	 * @return void
 	 */
-	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn') ) {
+	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn') {
 
 		$this->start_controls_section(
 			"{$id_prefix}_muia_button_content",

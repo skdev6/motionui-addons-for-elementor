@@ -12,10 +12,7 @@ namespace Themeic\MotionUI_Addons\Widgets;
 
 use Themeic\MotionUI_Addons\Traits\Button_Controls;
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-}
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Class Animate_Button
