@@ -24,16 +24,6 @@ class Animate_Button extends Muia_Base{
     use Button_Controls;
 
     /**
-     * Retrieve the widget title.
-     *
-     * @since  1.0.0
-     * @return string
-     */
-    public function get_title() {
-        return esc_html__( 'Animate Button', 'motionui-addons-for-elementor' );
-    }
-
-    /**
      * Retrieve the widget icon.
      *
      * @since  1.0.0
@@ -71,4 +61,4 @@ class Animate_Button extends Muia_Base{
         $this->_render_muia_btn();
     }
 
-}   
+}

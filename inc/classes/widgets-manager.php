@@ -27,7 +27,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animate-slider'=>[  
-                'title' => __('Animate Slide', 'motionui-addons-for-elementor'),
+                'title' => __('Animated Button', 'motionui-addons-for-elementor'),
                 'category'=> 'general',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -36,7 +36,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animate-image'=>[  
-                'title' => __('Animate Image', 'motionui-addons-for-elementor'),
+                'title' => __('Animated Image', 'motionui-addons-for-elementor'),
                 'category'=> 'general',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -45,7 +45,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animate-gallery'=>[  
-                'title' => __('Animate Gallery', 'motionui-addons-for-elementor'),
+                'title' => __('Animated Gallery', 'motionui-addons-for-elementor'),
                 'category'=> 'general',
                 'is_active'=> true,
                 'is_pro'       => false,

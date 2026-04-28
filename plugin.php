@@ -19,10 +19,8 @@
  * @package              MotionUI_Addons
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly.
-} 
- 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Define Versioning
  */
