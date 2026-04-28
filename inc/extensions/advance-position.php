@@ -5,6 +5,10 @@ namespace Themeic\MotionUI_Addons\Inc\Extensions;
 use Elementor\Element_Base;
 use Elementor\Controls_Manager;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Advance_Position{
 
     /**
@@ -20,23 +24,23 @@ class Advance_Position{
         $element->start_controls_section(
             'mui_addons_advance_position',
             array(
-                'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Advance Position', 'motionui-addons')),
+                'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Advance Position', 'motionui-addons-for-elementor')),
                 'tab' => Controls_Manager::TAB_ADVANCED,
             )
         );
         $element->add_responsive_control( 
             'mui_addons_position_type',
             array(
-                'label'       => __('Position Type', 'motionui-addons' ),
+                'label'       => __('Position Type', 'motionui-addons-for-elementor' ),
                 'label_block' => true,
                 'type'        => Controls_Manager::SELECT,
                 'options'     => array(
-                    ''         => __('Default', 'motionui-addons' ),
-                    'static'   => __('Static', 'motionui-addons' ),
-                    'sticky'   => __('Sticky', 'motionui-addons' ),
-                    'relative' => __('Relative', 'motionui-addons' ),
-                    'fixed' => __('fixed', 'motionui-addons' ),
-                    'absolute' => __('Absolute', 'motionui-addons' )
+                    ''         => __('Default', 'motionui-addons-for-elementor' ),
+                    'static'   => __('Static', 'motionui-addons-for-elementor' ),
+                    'sticky'   => __('Sticky', 'motionui-addons-for-elementor' ),
+                    'relative' => __('Relative', 'motionui-addons-for-elementor' ),
+                    'fixed' => __('fixed', 'motionui-addons-for-elementor' ),
+                    'absolute' => __('Absolute', 'motionui-addons-for-elementor' )
                 ),
                 'default'      => '',
                 'selectors'    => array(
@@ -48,7 +52,7 @@ class Advance_Position{
         $element->add_responsive_control(
             'mui_addons_position_top',
             array(
-                'label'      => __('Top', 'motionui-addons' ),
+                'label'      => __('Top', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => array('px', 'em', '%', 'vw', 'vh', 'custom'),
                 'range'      => array(
@@ -80,7 +84,7 @@ class Advance_Position{
         $element->add_responsive_control(
             'mui_addons_position_right',
             array(
-                'label'      => __('Right', 'motionui-addons' ),
+                'label'      => __('Right', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => array('px', 'em', '%', 'vw', 'vh', 'custom'),
                 'range'      => array(
@@ -112,7 +116,7 @@ class Advance_Position{
         $element->add_responsive_control(
             'mui_addons_position_bottom',
             array(
-                'label'      => __('Bottom', 'motionui-addons' ),
+                'label'      => __('Bottom', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => array('px', 'em', '%', 'vw', 'vh', 'custom'),
                 'range'      => array(
@@ -143,7 +147,7 @@ class Advance_Position{
         $element->add_responsive_control(
             'mui_addons_position_left',
             array(
-                'label'      => __('Left', 'motionui-addons' ),
+                'label'      => __('Left', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => array('px', 'em', '%', 'vw', 'vh', 'custom'),
                 'range'      => array(
@@ -175,8 +179,8 @@ class Advance_Position{
         $element->add_responsive_control(
             'mui_addons_position_from_center',
             array(
-                'label'      => __('From Center', 'motionui-addons' ),
-                'description' => __('Please avoid using "From Center" and "Left" options at the same time.', 'motionui-addons' ),
+                'label'      => __('From Center', 'motionui-addons-for-elementor' ),
+                'description' => __('Please avoid using "From Center" and "Left" options at the same time.', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => array('px', 'em', '%', 'vw', 'vh', 'custom'),
                 'range'      => array(

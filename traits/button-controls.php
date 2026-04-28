@@ -83,7 +83,7 @@ trait Button_Controls {
 	 *   $this->_register_muia_btn_style_controls(
 	 *       'my_btn',
 	 *       array(
-	 *           'title'       => esc_html__( 'Button Style', 'motionui-addons' ),
+	 *           'title'       => esc_html__( 'Button Style', 'motionui-addons-for-elementor' ),
 	 *           'selectors'   => '.my-btn, .my-btn-alt',
 	 *           'active'      => true,
 	 *           'is_variable' => true,  // Output CSS custom properties instead of direct CSS.
@@ -115,7 +115,7 @@ trait Button_Controls {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'title'           => esc_html__( 'Animated Button Style', 'motionui-addons' ),
+				'title'           => esc_html__( 'Animated Button Style', 'motionui-addons-for-elementor' ),
 				'selectors'       => '.muia-btn',
 				'bg_color'        => true,
 				'color'           => true,
@@ -179,7 +179,7 @@ trait Button_Controls {
 			$this->add_responsive_control(
 				"{$id_prefix}_margin",
 				array(
-					'label'      => esc_html__( 'Margin', 'motionui-addons' ),
+					'label'      => esc_html__( 'Margin', 'motionui-addons-for-elementor' ),
 					'type'       => Controls_Manager::DIMENSIONS,
 					'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
 					'selectors'  => array(
@@ -196,7 +196,7 @@ trait Button_Controls {
 			$this->add_responsive_control(
 				"{$id_prefix}_padding",
 				array(
-					'label'      => esc_html__( 'Padding', 'motionui-addons' ),
+					'label'      => esc_html__( 'Padding', 'motionui-addons-for-elementor' ),
 					'type'       => Controls_Manager::DIMENSIONS,
 					'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
 					'selectors'  => array(
@@ -216,14 +216,14 @@ trait Button_Controls {
 			// -- Normal Tab -------------------------------------------------------
 			$this->start_controls_tab(
 				"{$id_prefix}_tab_normal",
-				array( 'label' => esc_html__( 'Normal', 'motionui-addons' ) )
+				array( 'label' => esc_html__( 'Normal', 'motionui-addons-for-elementor' ) )
 			);
 
 			if ( $args['color'] ) {
 				$this->add_control(
 					"{$id_prefix}_color",
 					array(
-						'label'     => esc_html__( 'Text Color', 'motionui-addons' ),
+						'label'     => esc_html__( 'Text Color', 'motionui-addons-for-elementor' ),
 						'type'      => Controls_Manager::COLOR,
 						'selectors' => array(
 							$selector => ( $is_var ? '--color' : 'color' ) . ': {{VALUE}};',
@@ -236,7 +236,7 @@ trait Button_Controls {
 				$this->add_control(
 					"{$id_prefix}_bg_color",
 					array(
-						'label'     => esc_html__( 'Background Color', 'motionui-addons' ),
+						'label'     => esc_html__( 'Background Color', 'motionui-addons-for-elementor' ),
 						'type'      => Controls_Manager::COLOR,
 						'selectors' => array(
 							$selector => ( $is_var ? '--bg-color' : 'background-color' ) . ': {{VALUE}};',
@@ -258,7 +258,7 @@ trait Button_Controls {
 				$this->add_responsive_control(
 					"{$id_prefix}_border_radius",
 					array(
-						'label'      => esc_html__( 'Border Radius', 'motionui-addons' ),
+						'label'      => esc_html__( 'Border Radius', 'motionui-addons-for-elementor' ),
 						'type'       => Controls_Manager::DIMENSIONS,
 						'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
 						'selectors'  => array(
@@ -273,7 +273,7 @@ trait Button_Controls {
 			// -- Hover Tab --------------------------------------------------------
 			$this->start_controls_tab(
 				"{$id_prefix}_tab_hover",
-				array( 'label' => esc_html__( 'Hover', 'motionui-addons' ) )
+				array( 'label' => esc_html__( 'Hover', 'motionui-addons-for-elementor' ) )
 			);
 
 			if ( $args['color'] ) {
@@ -291,7 +291,7 @@ trait Button_Controls {
 				$this->add_control(
 					"{$id_prefix}_color_hover",
 					array(
-						'label'     => esc_html__( 'Text Color', 'motionui-addons' ),
+						'label'     => esc_html__( 'Text Color', 'motionui-addons-for-elementor' ),
 						'type'      => Controls_Manager::COLOR,
 						'selectors' => $color_hover_selectors,
 					)
@@ -313,7 +313,7 @@ trait Button_Controls {
 				$this->add_control(
 					"{$id_prefix}_bg_color_hover",
 					array(
-						'label'     => esc_html__( 'Background Color', 'motionui-addons' ),
+						'label'     => esc_html__( 'Background Color', 'motionui-addons-for-elementor' ),
 						'type'      => Controls_Manager::COLOR,
 						'selectors' => $bg_hover_selectors,
 					)
@@ -333,7 +333,7 @@ trait Button_Controls {
 				$this->add_control(
 					"{$id_prefix}_border_color_hover",
 					array(
-						'label'     => esc_html__( 'Border Color', 'motionui-addons' ),
+						'label'     => esc_html__( 'Border Color', 'motionui-addons-for-elementor' ),
 						'type'      => Controls_Manager::COLOR,
 						'selectors' => $border_hover_selectors,
 					)
@@ -347,14 +347,14 @@ trait Button_Controls {
 
 				$this->start_controls_tab(
 					"{$id_prefix}_tab_active",
-					array( 'label' => esc_html__( 'Active', 'motionui-addons' ) )
+					array( 'label' => esc_html__( 'Active', 'motionui-addons-for-elementor' ) )
 				);
 
 				if ( $args['color'] ) {
 					$this->add_control(
 						"{$id_prefix}_color_active",
 						array(
-							'label'     => esc_html__( 'Text Color', 'motionui-addons' ),
+							'label'     => esc_html__( 'Text Color', 'motionui-addons-for-elementor' ),
 							'type'      => Controls_Manager::COLOR,
 							'selectors' => array(
 								$active_selector => ( $is_var ? '--active-color' : 'color' ) . ': {{VALUE}};',
@@ -367,7 +367,7 @@ trait Button_Controls {
 					$this->add_control(
 						"{$id_prefix}_bg_color_active",
 						array(
-							'label'     => esc_html__( 'Background Color', 'motionui-addons' ),
+							'label'     => esc_html__( 'Background Color', 'motionui-addons-for-elementor' ),
 							'type'      => Controls_Manager::COLOR,
 							'selectors' => array(
 								$active_selector => ( $is_var ? '--active-bg-color' : 'background-color' ) . ': {{VALUE}};',
@@ -380,7 +380,7 @@ trait Button_Controls {
 					$this->add_control(
 						"{$id_prefix}_border_color_active",
 						array(
-							'label'     => esc_html__( 'Border Color', 'motionui-addons' ),
+							'label'     => esc_html__( 'Border Color', 'motionui-addons-for-elementor' ),
 							'type'      => Controls_Manager::COLOR,
 							'selectors' => array(
 								$active_selector => ( $is_var ? '--active-border-color' : 'border-color' ) . ': {{VALUE}};',
@@ -406,12 +406,12 @@ trait Button_Controls {
 	 * @param  string $title     Section title. Default 'Animated Button'.
 	 * @return void
 	 */
-	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn', $title = 'Animated Button' ) {
+	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn') ) {
 
 		$this->start_controls_section(
 			"{$id_prefix}_muia_button_content",
 			array(
-				'label' => esc_html__( $title, 'motionui-addons' ),
+				'label' => esc_html__( 'Animated Button', 'motionui-addons-for-elementor' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
 			)
 		);
@@ -419,20 +419,20 @@ trait Button_Controls {
 		$this->add_control(
 			"{$id_prefix}_btn_type",
 			array(
-				'label'   => esc_html__( 'Type', 'motionui-addons' ),
+				'label'   => esc_html__( 'Type', 'motionui-addons-for-elementor' ),
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'muia-btn-normal',
 				'options' => array(
-					'muia-btn-normal'          => esc_html__( 'Normal', 'motionui-addons' ),
-					'muia-btn-circle'        => esc_html__( 'Circle', 'motionui-addons' ),
-					'muia-btn-separate-circle-icon'   => esc_html__( 'Separate Circle Icon', 'motionui-addons' ),
+					'muia-btn-normal'          => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
+					'muia-btn-circle'        => esc_html__( 'Circle', 'motionui-addons-for-elementor' ),
+					'muia-btn-separate-circle-icon'   => esc_html__( 'Separate Circle Icon', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
 		$this->add_responsive_control(      
 			'circle_btn_size',
 			[
-				'label' => esc_html__( 'Circle Size', 'motionui-addons' ),
+				'label' => esc_html__( 'Circle Size', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => [ 'em', 'px', '%', 'rem', 'custom' ],
 				'range' => [
@@ -465,14 +465,14 @@ trait Button_Controls {
 		$this->add_control(     
 			"{$id_prefix}_btn_effect",
 			array(
-				'label'   => esc_html__( 'Effect', 'motionui-addons' ),
+				'label'   => esc_html__( 'Effect', 'motionui-addons-for-elementor' ),
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'muia-btn-wave',
 				'options' => array(
-					'muia-btn-wave'        => esc_html__( 'Wave', 'motionui-addons' ),
-					'muia-btn-reveal' => esc_html__( 'Reveal', 'motionui-addons' ),
-					// 'muia-btn-reveal-random' => esc_html__( 'Reveal Random', 'motionui-addons' ),
-					// 'muia-btn-symbolab'      => esc_html__( 'Symbolab', 'motionui-addons' ),
+					'muia-btn-wave'        => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
+					'muia-btn-reveal' => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
+					// 'muia-btn-reveal-random' => esc_html__( 'Reveal Random', 'motionui-addons-for-elementor' ),
+					// 'muia-btn-symbolab'      => esc_html__( 'Symbolab', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
@@ -480,7 +480,7 @@ trait Button_Controls {
 		$this->add_control(
 			"{$id_prefix}_muia_magnetic_effect",
 			array(
-				'label'        => esc_html__( 'Magnetic Effect', 'motionui-addons' ),
+				'label'        => esc_html__( 'Magnetic Effect', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'label_block'  => false,
 				'return_value' => 'yes',
@@ -491,10 +491,10 @@ trait Button_Controls {
 		$this->add_control(
 			"{$id_prefix}_button_text",
 			array(
-				'label'       => esc_html__( 'Text', 'motionui-addons' ),
+				'label'       => esc_html__( 'Text', 'motionui-addons-for-elementor' ),
 				'label_block' => true,
 				'type'        => Controls_Manager::TEXT,
-				'default'     => esc_html__( 'Button Text', 'motionui-addons' ),
+				'default'     => esc_html__( 'Button Text', 'motionui-addons-for-elementor' ),
 				'dynamic'     => array(
 					'active' => true,
 				),
@@ -504,9 +504,9 @@ trait Button_Controls {
 		$this->add_control(
 			"{$id_prefix}_button_link",
 			array(
-				'label'         => esc_html__( 'Link', 'motionui-addons' ),
+				'label'         => esc_html__( 'Link', 'motionui-addons-for-elementor' ),
 				'type'          => Controls_Manager::URL,
-				'placeholder'   => esc_html__( 'https://your-link.com', 'motionui-addons' ),
+				'placeholder'   => esc_html__( 'https://your-link.com', 'motionui-addons-for-elementor' ),
 				'show_external' => true,
 				'default'       => array(
 					'url'         => '#',
@@ -522,7 +522,7 @@ trait Button_Controls {
 		$this->add_control(
 			"{$id_prefix}_icon",
 			array(
-				'label'       => esc_html__( 'Icon', 'motionui-addons' ),
+				'label'       => esc_html__( 'Icon', 'motionui-addons-for-elementor' ),
 				'label_block' => false,
 				'type'        => Controls_Manager::ICONS,
 				'skin'        => 'inline',
@@ -531,7 +531,7 @@ trait Button_Controls {
 		$this->add_control(
 			"{$id_prefix}_is_stroke_icon",
 			array(
-				'label'       => esc_html__( 'Is it a Stroke icon ? ', 'motionui-addons' ),
+				'label'       => esc_html__( 'Is it a Stroke icon ? ', 'motionui-addons-for-elementor' ),
 				'label_block' => false,
 				'type'        => Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
@@ -544,16 +544,16 @@ trait Button_Controls {
 		$this->add_control(  
 			"{$id_prefix}_icon_position_style",
 			array(
-				'label'       => esc_html__( 'Icon Position', 'motionui-addons' ),
+				'label'       => esc_html__( 'Icon Position', 'motionui-addons-for-elementor' ),
 				'type'        => Controls_Manager::CHOOSE,
 				'label_block' => false,
 				'options'     => array(
 					'left'  => array(
-						'title' => esc_html__( 'Left', 'motionui-addons' ),
+						'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-h-align-left',
 					),
 					'right' => array(
-						'title' => esc_html__( 'Right', 'motionui-addons' ),
+						'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-h-align-right',
 					),
 				),
@@ -567,7 +567,7 @@ trait Button_Controls {
 		$this->add_responsive_control(   
 			'space_between_text_icon',
 			[
-				'label' => esc_html__( 'Icon Spacing', 'motionui-addons' ),
+				'label' => esc_html__( 'Icon Spacing', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'range' => [
@@ -592,7 +592,7 @@ trait Button_Controls {
 		$this->add_responsive_control(      
 			'btn_icon_rotation',
 			[
-				'label' => esc_html__( 'Icon rotation', 'motionui-addons' ),
+				'label' => esc_html__( 'Icon rotation', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => [ 'px' ],
 				'range' => [ 
@@ -613,7 +613,7 @@ trait Button_Controls {
 		$this->add_responsive_control(        
 			'btn_icon_size',
 			[
-				'label' => esc_html__( 'Icon Size', 'motionui-addons' ),
+				'label' => esc_html__( 'Icon Size', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => [ 'em', 'px', '%', 'rem', 'custom' ],
 				'range' => [
@@ -646,21 +646,21 @@ trait Button_Controls {
 		$this->add_responsive_control(
 			"{$id_prefix}_align_x",
 			array(
-				'label'       => esc_html__( 'Alignment', 'motionui-addons' ),
+				'label'       => esc_html__( 'Alignment', 'motionui-addons-for-elementor' ),
 				'type'        => Controls_Manager::CHOOSE,
 				'label_block' => false,
                 'separator'    => 'before', 
 				'options'     => array(
 					'left'   => array(
-						'title' => esc_html__( 'Left', 'motionui-addons' ),
+						'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-h-align-left',
 					),
 					'center' => array(
-						'title' => esc_html__( 'Center', 'motionui-addons' ),
+						'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-h-align-center',
 					),
 					'right'  => array(
-						'title' => esc_html__( 'Right', 'motionui-addons' ),
+						'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-h-align-right',
 					),
 				),

@@ -35,16 +35,16 @@ trait Custom_Control{
 		$this->add_responsive_control(
 			$prefix . 'border',
 			[  
-				'label' => esc_html__( 'Border Style', 'textdomain' ),
+				'label' => esc_html__( 'Border Style', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
-					'' => esc_html__( 'Default', 'textdomain' ),
-					'none' => esc_html__( 'None', 'textdomain' ),
-					'solid'  => esc_html__( 'Solid', 'textdomain' ),
-					'dashed' => esc_html__( 'Dashed', 'textdomain' ),
-					'dotted' => esc_html__( 'Dotted', 'textdomain' ),
-					'double' => esc_html__( 'Double', 'textdomain' ),
+					'' => esc_html__( 'Default', 'motionui-addons-for-elementor' ),
+					'none' => esc_html__( 'None', 'motionui-addons-for-elementor' ),
+					'solid'  => esc_html__( 'Solid', 'motionui-addons-for-elementor' ),
+					'dashed' => esc_html__( 'Dashed', 'motionui-addons-for-elementor' ),
+					'dotted' => esc_html__( 'Dotted', 'motionui-addons-for-elementor' ),
+					'double' => esc_html__( 'Double', 'motionui-addons-for-elementor' ),
 				],
 				'selectors' => [
 					$selector => ( $is_var ? '--border-style' : 'border-style' ) . ': {{VALUE}};',
@@ -54,7 +54,7 @@ trait Custom_Control{
 		$this->add_responsive_control(
 			$prefix . 'border_width',
 			[
-				'label' => esc_html__( 'Border Width', 'textdomain' ),
+				'label' => esc_html__( 'Border Width', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
@@ -68,7 +68,7 @@ trait Custom_Control{
         $this->add_responsive_control(   
             $prefix . 'border_color',
             [
-                'label' => esc_html__( 'Border Color', 'textdomain' ),
+                'label' => esc_html__( 'Border Color', 'motionui-addons-for-elementor' ),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     $selector => ( $is_var ? '--border-color' : 'border-color' ) . ': {{VALUE}};',

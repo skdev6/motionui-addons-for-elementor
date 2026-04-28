@@ -33,7 +33,7 @@ class Animate_Button extends Muia_Base{
      * @return string
      */
     public function get_title() {
-        return esc_html__( 'Animate Button', 'motionui-addons' );
+        return esc_html__( 'Animate Button', 'motionui-addons-for-elementor' );
     }
 
     /**

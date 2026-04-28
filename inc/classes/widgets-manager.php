@@ -1,6 +1,10 @@
 <?php 
 namespace Themeic\MotionUI_Addons\Inc\Classes;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Widgets_Manager{
 
     const WIDGET_DB_KEY = 'muia_active_widgets';
@@ -14,7 +18,7 @@ class Widgets_Manager{
     public static function get_widgets_map(){
         return [
             'animate-button'=>[
-                'title' => __('Animate Button', 'motionui-addons'),
+                'title' => __('Animated Button', 'motionui-addons-for-elementor'),
                 'category'=> 'general',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -22,8 +26,8 @@ class Widgets_Manager{
                 'demo'=> '',
                 'tutorial'=> '',
             ],
-            'themeic-button'=>[  
-                'title' => __('Animate Slider', 'motionui-addons'),
+            'animate-slider'=>[  
+                'title' => __('Animate Slide', 'motionui-addons-for-elementor'),
                 'category'=> 'general',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -31,6 +35,24 @@ class Widgets_Manager{
                 'demo'=> '',
                 'tutorial'=> '',
             ],
+            'animate-image'=>[  
+                'title' => __('Animate Image', 'motionui-addons-for-elementor'),
+                'category'=> 'general',
+                'is_active'=> true,
+                'is_pro'       => false,
+                'is_upcoming'  => false,
+                'demo'=> '',
+                'tutorial'=> '',
+            ],
+            'animate-gallery'=>[  
+                'title' => __('Animate Gallery', 'motionui-addons-for-elementor'),
+                'category'=> 'general',
+                'is_active'=> true,
+                'is_pro'       => false,
+                'is_upcoming'  => false,
+                'demo'=> '',
+                'tutorial'=> '',
+            ]
         ];
     }
     public static function register_widgets($widgets_manager = null){

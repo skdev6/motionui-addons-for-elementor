@@ -5,19 +5,23 @@ namespace Themeic\MotionUI_Addons\Inc\Extensions;
 use Elementor\Element_Base;
 use Elementor\Controls_Manager;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Scroll_Animation{
     public static function register_controls($element){
         $element->start_controls_section(
             'mui_addons_scroll_animation',
             [
-                'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Scroll Animation', 'motionui-addons')),
+                'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Scroll Animation', 'motionui-addons-for-elementor')),
                 'tab' => Controls_Manager::TAB_ADVANCED,
             ]
         );
 		$element->add_control(
 			'mui_scroll_ani_enable',
 			[
-				'label' => __( 'Enable', 'motionui-addons' ),
+				'label' => __( 'Enable', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
 				'prefix_class' => 'mui-scroll-ani-',
@@ -29,7 +33,7 @@ class Scroll_Animation{
 		$element->start_controls_tab(
 			'mui_scroll_ani_from',
 			[
-				'label' => __( 'From', 'motionui-addon' ),
+				'label' => __( 'From', 'motionui-addons-for-elementor' ),
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
 				],
@@ -39,7 +43,7 @@ class Scroll_Animation{
 		$element->add_control(
 			'mui_scroll_ani_translate_toggle',
 			[
-				'label' => __( 'Translate', 'motionui-addon' ),
+				'label' => __( 'Translate', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
 				'condition' => [
@@ -53,7 +57,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_translate_x',
 			[
-				'label' => __( 'Translate X', 'motionui-addon' ),
+				'label' => __( 'Translate X', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -74,7 +78,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_translate_y',
 			[
-				'label' => __( 'Translate Y', 'motionui-addon' ),
+				'label' => __( 'Translate Y', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -97,7 +101,7 @@ class Scroll_Animation{
 		$element->add_control(
 			'mui_scroll_ani_rotate_toggle',
 			[
-				'label' => __( 'Rotation', 'motionui-addon' ),
+				'label' => __( 'Rotation', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::POPOVER_TOGGLE,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -121,7 +125,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_rotate_x',
 			[
-				'label' => __( 'Rotation X', 'motionui-addon' ),
+				'label' => __( 'Rotation X', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -142,7 +146,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_rotate_y',
 			[
-				'label' => __( 'Rotation Y', 'motionui-addon' ),
+				'label' => __( 'Rotation Y', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -163,7 +167,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_rotate_z',
 			[
-				'label' => __( 'Rotation (Z)', 'motionui-addon' ),
+				'label' => __( 'Rotation (Z)', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -186,7 +190,7 @@ class Scroll_Animation{
 		$element->add_control(
 			'mui_scroll_ani_scale_toggle',
 			[
-				'label' => __( 'Scale', 'motionui-addon' ),
+				'label' => __( 'Scale', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
 				'condition' => [
@@ -211,7 +215,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_scale_x',
 			[
-				'label' => __( 'Scale (X)', 'motionui-addon' ),
+				'label' => __( 'Scale (X)', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -236,7 +240,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_scale_y',
 			[
-				'label' => __( 'Scale Y', 'motionui-addon' ),
+				'label' => __( 'Scale Y', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -263,7 +267,7 @@ class Scroll_Animation{
 		$element->add_control(
 			'mui_scroll_ani_skew_toggle',
 			[
-				'label' => __( 'Skew', 'motionui-addon' ),
+				'label' => __( 'Skew', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
 				'condition' => [
@@ -277,7 +281,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_skew_x',
 			[
-				'label' => __( 'Skew X', 'motionui-addon' ),
+				'label' => __( 'Skew X', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -298,7 +302,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_skew_y',
 			[
-				'label' => __( 'Skew Y', 'motionui-addon' ),
+				'label' => __( 'Skew Y', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -320,7 +324,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_opacity',
 			[
-				'label' => esc_html__( 'Opacity', 'textdomain' ),
+				'label' => esc_html__( 'Opacity', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => ['px'],
 				'range' => [
@@ -343,7 +347,7 @@ class Scroll_Animation{
 		$element->start_controls_tab(
             'mui_scroll_ani_to',
             [
-				'label' => __( 'To', 'motionui-addon' ),
+				'label' => __( 'To', 'motionui-addons-for-elementor' ),
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
 				],
@@ -353,7 +357,7 @@ class Scroll_Animation{
 		$element->add_control(
 			'mui_scroll_ani_translate_toggle_hover',
 			[
-				'label' => __( 'Translate', 'motionui-addon' ),
+				'label' => __( 'Translate', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
 				'condition' => [
@@ -367,7 +371,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_translate_x_hover',
 			[
-				'label' => __( 'Translate X', 'motionui-addon' ),
+				'label' => __( 'Translate X', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -388,7 +392,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_translate_y_hover',
 			[
-				'label' => __( 'Translate Y', 'motionui-addon' ),
+				'label' => __( 'Translate Y', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -411,7 +415,7 @@ class Scroll_Animation{
 		$element->add_control(
 			'mui_scroll_ani_rotate_toggle_hover',
 			[
-				'label' => __( 'Rotation', 'motionui-addon' ),
+				'label' => __( 'Rotation', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::POPOVER_TOGGLE,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -434,7 +438,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_rotate_x_hover',
 			[
-				'label' => __( 'Rotation X', 'motionui-addon' ),
+				'label' => __( 'Rotation X', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -455,7 +459,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_rotate_y_hover',
 			[
-				'label' => __( 'Rotation Y', 'motionui-addon' ),
+				'label' => __( 'Rotation Y', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -476,7 +480,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_rotate_z_hover',
 			[
-				'label' => __( 'Rotation (Z)', 'motionui-addon' ),
+				'label' => __( 'Rotation (Z)', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -499,7 +503,7 @@ class Scroll_Animation{
 		$element->add_control(
 			'mui_scroll_ani_scale_toggle_hover',
 			[
-				'label' => __( 'Scale', 'motionui-addon' ),
+				'label' => __( 'Scale', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
 				'condition' => [
@@ -523,7 +527,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_scale_x_hover',
 			[
-				'label' => __( 'Scale (X)', 'motionui-addon' ),
+				'label' => __( 'Scale (X)', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -548,7 +552,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_scale_y_hover',
 			[
-				'label' => __( 'Scale Y', 'motionui-addon' ),
+				'label' => __( 'Scale Y', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -575,7 +579,7 @@ class Scroll_Animation{
 		$element->add_control(
 			'mui_scroll_ani_skew_toggle_hover',
 			[
-				'label' => __( 'Skew', 'motionui-addon' ),
+				'label' => __( 'Skew', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
 				'condition' => [
@@ -589,7 +593,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_skew_x_hover',
 			[
-				'label' => __( 'Skew X', 'motionui-addon' ),
+				'label' => __( 'Skew X', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -610,7 +614,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_skew_y_hover',
 			[
-				'label' => __( 'Skew Y', 'motionui-addon' ),
+				'label' => __( 'Skew Y', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -632,7 +636,7 @@ class Scroll_Animation{
 		$element->add_responsive_control(
 			'mui_scroll_ani_opacity_to',
 			[
-				'label' => esc_html__( 'Opacity', 'textdomain' ),
+				'label' => esc_html__( 'Opacity', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => ['px'],
 				'range' => [
@@ -658,7 +662,7 @@ class Scroll_Animation{
 		$element->add_control( 
 			'mui_scroll_ani_delay',
 			[
-				'label' => esc_html__( 'Delay (optional)', 'motionui-addon' ),
+				'label' => esc_html__( 'Delay (optional)', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'separator' => 'before',
 				'condition' => [

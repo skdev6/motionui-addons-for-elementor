@@ -4,6 +4,10 @@ namespace Themeic\MotionUI_Addons\Inc\Classes;
 
 use Themeic\MotionUI_Addons\Inc\Extensions as Extensions;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Extensions_Manager{
     public static $logo = '';
 

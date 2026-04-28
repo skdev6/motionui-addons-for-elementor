@@ -1,9 +1,13 @@
 <?php 
 namespace Themeic\MotionUI_Addons\Inc\Classes;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Dashboard{
 
-    public $slug = 'motionui-addons';
+    public $slug = 'motionui-addons-for-elementor';
 
     public static function add_menu(){ 
 
@@ -21,8 +25,8 @@ class Dashboard{
         );
         add_submenu_page(
             $page_slug,
-            esc_html__("Settings", "motionui-addons"),
-            esc_html__("Settings", "motionui-addons"),
+            esc_html__("Settings", 'motionui-addons-for-elementor'),
+            esc_html__("Settings", 'motionui-addons-for-elementor'),
             "manage_options",
             $page_slug,
             [__CLASS__, "init_page"]

@@ -1,6 +1,10 @@
 <?php 
 namespace Themeic\MotionUI_Addons\Inc\Classes;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Motionui {
 
     /**
@@ -23,13 +27,13 @@ class Motionui {
      * The display name of the plugin
      */
     public static function get_admin_name() {
-        return __( 'MotionUI Addons', 'motionui-addons' );
+        return __( 'MotionUI Addons', 'motionui-addons-for-elementor' );
     }
     /**
      * The display name of the plugin
      */
     public static function get_extention_logo() {
-        return __( 'MotionUI Addons', 'motionui-addons' );
+        return __( 'MotionUI Addons', 'motionui-addons-for-elementor' );
     }
     
 }

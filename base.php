@@ -49,7 +49,7 @@ class Base {
      * * Makes the plugin translation-ready.
      */
     public function i18n(){
-        load_plugin_textdomain('gsap-addons-for-elementor', false, dirname(THEMEIC_MUIA_FILE) . '/languages');
+        load_plugin_textdomain('motionui-addons-for-elementor', false, dirname(THEMEIC_MUIA_FILE) . '/languages');
     }
 
     /**
@@ -74,7 +74,7 @@ class Base {
         $manager->add_category(
             'motionui_addons',
             [
-                'title' => __( 'MotionUi Addons', 'motionui-addons' ),
+                'title' => __( 'MotionUi Addons', 'motionui-addons-for-elementor' ),
                 'icon' => 'th-gsap-addons',
             ]
         );

@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:           MotionUI Addons
- * Plugin URI:            https://themeic.com/motionui-addons
+ * Plugin Name:           MotionUI Addons for Elementor
+ * Plugin URI:            https://motionuiaddons.com/
  * Description:           Bring powerful GSAP animations to Elementor with ease. Includes advanced widgets like Animated Slider, Testimonial Carousel, News Ticker, Floating Effects, and more.
  * Version:               1.0.0
  * Requires at least:     6.4
@@ -13,7 +13,7 @@
  * Author URI:            https://themeic.com/
  * License:               GPL-2.0-or-later
  * License URI:           https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:           motionui-addons
+ * Text Domain:           motionui-addons-for-elementor
  * Domain Path:           /languages/
  *
  * @package              MotionUI_Addons
@@ -79,30 +79,39 @@ function themeic_muia_base_begin() {
 add_action( 'plugins_loaded', 'themeic_muia_base_begin' );
 
 /**
- * Admin notice for missing Elementor
- */ 
+ * Admin notice when Elementor is not installed or activated.
+ */
 function themeic_muia_notice_missing_main_plugin() {
-    if ( isset( $_GET['activate'] ) ) unset( $_GET['activate'] );
+    if ( isset( $_GET['activate'] ) ) {
+        unset( $_GET['activate'] );
+    }
 
+    /* translators: 1: Plugin name, 2: Required plugin name */
     $message = sprintf(
-        esc_html__( '"%1$s" requires "%2$s" to be installed and activated.', 'motionui-addons' ),
-        '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons' ) . '</strong>',
-        '<strong>' . esc_html__( 'Elementor', 'motionui-addons' ) . '</strong>'
+        esc_html__( '"%1$s" requires "%2$s" to be installed and activated.', 'motionui-addons-for-elementor' ),
+        '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons-for-elementor' ) . '</strong>',
+        '<strong>Elementor</strong>'
     );
 
-    printf( '<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', wp_kses_post( $message ) );
+    printf(
+        '<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>',
+        wp_kses_post( $message )
+    );
 }
 
 /**
  * Admin notice for outdated Elementor version
- */  
+ */
 function themeic_muia_notice_minimum_elementor_version() {
-    if ( isset( $_GET['activate'] ) ) unset( $_GET['activate'] );
+    if ( isset( $_GET['activate'] ) ) {
+        unset( $_GET['activate'] );
+    }
 
+    /* translators: 1: Plugin name, 2: Required plugin name, 3: Required version number */
     $message = sprintf(
-        esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'motionui-addons' ),
-        '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons' ) . '</strong>',
-        '<strong>' . esc_html__( 'Elementor', 'motionui-addons' ) . '</strong>',
+        esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'motionui-addons-for-elementor' ),
+        '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons-for-elementor' ) . '</strong>',
+        '<strong>' . esc_html__( 'Elementor', 'motionui-addons-for-elementor' ) . '</strong>',
         THEMEIC_MUIA_MIN_ELEMENTOR_VERSION
     );
 
@@ -111,14 +120,17 @@ function themeic_muia_notice_minimum_elementor_version() {
 
 /**
  * Admin notice for outdated PHP version
- */ 
+ */
 function themeic_muia_notice_minimum_php_version() {
-    if ( isset( $_GET['activate'] ) ) unset( $_GET['activate'] );
+    if ( isset( $_GET['activate'] ) ) {
+        unset( $_GET['activate'] );
+    }
 
+    /* translators: 1: Plugin name, 2: Required technology name, 3: Required version number */
     $message = sprintf(
-        esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'motionui-addons' ),
-        '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons' ) . '</strong>',
-        '<strong>' . esc_html__( 'PHP', 'motionui-addons' ) . '</strong>',
+        esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'motionui-addons-for-elementor' ),
+        '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons-for-elementor' ) . '</strong>',
+        '<strong>' . esc_html__( 'PHP', 'motionui-addons-for-elementor' ) . '</strong>',
         THEMEIC_MUIA_MIN_PHP_VERSION
     );
 

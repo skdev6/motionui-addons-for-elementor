@@ -5,32 +5,36 @@ namespace Themeic\MotionUI_Addons\Inc\Extensions;
 use Elementor\Element_Base;
 use Elementor\Controls_Manager;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Motion{
     public static function register_controls($element){
         $element->start_controls_section(
             'mui_addons_motion_effects',
             [
-                'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Element Motion', 'motionui-addons')),
+                'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Element Motion', 'motionui-addons-for-elementor')),
                 'tab' => Controls_Manager::TAB_ADVANCED,
             ]
         );
 		$element->add_control(
 			'muia_motion_effects_name',
 			[
-				'label' => esc_html__( 'Animation', 'textdomain' ),
+				'label' => esc_html__( 'Animation', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SELECT2,
 				'label_block' => true,
                 'frontend_available' => true,  
 				'options' => [
-					''  => esc_html__( 'None', 'textdomain' ),
-					'fade-in-up' => esc_html__( 'Fade In Up', 'textdomain' ),
-					'fade-in-down' => esc_html__( 'Fade In Down', 'textdomain' ),
-					'fade-in-left' => esc_html__( 'Fade In Left', 'textdomain' ),
-					'fade-in-right' => esc_html__( 'Fade In Right', 'textdomain' ),
-					'slide-in-up' => esc_html__( 'Slide In Up', 'textdomain' ),
-					'slide-in-down' => esc_html__( 'Slide In Down', 'textdomain' ),
-					'slide-in-left' => esc_html__( 'Slide In Left', 'textdomain' ),
-					'slide-in-right' => esc_html__( 'Slide In Right', 'textdomain' ),
+					''  => esc_html__( 'None', 'motionui-addons-for-elementor' ),
+					'fade-in-up' => esc_html__( 'Fade In Up', 'motionui-addons-for-elementor' ),
+					'fade-in-down' => esc_html__( 'Fade In Down', 'motionui-addons-for-elementor' ),
+					'fade-in-left' => esc_html__( 'Fade In Left', 'motionui-addons-for-elementor' ),
+					'fade-in-right' => esc_html__( 'Fade In Right', 'motionui-addons-for-elementor' ),
+					'slide-in-up' => esc_html__( 'Slide In Up', 'motionui-addons-for-elementor' ),
+					'slide-in-down' => esc_html__( 'Slide In Down', 'motionui-addons-for-elementor' ),
+					'slide-in-left' => esc_html__( 'Slide In Left', 'motionui-addons-for-elementor' ),
+					'slide-in-right' => esc_html__( 'Slide In Right', 'motionui-addons-for-elementor' ),
 				],
 				'default' => '',
                 'prefix_class' => 'has-muia-motion-effect muia-',
@@ -39,7 +43,7 @@ class Motion{
         $element->add_control( 
             'muia_form_start_motion',
             [
-                'label' => esc_html__( 'Transform From', 'themeic' ),
+                'label' => esc_html__( 'Transform From', 'motionui-addons-for-elementor' ),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px','vw', 'vh', 'rem', '%', 'custom'],
                 'range' => [
@@ -65,7 +69,7 @@ class Motion{
 		$element->add_control( 
 			$prefix . 'mui_motion_duration',
 			[
-				'label' => esc_html__( 'Duration (optional)', 'motionui-addon' ),
+				'label' => esc_html__( 'Duration (optional)', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -84,7 +88,7 @@ class Motion{
 		$element->add_control( 
 			$prefix . 'mui_motion_stagger',
 			[
-				'label' => esc_html__( 'stagger (optional)', 'themeic' ),
+				'label' => esc_html__( 'stagger (optional)', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => ['px'],
 				'range' => [
@@ -103,47 +107,47 @@ class Motion{
 		$element->add_control(
 			$prefix . 'mui_motion_ease',
 			[
-				'label'   => __('Easing (optional)', 'motionui-addon'),
+				'label'   => __('Easing (optional)', 'motionui-addons-for-elementor'),
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'expo.out',
 				'options' => [
 					// Expo
-					'expo.out'   => __('Expo Out', 'motionui-addon'),
-					'expo.in'    => __('Expo In', 'motionui-addon'),
-					'expo.inOut' => __('Expo InOut', 'motionui-addon'),
+					'expo.out'   => __('Expo Out', 'motionui-addons-for-elementor'),
+					'expo.in'    => __('Expo In', 'motionui-addons-for-elementor'),
+					'expo.inOut' => __('Expo InOut', 'motionui-addons-for-elementor'),
 
 					// Power
-					'power1.out'   => __('Power1 Out', 'motionui-addon'),
-					'power1.in'    => __('Power1 In', 'motionui-addon'),
-					'power1.inOut' => __('Power1 InOut', 'motionui-addon'),
+					'power1.out'   => __('Power1 Out', 'motionui-addons-for-elementor'),
+					'power1.in'    => __('Power1 In', 'motionui-addons-for-elementor'),
+					'power1.inOut' => __('Power1 InOut', 'motionui-addons-for-elementor'),
 
-					'power2.out'   => __('Power2 Out', 'motionui-addon'),
-					'power2.in'    => __('Power2 In', 'motionui-addon'),
-					'power2.inOut' => __('Power2 InOut', 'motionui-addon'),
+					'power2.out'   => __('Power2 Out', 'motionui-addons-for-elementor'),
+					'power2.in'    => __('Power2 In', 'motionui-addons-for-elementor'),
+					'power2.inOut' => __('Power2 InOut', 'motionui-addons-for-elementor'),
 
-					'power3.out'   => __('Power3 Out', 'motionui-addon'),
-					'power3.in'    => __('Power3 In', 'motionui-addon'),
-					'power3.inOut' => __('Power3 InOut', 'motionui-addon'),
+					'power3.out'   => __('Power3 Out', 'motionui-addons-for-elementor'),
+					'power3.in'    => __('Power3 In', 'motionui-addons-for-elementor'),
+					'power3.inOut' => __('Power3 InOut', 'motionui-addons-for-elementor'),
 
-					'power4.out'   => __('Power4 Out', 'motionui-addon'),
-					'power4.in'    => __('Power4 In', 'motionui-addon'),
-					'power4.inOut' => __('Power4 InOut', 'motionui-addon'),
+					'power4.out'   => __('Power4 Out', 'motionui-addons-for-elementor'),
+					'power4.in'    => __('Power4 In', 'motionui-addons-for-elementor'),
+					'power4.inOut' => __('Power4 InOut', 'motionui-addons-for-elementor'),
 
 					// Back
-					'back.out(1.7)'   => __('Back Out', 'motionui-addon'),
-					'back.in(1.7)'    => __('Back In', 'motionui-addon'),
-					'back.inOut(1.7)' => __('Back InOut', 'motionui-addon'),
+					'back.out(1.7)'   => __('Back Out', 'motionui-addons-for-elementor'),
+					'back.in(1.7)'    => __('Back In', 'motionui-addons-for-elementor'),
+					'back.inOut(1.7)' => __('Back InOut', 'motionui-addons-for-elementor'),
 
 					// Elastic
-					'elastic.out(1, 0.3)' => __('Elastic Out', 'motionui-addon'),
-					'elastic.in(1, 0.3)'  => __('Elastic In', 'motionui-addon'),
+					'elastic.out(1, 0.3)' => __('Elastic Out', 'motionui-addons-for-elementor'),
+					'elastic.in(1, 0.3)'  => __('Elastic In', 'motionui-addons-for-elementor'),
 
 					// Bounce
-					'bounce.out' => __('Bounce Out', 'motionui-addon'),
-					'bounce.in'  => __('Bounce In'),
+					'bounce.out' => __('Bounce Out', 'motionui-addons-for-elementor'),
+					'bounce.in'  => __('Bounce In', 'motionui-addons-for-elementor'),
 
 					// Linear
-					'none' => __('Linear (None)', 'motionui-addon'),
+					'none' => __('Linear (None)', 'motionui-addons-for-elementor'),
 				],
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -156,13 +160,13 @@ class Motion{
 		$element->add_control(
 			$prefix . 'mui_motion_trigger_class_name',
 			[
-				'label' => esc_html__( 'Trigger Class Name', 'motionui-addons' ),
+				'label' => esc_html__( 'Trigger Class Name', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::TEXT,
 				'description' => esc_html__(
 					'Optional. Enter a CSS class name to use another element as the scroll trigger. If left empty, the current widget element will be used as the trigger.',
-					'motionui-addons'
+					'motionui-addons-for-elementor'
 				),
-				'placeholder' => esc_html__( 'optional-example-trigger', 'motionui-addons' ),
+				'placeholder' => esc_html__( 'optional-example-trigger', 'motionui-addons-for-elementor' ),
 				'frontend_available' => true,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -172,13 +176,13 @@ class Motion{
 		$element->add_control(
 			$prefix . 'mui_motion_child_element_selector',
 			[
-				'label' => esc_html__( 'Child Element Selector', 'motionui-addons' ),
+				'label' => esc_html__( 'Child Element Selector', 'motionui-addons-for-elementor' ),
 				'type' => Controls_Manager::TEXT,
 				'description' => esc_html__(
 					'Optional. Enter a CSS selector to target a child element as animation. If left empty, the current widget element will be used as animation.',
-					'motionui-addons'
+					'motionui-addons-for-elementor'
 				),
-				'placeholder' => esc_html__( '.example-child', 'motionui-addons' ),
+				'placeholder' => esc_html__( '.example-child', 'motionui-addons-for-elementor' ),
 				'frontend_available' => true,
 				'condition' => [
 					'mui_scroll_ani_enable' => 'yes',
@@ -188,10 +192,10 @@ class Motion{
 		$element->add_control(
 			$prefix . 'mui_motion_with_scroll',
 			[
-				'label' => esc_html__( 'Animate with scroll', 'textdomain' ),
+				'label' => esc_html__( 'Animate with scroll', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'textdomain' ),
-				'label_off' => esc_html__( 'No', 'textdomain' ),
+				'label_on' => esc_html__( 'Yes', 'motionui-addons-for-elementor' ),
+				'label_off' => esc_html__( 'No', 'motionui-addons-for-elementor' ),
 				'return_value' => 'yes',
 				'default' => 'no',
 				'frontend_available' => true,

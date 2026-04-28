@@ -1,3 +1,17 @@
+<?php
+/**
+ * Dashboard Main Template
+ *
+ * This file is loaded by the plugin and should not be accessed directly.
+ *
+ * @package MotionUI Addons for Elementor
+ */
+
+// Prevent direct access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+?>
 <div class="th-left-nav d-lg-flex">
     <span class="logo-text2">Menu</span>
     <ul class="th-das-navbar">
