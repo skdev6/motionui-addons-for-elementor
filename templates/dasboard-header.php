@@ -1,8 +1,6 @@
 <?php
 /**
- * Dashboard Main Template
- *
- * This file is loaded by the plugin and should not be accessed directly.
+ * Dashboard Header Template
  *
  * @package MotionUI Addons for Elementor
  */
@@ -12,12 +10,19 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 ?>
+
 <header class="themeic-das-header">
     <div class="container-fluid d-flex align-items-center gap-2 py-3 th-das-header">
         <span class="logo-wrap th-text-primary mr-auto">
-            <img src="<?php echo THEMEIC_MUIA_ASSETS . '/img/motionui-logo-black.svg'; ?>" alt="MotionUi Addons Logo" class="logo-img">
-            <?php _e('MotionUi Addons', 'motionui-addons-for-elementor'); ?>
+            <img src="<?php echo esc_url( THEMEIC_MUIA_ASSETS . '/img/motionui-logo-black.svg' ); ?>" 
+                 alt="<?php esc_attr_e( 'MotionUI Addons Logo', 'motionui-addons-for-elementor' ); ?>" 
+                 class="logo-img">
+            
+            <?php esc_html_e( 'MotionUI Addons', 'motionui-addons-for-elementor' ); ?>
         </span>
-        <a href="#" class="th-das-btn btn-sm btn-secondary"><?php _e('View All Demo', 'motionui-addons-for-elementor'); ?></a>
+        
+        <a href="#" class="th-das-btn btn-sm btn-secondary">
+            <?php esc_html_e( 'View All Demo', 'motionui-addons-for-elementor' ); ?>
+        </a>
     </div>
-</header>
+</header>  

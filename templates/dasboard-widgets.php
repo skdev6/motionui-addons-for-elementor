@@ -12,11 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 ?>
+
 <div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
     <ul class="th-das-navbar inline-nav">
-        <li class="current-menu-item"><a href="#">All Widgets</a></li>
-        <li><a href="#">Cards</a></li>
-        <li><a href="#">Buttons</a></li>
+        <li class="current-menu-item"><a href="#"><?php esc_html_e( 'All Widgets', 'motionui-addons-for-elementor' ); ?></a></li>
+        <li><a href="#"><?php esc_html_e( 'Cards', 'motionui-addons-for-elementor' ); ?></a></li>
+        <li><a href="#"><?php esc_html_e( 'Buttons', 'motionui-addons-for-elementor' ); ?></a></li>
     </ul>
     
     <div class="right-menu-item d-flex gap-2 align-items-center">
@@ -32,15 +33,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 </div>
 
 <div class="widget-card-wrap">
-    <?php foreach ( MotionUiClasses\Widgets_Manager::get_widgets_map() as $widget_slug => $widget ) : ?>
-        <div class="th-widget-card <?php echo esc_attr( $widget_slug ); ?>">
+    <?php foreach ( MotionUiClasses\Widgets_Manager::get_widgets_map() as $muia_widget_slug => $muia_widget ) : ?>
+        <div class="th-widget-card <?php echo esc_attr( $muia_widget_slug ); ?>">
             <div class="icon-wrap">
                 <i class="th-icon">
                     <!-- Your SVG here -->
                 </i>
             </div> 
             <div class="card-con">
-                <h4 class="title"><?php echo esc_html( $widget['title'] ?? '' ); ?></h4>
+                <h4 class="title"><?php echo esc_html( $muia_widget['title'] ?? '' ); ?></h4>
                 
                 <div class="gap-2 d-flex align-items-center">
                     <a href="#" class="th-doc-link">
@@ -55,8 +56,8 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
             
             <div class="th-switch-control d-flex align-items-center ml-auto">
-                <input type="checkbox" id="toggle-<?php echo esc_attr( $widget_slug ); ?>"/>
-                <label class="switch-label" for="toggle-<?php echo esc_attr( $widget_slug ); ?>"></label>
+                <input type="checkbox" id="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"/>
+                <label class="switch-label" for="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"></label>
             </div>
         </div>
     <?php endforeach; ?>
