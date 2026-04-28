@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     <ul class="th-das-navbar">
         <li class="current-menu-item">
             <a href="#">
-                <i class="th-icon-element-2"></i>
+                <i class="eicon-shape"></i>
                 Widgets
             </a>
         </li>
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         </li>
         <li>
             <a href="#">
-                <i class="th-icon-elements"></i>
+                <i class="eicon-spinner"></i>
                 Preloaders
             </a>
         </li>

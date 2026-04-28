@@ -27,6 +27,7 @@ class Assets{
         wp_enqueue_script('ScrollTrigger');
         wp_enqueue_script('Observer');
         wp_enqueue_script('SplitText');      
+        wp_enqueue_script('split-type');      
         wp_enqueue_script('motionui-addons-for-elementor');  
         wp_enqueue_script('motionui-addons-init'); 
     }

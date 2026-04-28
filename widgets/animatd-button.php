@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0.0
  */
-class Animate_Button extends Muia_Base{
+class Animated_Button extends Muia_Base{
 
     use Button_Controls;
 

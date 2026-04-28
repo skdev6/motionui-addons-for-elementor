@@ -376,7 +376,7 @@ trait Button_Controls {
 	 * @param  string $title     Section title. Default 'Animated Button'.
 	 * @return void
 	 */
-	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn') {
+	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn', $is_content_cntrols = true) {
 
 		$this->start_controls_section(
 			"{$id_prefix}_muia_button_content",
@@ -458,6 +458,7 @@ trait Button_Controls {
 			)
 		);
 
+		if($is_content_cntrols):
 		$this->add_control(
 			"{$id_prefix}_button_text",
 			array(
@@ -488,7 +489,7 @@ trait Button_Controls {
 				),
 			)
 		);
-
+		endif;
 		$this->add_control(
 			"{$id_prefix}_icon",
 			array(
@@ -654,7 +655,7 @@ trait Button_Controls {
 	 * @param  string $id_prefix Unique prefix matching the registered controls. Default 'muia_btn'.
 	 * @return void
 	 */
-	public function _render_muia_btn( $id_prefix = 'muia_btn' ) {
+	public function _render_muia_btn( $id_prefix = 'muia_btn', $args = array() ) {
 
 		$settings = $this->get_settings_for_display();
 
@@ -710,12 +711,22 @@ trait Button_Controls {
             $icon_position == 'right' ? 'muia-icon-pos-right' : '',
         ]));
 
+		$args = wp_parse_args(
+			$args,
+			array(
+				'title'      => $button_text,
+				'url'        => $button_url,
+				'url_target' => $button_target,
+				'url_rel'    => $button_rel,
+			)
+		);
+
 		echo $magnetic_effect !=='' ? '<div class="muia-btn-wrap">' : '';
 		?>
 		<a
-			href="<?php echo esc_url( $button_url ); ?>"
-			target="<?php echo esc_attr( $button_target ); ?>"
-			rel="<?php echo esc_attr( $button_rel ); ?>"
+			href="<?php echo esc_url( $args['url'] ); ?>"
+			target="<?php echo esc_attr( $args['url_target'] ); ?>"
+			rel="<?php echo esc_attr( $args['url_rel'] ); ?>"
 			class="<?php echo esc_attr( $btn_classes ); ?>"
 		>
 
@@ -731,9 +742,9 @@ trait Button_Controls {
                 </span>
             <?php endif; ?>
             
-			<?php if ( ! empty( $button_text ) ) : ?>
+			<?php if ( ! empty( $args['title'] ) ) : ?>
 				<span class="muia-btn-text-wrap">
-					<span class="muia-btn-text"><?php echo esc_html( $button_text ); ?></span>
+					<span class="muia-btn-text"><?php echo esc_html( $args['title'] ); ?></span>
 				</span>
 			<?php endif; ?>
 

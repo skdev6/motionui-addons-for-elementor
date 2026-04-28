@@ -11,6 +11,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
+
+use Themeic\MotionUI_Addons\Inc\Classes as MotionUiClasses; 
 ?>
 
 <div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
@@ -36,9 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     <?php foreach ( MotionUiClasses\Widgets_Manager::get_widgets_map() as $muia_widget_slug => $muia_widget ) : ?>
         <div class="th-widget-card <?php echo esc_attr( $muia_widget_slug ); ?>">
             <div class="icon-wrap">
-                <i class="th-icon">
-                    <!-- Your SVG here -->
-                </i>
+                <i class="eicon-button"></i>
             </div> 
             <div class="card-con">
                 <h4 class="title"><?php echo esc_html( $muia_widget['title'] ?? '' ); ?></h4>

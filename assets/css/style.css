@@ -60,3 +60,13 @@
     height: 100%;
     width: 100%;
 }  
+.th-widget-card .icon-wrap {
+    color: #000;
+    font-size: 30px;
+}   
+.th-das-navbar li a i {
+    font-size: 1.2em;
+}  
+.th-das-navbar li>a {  
+    gap: 11px;
+}

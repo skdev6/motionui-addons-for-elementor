@@ -17,39 +17,47 @@ class Widgets_Manager{
     }
     public static function get_widgets_map(){
         return [
-            'animate-button'=>[
+            'animated-button'=>[
                 'title' => __('Animated Button', 'motionui-addons-for-elementor'),
-                'category'=> 'general',
+                'category'=> 'button',
+                'tags'    => ['button', 'animation'],
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
+                'icon'=>'eicon-button',
                 'demo'=> '',
                 'tutorial'=> '',
             ],
-            'animate-slider'=>[  
-                'title' => __('Animated Button', 'motionui-addons-for-elementor'),
+            'animated-slider'=>[  
+                'title' => __('Animated Slider', 'motionui-addons-for-elementor'),
                 'category'=> 'general',
+                'tags'    => ['slider', 'slide show', 'hero'],
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
+                'icon'=>'eicon-button',
                 'demo'=> '',
                 'tutorial'=> '',
             ],
-            'animate-image'=>[  
+            'animated-image'=>[  
                 'title' => __('Animated Image', 'motionui-addons-for-elementor'),
                 'category'=> 'general',
+                'tags'    => ['image'],
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
+                'icon'=>'eicon-button',
                 'demo'=> '',
                 'tutorial'=> '',
             ],
-            'animate-gallery'=>[  
+            'animated-gallery'=>[  
                 'title' => __('Animated Gallery', 'motionui-addons-for-elementor'),
                 'category'=> 'general',
+                'tags'    => ['image', 'gallery'], 
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
+                'icon'=>'eicon-button',
                 'demo'=> '',
                 'tutorial'=> '',
             ]
