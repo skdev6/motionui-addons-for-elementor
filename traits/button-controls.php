@@ -85,7 +85,7 @@ trait Button_Controls {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'title'           => esc_html__( 'Animated Button Style', 'motionui-addons-for-elementor' ),
+				'title'           => esc_html__( 'Button Style', 'motionui-addons-for-elementor' ),
 				'selectors'       => '.muia-btn',
 				'bg_color'        => true,
 				'color'           => true,
@@ -153,7 +153,7 @@ trait Button_Controls {
 					'type'       => Controls_Manager::DIMENSIONS,
 					'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
 					'selectors'  => array(
-						$selector => ( $is_var ? '--margin' : 'margin' ) . ': {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+						$selector => 'margin : {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 					),
 				)
 			);
@@ -376,12 +376,23 @@ trait Button_Controls {
 	 * @param  string $title     Section title. Default 'Animated Button'.
 	 * @return void
 	 */
-	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn', $is_content_cntrols = true) {
+	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn', $args = array() ) {
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'default_btn_type'  => 'muia-btn-normal',
+				'default_btn_effect'=> 'muia-btn-wave',
+				'show_content'      => true
+			)
+		);
+
+		$is_content_cntrols = $args['show_content'];
 
 		$this->start_controls_section(
 			"{$id_prefix}_muia_button_content",
 			array(
-				'label' => esc_html__( 'Animated Button', 'motionui-addons-for-elementor' ),
+				'label' => esc_html__( 'Button Content', 'motionui-addons-for-elementor' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
 			)
 		);
@@ -391,7 +402,7 @@ trait Button_Controls {
 			array(
 				'label'   => esc_html__( 'Type', 'motionui-addons-for-elementor' ),
 				'type'    => Controls_Manager::SELECT,
-				'default' => 'muia-btn-normal',
+				'default' => $args['default_btn_type'],
 				'options' => array(
 					'muia-btn-normal'          => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
 					'muia-btn-circle'        => esc_html__( 'Circle', 'motionui-addons-for-elementor' ),
@@ -437,7 +448,7 @@ trait Button_Controls {
 			array(
 				'label'   => esc_html__( 'Effect', 'motionui-addons-for-elementor' ),
 				'type'    => Controls_Manager::SELECT,
-				'default' => 'muia-btn-wave',
+				'default' => $args['default_btn_effect'],
 				'options' => array(
 					'muia-btn-wave'        => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
 					'muia-btn-reveal' => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),

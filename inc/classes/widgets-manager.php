@@ -35,7 +35,7 @@ class Widgets_Manager{
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
-                'icon'=>'eicon-button',
+                'icon'=>'eicon-post-slider',
                 'demo'=> '',
                 'tutorial'=> '',
             ],

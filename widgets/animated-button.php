@@ -24,16 +24,6 @@ class Animated_Button extends Muia_Base{
     use Button_Controls;
 
     /**
-     * Retrieve the widget icon.
-     *
-     * @since  1.0.0
-     * @return string
-     */
-    public function get_icon() {
-        return 'eicon-button themeic-muia-logo';   // Make sure this icon exists
-    }
-
-    /**
      * Retrieve widget keywords (optional but recommended for search)
      */
     public function get_keywords() {

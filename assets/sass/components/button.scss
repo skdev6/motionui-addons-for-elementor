@@ -236,4 +236,81 @@
         }
     }
 }     
-
+.muia-prev, .muia-next {   
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(17px);
+    border-color: transparent;
+    color: #fff;
+    height: 2.955em;
+    width: 2.955em;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    &:hover{  
+        background-color:rgba(255, 255, 255, 0.4);
+        border-color: transparent; 
+    }
+    &:focus{  
+        background-color:rgba(255, 255, 255, 0.1);
+        border-color: transparent; 
+    }
+}
+.muia-dot-pagi {
+        font-size: 11px;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        color: rgba(255,255,255,.5);  
+        --active-line:2em;
+        --gap: .4em; 
+        --transition-duration:.5s; 
+        gap: var(--gap);
+        width: 3.5em;  
+    .dot-item { 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer; 
+        transition:margin var(--transition-duration) cubic-bezier(.4, 0, 0, 1); 
+        span{
+            height: 1em;
+            width: 1em;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            transition:all var(--transition-duration) cubic-bezier(.4, 0, 0, 1);  
+        }
+        &::after,&::before{
+            content: '';
+            width: 1px;
+            background-color: currentColor;
+            height: 0; 
+            transition: height var(--transition-duration) cubic-bezier(.4, 0, 0, 1);  
+        }
+        &:first-child{
+            &::before{
+                display: none;
+            }
+        }
+        &:last-child{
+            &::after{  
+                display: none;
+            }
+        }
+    }
+    .dot-item.active {
+        margin-bottom: calc(-1*var(--gap));
+        margin-top: calc(-1 * var(--gap));  
+        &::after,&::before{ 
+            height: var(--active-line);
+        }
+        span{
+            height: 3em;
+            width: 3em;  
+            color: #fff;
+        } 
+    }
+}
+   

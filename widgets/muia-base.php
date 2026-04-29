@@ -37,6 +37,18 @@ abstract class Muia_Base extends Widget_Base {
         return 'muia-' . $name;
     }
     /**
+     * Retrieve the widget icon.
+     */
+    public function get_icon() {
+        $widget_slug = str_replace( 'muia-', '', $this->get_name() );
+        $widgets_map = Widgets_Manager::get_widgets_map();
+
+        if ( isset( $widgets_map[ $widget_slug ]['icon'] ) ) {
+            return $widgets_map[ $widget_slug ]['icon'] . ' themeic-muia-logo';
+        }  
+        return 'themeic-muia-logo';
+    }
+    /**
      * Get widget title.
      *
      * @since 1.0.0

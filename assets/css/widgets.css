@@ -204,6 +204,196 @@
   --shape-round:0%;
 }
 
+.muia-prev, .muia-next {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(17px);
+  border-color: transparent;
+  color: #fff;
+  height: 2.955em;
+  width: 2.955em;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+}
+.muia-prev:hover, .muia-next:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-color: transparent;
+}
+.muia-prev:focus, .muia-next:focus {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: transparent;
+}
+
+.muia-dot-pagi {
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.5);
+  --active-line:2em;
+  --gap: .4em;
+  --transition-duration:.5s;
+  gap: var(--gap);
+  width: 3.5em;
+}
+.muia-dot-pagi .dot-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: margin var(--transition-duration) cubic-bezier(0.4, 0, 0, 1);
+}
+.muia-dot-pagi .dot-item span {
+  height: 1em;
+  width: 1em;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: all var(--transition-duration) cubic-bezier(0.4, 0, 0, 1);
+}
+.muia-dot-pagi .dot-item::after, .muia-dot-pagi .dot-item::before {
+  content: "";
+  width: 1px;
+  background-color: currentColor;
+  height: 0;
+  transition: height var(--transition-duration) cubic-bezier(0.4, 0, 0, 1);
+}
+.muia-dot-pagi .dot-item:first-child::before {
+  display: none;
+}
+.muia-dot-pagi .dot-item:last-child::after {
+  display: none;
+}
+.muia-dot-pagi .dot-item.active {
+  margin-bottom: calc(-1 * var(--gap));
+  margin-top: calc(-1 * var(--gap));
+}
+.muia-dot-pagi .dot-item.active::after, .muia-dot-pagi .dot-item.active::before {
+  height: var(--active-line);
+}
+.muia-dot-pagi .dot-item.active span {
+  height: 3em;
+  width: 3em;
+  color: #fff;
+}
+
+.muia-slide-basic {
+  min-height: 100vh;
+  width: 100%;
+  padding-top: 120px;
+  padding-bottom: 120px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.muia-slide-basic .overlay {
+  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+}
+.muia-slide-basic .title-wrapper {
+  margin-top: auto;
+  margin-bottom: auto;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
+.muia-slide-basic .title-wrapper .slide-title-item {
+  display: inline-block;
+  color: transparent;
+  line-height: 1;
+  font-size: 6.5vw;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  text-align: center;
+  margin-bottom: 0;
+  padding-left: 0.227em;
+  padding-right: 0.227em;
+  width: 100%;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--color);
+  font-family: "Poppins", Sans-serif;
+  transition: color 1s cubic-bezier(0.4, 0, 0, 1);
+}
+.muia-slide-basic .title-wrapper .slide-title-item.active {
+  color: var(--color);
+}
+.muia-slide-basic .pagi-wrapper {
+  position: relative;
+  z-index: 4;
+  font-size: 5.208vw;
+  --pagination-h:3.45em;
+  align-items: center;
+}
+.muia-slide-basic .slide-bg-wrap {
+  position: absolute;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+.muia-slide-basic .slide-bg-item {
+  position: absolute;
+  inset: 0;
+  z-index: calc(40 - var(--index));
+  -webkit-clip-path: inset(0 var(--cright) 0 var(--cleft));
+  clip-path: inset(0 var(--cright) 0 var(--cleft));
+}
+.muia-slide-basic .slide-bg-item .sb-item {
+  height: 100%;
+  width: 100%;
+}
+.muia-slide-basic .sb-item {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.muia-slide-basic .pagi-wrapper {
+  height: var(--pagination-h);
+  display: flex;
+}
+.muia-slide-basic .muia-thumb-pagi {
+  height: 100%;
+  display: flex;
+  gap: 15px;
+  overflow: hidden;
+}
+.muia-slide-basic .muia-thumb-pagi-wrapper {
+  height: var(--pagination-h);
+  width: 40%;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.muia-slide-basic .muia-thumb-pagi .pagi-thumb {
+  width: 35%;
+  height: 100%;
+  flex-shrink: 0;
+  --x:0;
+  --gx:0;
+  transform: translateX(calc(var(--x) + var(--gx)));
+}
+.muia-slide-basic .muia-prev, .muia-slide-basic .muia-next {
+  font-size: 1.146vw;
+}
+.muia-slide-basic .muia-slide-nav {
+  display: flex;
+  gap: 15px;
+}
+.muia-slide-basic .muia-dot-pagi {
+  margin-left: 40px;
+}
+
 /*header styles*/
 /*Cards styles*/
 /*Breadcrumb Style*/

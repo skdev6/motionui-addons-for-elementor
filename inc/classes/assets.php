@@ -18,8 +18,8 @@ class Assets{
         wp_register_script('MotionPathPlugin', THEMEIC_MUIA_ASSETS . 'js/MotionPathPlugin.min.js', ['gsap'], '3.15.0', true);
         wp_register_script('Observer', THEMEIC_MUIA_ASSETS . 'js/Observer.min.js', ['gsap'], '3.15.0', true);
         //
-        wp_register_script('motionui-addons-for-elementor', THEMEIC_MUIA_ASSETS . 'js/motionui-addons.js', ['gsap'], THEMEIC_MUIA_VERSION, true); 
-        wp_register_script('motionui-addons-init', THEMEIC_MUIA_ASSETS . 'js/motionui-addons-init.js', ['gsap', 'motionui-addons-for-elementor'], THEMEIC_MUIA_VERSION, true); 
+        wp_register_script('motionui-addons', THEMEIC_MUIA_ASSETS . 'js/motionui-addons.js', ['gsap'], THEMEIC_MUIA_VERSION, true); 
+        // wp_register_script('motionui-addons-init', THEMEIC_MUIA_ASSETS . 'js/motionui-addons-init.js', ['gsap', 'motionui-addons-for-elementor'], THEMEIC_MUIA_VERSION, true); 
     }    
 
     public static function enqueue_scripts(){
@@ -28,13 +28,19 @@ class Assets{
         wp_enqueue_script('Observer');
         wp_enqueue_script('SplitText');      
         wp_enqueue_script('split-type');      
-        wp_enqueue_script('motionui-addons-for-elementor');  
-        wp_enqueue_script('motionui-addons-init'); 
+        wp_enqueue_script('motionui-addons');  
+        // wp_enqueue_script('motionui-addons-init'); 
     }
     public static function enqueue_styles(){  
          wp_enqueue_style(
             'motionui-addons-widgets', 
             THEMEIC_MUIA_ASSETS . 'css/widgets.css', 
+            [], 
+            THEMEIC_MUIA_VERSION
+        ); 
+         wp_enqueue_style(
+            'themeic-icons', 
+            THEMEIC_MUIA_ASSETS . 'fonts/th-icon-basic.css', 
             [], 
             THEMEIC_MUIA_VERSION
         ); 
