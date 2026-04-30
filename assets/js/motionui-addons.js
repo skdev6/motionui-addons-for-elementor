@@ -5,8 +5,8 @@
     
 
     function initScrollTrigger(trigger, settings){   
-        let start = settings?.isWithScroll ? 'top 98%' : "top 80%";
-        let end = settings?.isWithScroll ? 'top 15%' : "+=100%";
+        let start = settings?.isWithScroll ? 'top 95%' : "top 80%";
+        let end = settings?.isWithScroll ? 'top 5%' : "+=100%";
         return{   
             trigger,
             start,
@@ -29,6 +29,7 @@
             isWithScroll: settings[ prefix + 'mui_motion_with_scroll' ] === 'yes',
         };
     }
+
     function afterLoad(fun){
         fun(); 
     }
@@ -44,33 +45,121 @@
             })
         }
     }
+    // 
+
     // Text Animations
     function textAnimation( $scope, settings ) {
-        let textElement  = $scope.find( '.elementor-heading-title' );
-        let aniSettings  = getAniSettings( settings );
+        const textElement = $scope.find( '.elementor-heading-title' );
+        const aniSettings = getAniSettings( settings );
+        const aniType     = settings?.muia_text_ani    ?? '';
+        const aniBy       = settings?.muia_text_ani_by ?? 'words';
+
+        if ( ! textElement.length || ! aniType ) return;
 
         if ( ! textElement.hasClass( 'muia-split-initialized' ) ) {
             textElement.addClass( 'muia-split-initialized' );
-            SplitText.create( textElement[0], { type: 'chars', charsClass: 'char-text' } );
+            SplitText.create( textElement[0], {
+                type:        'lines,words,chars',
+                linesClass:  'line-text',
+                wordsClass:  'word-text',
+                charsClass:  'char-text',
+            } );
         }
 
-        let aniElements = textElement.find( '.char-text' );
+        const selectorMap = {
+            lines: '.line-text',
+            words: '.word-text',
+            chars: '.char-text',
+        };
+        const elements = textElement.find( selectorMap[ aniBy ] || '.word-text' );
+
+        if ( ! elements.length ) return;
+
         $scope.removeClass( 'visibility__hidden' );
 
-        gsap.set( aniElements, { opacity: 0, y: 20 } );
+        const stagger  = s => s.stagger  || 0.04;
+        const duration = s => s.duration || 0.8;
+        const delay    = s => s.delay    || 0;
+        const ease     = ( s, fallback ) => s.ease || fallback;
 
-        afterLoad(function(){
-            gsap.to( aniElements, {
-                opacity:  1,
-                y:        0,
-                stagger:  aniSettings.stagger || 0.05,
-                ease:     aniSettings.ease    || 'power4.out',
-                duration: aniSettings.duration,
-                delay:    aniSettings.delay,
-            });
-        });
+        const animations = {
+
+            'fade-up': ( els, s ) => {
+                gsap.set( els, { opacity: 0, y: 40 } );
+                gsap.to( els, {
+                    opacity:  1,
+                    y:        0,
+                    duration: duration( s ),
+                    delay:    delay( s ),
+                    stagger:  stagger( s ),
+                    ease:     ease( s, 'power4.out' ),
+                } );
+            },
+            'reveal': ( els, s ) => {
+                els.css( { overflow: 'hidden', display: 'inline-block' } );
+                gsap.set( els, { y: '110%' } );
+                gsap.to( els, {
+                    y:        '0%',
+                    duration: duration( s ),
+                    delay:    delay( s ),
+                    stagger:  stagger( s ),
+                    ease:     ease( s, 'expo.out' ),
+                } );
+            },
+            'slide-in': ( els, s ) => {
+                gsap.set( els, { opacity: 0, x: -30, rotation: -8 } );
+                gsap.to( els, {
+                    opacity:  1,
+                    x:        0,
+                    rotation: 0,
+                    duration: duration( s ),
+                    delay:    delay( s ),
+                    stagger:  stagger( s ),
+                    ease:     ease( s, 'back.out(1.7)' ),
+                } );
+            },
+            'scramble': ( els, s ) => {
+                const original = textElement.text();
+                gsap.to( textElement[0], {
+                    duration:     duration( s ) * 2,
+                    delay:        delay( s ),
+                    ease:         'none',
+                    scrambleText: {
+                        text:      original,
+                        chars:     'upperCase',
+                        speed:     0.5,
+                        delimiter: '',
+                    },
+                } );
+            },
+            'wave': ( els, s ) => {
+                gsap.set( els, { opacity: 0 } );
+                gsap.to( els, {
+                    opacity:  1,
+                    duration: duration( s ),
+                    delay:    delay( s ),
+                    stagger:  stagger( s ),
+                    ease:     ease( s, 'sine.out' ),
+                } );
+                gsap.fromTo( els,
+                    { y: 24 },
+                    {
+                        y:        0,
+                        duration: duration( s ),
+                        delay:    delay( s ),
+                        stagger: {
+                            each: stagger( s ),
+                            ease: 'sine.inOut',
+                        },
+                        ease: ease( s, 'sine.out' ),
+                    }
+                );
+            },
+        };
+        if ( animations[ aniType ] ) {
+            afterLoad( () => animations[ aniType ]( elements, aniSettings ) );
+        }
     }
-    
     function imageAnimation($scope, settings){    
         // console.log(settings);
         let imgElement = $scope.find('img');
@@ -360,6 +449,79 @@
             }
         });
     }
+    // Scroll Animation
+    function scrollAnimation( $scope, settings ) {
+        const wrapper     = $scope[0];
+        const aniSettings = getAniSettings( settings );
+
+        if ( ! wrapper ) return;
+
+        const getVar = ( name, fallback = undefined ) => {
+            const val = parseFloat( getComputedStyle( wrapper ).getPropertyValue( name ).trim() );
+            return isNaN( val ) ? fallback : val;
+        };
+
+        const getVarWithUnit = ( name, fallback = undefined ) => {
+            const val = getComputedStyle( wrapper ).getPropertyValue( name ).trim();
+            return val !== '' ? val : fallback;
+        };
+
+        const fromVars = {
+            x:       getVarWithUnit( '--mui-x' ),
+            y:       getVarWithUnit( '--mui-y' ),
+            rotateX: getVar( '--mui-rotate-x' ),
+            rotateY: getVar( '--mui-rotate-y' ),
+            rotateZ: getVar( '--mui-rotate-z' ),
+            scaleX:  getVar( '--mui-scale-x' ),
+            scaleY:  getVar( '--mui-scale-y' ),
+            skewX:   getVar( '--mui-skew-x' ),
+            skewY:   getVar( '--mui-skew-y' ),
+            opacity: getVar( '--mui-opacity' ),
+            transition:'none'
+        };
+
+        const toVars = {
+            x:       getVarWithUnit( '--mui-x-to',       '0px' ),
+            y:       getVarWithUnit( '--mui-y-to',        '0px' ),
+            rotateX: getVar( '--mui-rotate-x-to', 0 ),
+            rotateY: getVar( '--mui-rotate-y-to', 0 ),
+            rotateZ: getVar( '--mui-rotate-z-to', 0 ),
+            scaleX:  getVar( '--mui-scale-x-to',  1 ),
+            scaleY:  getVar( '--mui-scale-y-to',  1 ),
+            skewX:   getVar( '--mui-skew-x-to',   0 ),
+            skewY:   getVar( '--mui-skew-y-to',   0 ),
+            opacity: getVar( '--mui-opacity-to',   1 ),
+            ease:       aniSettings.isWithScroll ? 'none' : aniSettings.ease,
+            duration:   aniSettings.duration,
+            delay:      aniSettings.delay,
+        };
+
+        Object.keys( fromVars ).forEach( key => {
+            if ( fromVars[ key ] === undefined ) {
+                delete fromVars[ key ];
+                
+                const cssToVar = '--mui-' + key.replace( /([A-Z])/g, '-$1' ).toLowerCase() + '-to';
+                if ( getComputedStyle( wrapper ).getPropertyValue( cssToVar ).trim() === '' ) {
+                    delete toVars[ key ];
+                }
+            }
+        } );
+
+        if ( ! Object.keys( fromVars ).length ) return;
+
+        $scope.removeClass( 'visibility__hidden' );
+
+        let animateEl = $scope.find('> *:not(.elementor-element-overlay,.ui-resizable-handle)')[0];
+        afterLoad( () => {
+            console.log('scroll animations', animateEl);
+            
+            gsap.fromTo( animateEl, fromVars, {
+                ...toVars,
+                scrollTrigger: initScrollTrigger(wrapper, aniSettings),
+            } );
+        } );
+    }
+    
     /**
      * Initialized all widgets
     */
@@ -378,10 +540,12 @@
             onInit: function() {
                 if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
                 if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
+                if(this.$element.hasClass('mui-scroll-ani-yes')) scrollAnimation(this.$element, this.getElementSettings());
             },
             onElementChange: function onElementChange(e){
                 if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
                 if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
+                if(this.$element.hasClass('mui-scroll-ani-yes')) scrollAnimation(this.$element, this.getElementSettings());
             },
             getReadySettings:function (){
                 var settings = {

@@ -11,654 +11,532 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Scroll_Animation{
     public static function register_controls($element){
-        $element->start_controls_section(
-            'mui_addons_scroll_animation',
-            [
-                'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Scroll Animation', 'motionui-addons-for-elementor')),
-                'tab' => Controls_Manager::TAB_ADVANCED,
-            ]
-        );
-		$element->add_control(
-			'mui_scroll_ani_enable',
-			[
-				'label' => __( 'Enable', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SWITCHER,
-				'return_value' => 'yes',
-				'prefix_class' => 'mui-scroll-ani-',
-			]
+		$element->start_controls_section(
+			'mui_addons_scroll_animation',
+			array(
+				'label' => sprintf(
+					'<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>',
+					__( 'Scroll Animation', 'motionui-addons-for-elementor' )
+				),
+				'tab' => Controls_Manager::TAB_ADVANCED,
+			)
 		);
 
-		$element->start_controls_tabs('mui_scroll_ani_tabs');
+		$element->add_control(
+			'mui_scroll_ani_enable',
+			array(
+				'label'        => __( 'Enable', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'prefix_class' => 'mui-scroll-ani-',
+			)
+		);
+
+		$element->start_controls_tabs( 'mui_scroll_ani_tabs' );
+
+		// ── FROM TAB ────────────────────────────────────────────────────────────────
 
 		$element->start_controls_tab(
 			'mui_scroll_ani_from',
-			[
-				'label' => __( 'From', 'motionui-addons-for-elementor' ),
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+			array(
+				'label'     => __( 'From', 'motionui-addons-for-elementor' ),
+				'condition' => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
+		// Translate.
 		$element->add_control(
 			'mui_scroll_ani_translate_toggle',
-			[
-				'label' => __( 'Translate', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::POPOVER_TOGGLE,
+			array(
+				'label'        => __( 'Translate', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+				'condition'    => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->start_popover();
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_translate_x',
-			[
-				'label' => __( 'Translate X', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px', '%', 'vw', 'vh', 'em', 'rem'],
-				'range' => [
-					'px' => [
-						'min' => -1000,
-						'max' => 1000,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-translate-x: {{SIZE}}{{UNIT}};'
-				],
-			]
+			'muia_scroll_x',
+			array(
+				'label'      => __( 'Translate X', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'px', '%', 'vw', 'vh', 'em', 'rem' ),
+				'range'      => array(
+					'px' => array( 'min' => -1000, 'max' => 1000 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-x: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_translate_y',
-			[
-				'label' => __( 'Translate Y', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px', '%', 'vw', 'vh', 'em', 'rem'],
-				'range' => [
-					'px' => [
-						'min' => -1000,
-						'max' => 1000,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-translate-y: {{SIZE}}{{UNIT}};'
-				],
-			]
+			'mui_scroll_y',
+			array(
+				'label'      => __( 'Translate Y', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'px', '%', 'vw', 'vh', 'em', 'rem' ),
+				'range'      => array(
+					'px' => array( 'min' => -1000, 'max' => 1000 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-y: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->end_popover();
 
+		// Rotation.
 		$element->add_control(
 			'mui_scroll_ani_rotate_toggle',
-			[
-				'label' => __( 'Rotation', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::POPOVER_TOGGLE,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+			array(
+				'label'     => __( 'Rotation', 'motionui-addons-for-elementor' ),
+				'type'      => Controls_Manager::POPOVER_TOGGLE,
+				'condition' => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->start_popover();
-
 
 		$element->add_control(
 			'mui_scroll_ani_rotate_hr',
-			[
-				'type' => Controls_Manager::DIVIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+			array(
+				'type'      => Controls_Manager::DIVIDER,
+				'condition' => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_rotate_x',
-			[
-				'label' => __( 'Rotation X', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-rotate-x: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_rotate_x',
+			array(
+				'label'      => __( 'Rotation X', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-rotate-x: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_rotate_y',
-			[
-				'label' => __( 'Rotation Y', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-rotate-y: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_rotate_y',
+			array(
+				'label'      => __( 'Rotation Y', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-rotate-y: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_rotate_z',
-			[
-				'label' => __( 'Rotation (Z)', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-rotate-z: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_rotate_z',
+			array(
+				'label'      => __( 'Rotation (Z)', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-rotate-z: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->end_popover();
 
+		// Scale.
 		$element->add_control(
 			'mui_scroll_ani_scale_toggle',
-			[
-				'label' => __( 'Scale', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::POPOVER_TOGGLE,
+			array(
+				'label'        => __( 'Scale', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+				'condition'    => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->start_popover();
-
 
 		$element->add_control(
 			'mui_scroll_ani_scale_hr',
-			[
-				'type' => Controls_Manager::DIVIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+			array(
+				'type'      => Controls_Manager::DIVIDER,
+				'condition' => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_scale_x',
-			[
-				'label' => __( 'Scale (X)', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'default' => [
-					'size' => 1
-				],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 5,
-						'step' => .1
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-scale-x: {{SIZE}}; --mui-scroll-scale-y: {{SIZE}};'
-				],
-			]
+			'mui_scroll_scale_x',
+			array(
+				'label'      => __( 'Scale (X)', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'px' ),
+				'default'    => array( 'size' => 1 ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 5, 'step' => 0.1 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-scale-x: {{SIZE}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_scale_y',
-			[
-				'label' => __( 'Scale Y', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'default' => [
-					'size' => 1
-				],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 5,
-						'step' => .1
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-scale-y: {{SIZE}};'
-				],
-			]
+			'mui_scroll_scale_y',
+			array(
+				'label'      => __( 'Scale Y', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'px' ),
+				'default'    => array( 'size' => 1 ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 5, 'step' => 0.1 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-scale-y: {{SIZE}};',
+				),
+			)
 		);
 
 		$element->end_popover();
 
+		// Skew.
 		$element->add_control(
 			'mui_scroll_ani_skew_toggle',
-			[
-				'label' => __( 'Skew', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::POPOVER_TOGGLE,
+			array(
+				'label'        => __( 'Skew', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+				'condition'    => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->start_popover();
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_skew_x',
-			[
-				'label' => __( 'Skew X', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['deg'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-skew-x: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_skew_x',
+			array(
+				'label'      => __( 'Skew X', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-skew-x: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_skew_y',
-			[
-				'label' => __( 'Skew Y', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['deg'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-skew-y: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_skew_y',
+			array(
+				'label'      => __( 'Skew Y', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-skew-y: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->end_popover();
+
+		// Opacity.
 		$element->add_responsive_control(
-			'mui_scroll_ani_opacity',
-			[
-				'label' => esc_html__( 'Opacity', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 1,
-						'step' => 0.01,
-					],
-				],
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'selectors' => [
-					'{{WRAPPER}} .your-class' => '--mui-scroll-opacity: {{SIZE}};',
-				],
-			]
+			'mui_scroll_opacity',
+			array(
+				'label'      => esc_html__( 'Opacity', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 1, 'step' => 0.01 ),
+				),
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-opacity: {{SIZE}};',
+				),
+			)
 		);
+
 		$element->end_controls_tab();
+
+		// ── TO TAB ──────────────────────────────────────────────────────────────────
 
 		$element->start_controls_tab(
-            'mui_scroll_ani_to',
-            [
-				'label' => __( 'To', 'motionui-addons-for-elementor' ),
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-            ]
+			'mui_scroll_ani_to',
+			array(
+				'label'     => __( 'To', 'motionui-addons-for-elementor' ),
+				'condition' => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
+		// Translate.
 		$element->add_control(
-			'mui_scroll_ani_translate_toggle_hover',
-			[
-				'label' => __( 'Translate', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::POPOVER_TOGGLE,
+			'mui_scroll_ani_translate_toggle_to',
+			array(
+				'label'        => __( 'Translate', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+				'condition'    => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->start_popover();
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_translate_x_hover',
-			[
-				'label' => __( 'Translate X', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px', '%', 'vw', 'vh', 'em', 'rem'],
-				'range' => [
-					'px' => [
-						'min' => -1000,
-						'max' => 1000,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-translate-x-to: {{SIZE}}{{UNIT}};'
-				],
-			]
+			'mui_scroll_x_to',
+			array(
+				'label'      => __( 'Translate X', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'px', '%', 'vw', 'vh', 'em', 'rem' ),
+				'range'      => array(
+					'px' => array( 'min' => -1000, 'max' => 1000 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-x-to: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_translate_y_hover',
-			[
-				'label' => __( 'Translate Y', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px', '%', 'vw', 'vh', 'em', 'rem'],
-				'range' => [
-					'px' => [
-						'min' => -1000,
-						'max' => 1000,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-translate-y-to: {{SIZE}}{{UNIT}};'
-				],
-			]
+			'mui_scroll_y_to',
+			array(
+				'label'      => __( 'Translate Y', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'px', '%', 'vw', 'vh', 'em', 'rem' ),
+				'range'      => array(
+					'px' => array( 'min' => -1000, 'max' => 1000 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-y-to: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->end_popover();
 
+		// Rotation.
 		$element->add_control(
-			'mui_scroll_ani_rotate_toggle_hover',
-			[
-				'label' => __( 'Rotation', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::POPOVER_TOGGLE,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+			'mui_scroll_ani_rotate_toggle_to',
+			array(
+				'label'     => __( 'Rotation', 'motionui-addons-for-elementor' ),
+				'type'      => Controls_Manager::POPOVER_TOGGLE,
+				'condition' => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->start_popover();
 
 		$element->add_control(
-			'mui_scroll_ani_rotate_hr_hover',
-			[
-				'type' => Controls_Manager::DIVIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+			'mui_scroll_ani_rotate_hr_to',
+			array(
+				'type'      => Controls_Manager::DIVIDER,
+				'condition' => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_rotate_x_hover',
-			[
-				'label' => __( 'Rotation X', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-rotate-x-to: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_rotate_x_to',
+			array(
+				'label'      => __( 'Rotation X', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-rotate-x-to: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_rotate_y_hover',
-			[
-				'label' => __( 'Rotation Y', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-rotate-y-to: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_rotate_y_to',
+			array(
+				'label'      => __( 'Rotation Y', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-rotate-y-to: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_rotate_z_hover',
-			[
-				'label' => __( 'Rotation (Z)', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-rotate-z-to: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_rotate_z_to',
+			array(
+				'label'      => __( 'Rotation (Z)', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-rotate-z-to: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->end_popover();
 
+		// Scale.
 		$element->add_control(
-			'mui_scroll_ani_scale_toggle_hover',
-			[
-				'label' => __( 'Scale', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::POPOVER_TOGGLE,
+			'mui_scroll_ani_scale_toggle_to',
+			array(
+				'label'        => __( 'Scale', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+				'condition'    => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->start_popover();
 
 		$element->add_control(
-			'mui_scroll_ani_scale_hr_hover',
-			[
-				'type' => Controls_Manager::DIVIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+			'mui_scroll_ani_scale_hr_to',
+			array(
+				'type'      => Controls_Manager::DIVIDER,
+				'condition' => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_scale_x_hover',
-			[
-				'label' => __( 'Scale (X)', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'default' => [
-					'size' => 1
-				],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 5,
-						'step' => .1
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-scale-x-to: {{SIZE}}; --mui-scroll-scale-y-to: {{SIZE}};'
-				],
-			]
+			'mui_scroll_scale_x_to',
+			array(
+				'label'      => __( 'Scale (X)', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'px' ),
+				'default'    => array( 'size' => 1 ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 5, 'step' => 0.1 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-scale-x-to: {{SIZE}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_scale_y_hover',
-			[
-				'label' => __( 'Scale Y', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'default' => [
-					'size' => 1
-				],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 5,
-						'step' => .1
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-scale-y-to: {{SIZE}};'
-				],
-			]
+			'mui_scroll_scale_y_to',
+			array(
+				'label'      => __( 'Scale Y', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'px' ),
+				'default'    => array( 'size' => 1 ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 5, 'step' => 0.1 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-scale-y-to: {{SIZE}};',
+				),
+			)
 		);
 
 		$element->end_popover();
 
+		// Skew.
 		$element->add_control(
-			'mui_scroll_ani_skew_toggle_hover',
-			[
-				'label' => __( 'Skew', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::POPOVER_TOGGLE,
+			'mui_scroll_ani_skew_toggle_to',
+			array(
+				'label'        => __( 'Skew', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::POPOVER_TOGGLE,
 				'return_value' => 'yes',
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-			]
+				'condition'    => array( 'mui_scroll_ani_enable' => 'yes' ),
+			)
 		);
 
 		$element->start_popover();
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_skew_x_hover',
-			[
-				'label' => __( 'Skew X', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['deg'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-skew-x-to: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_skew_x_to',
+			array(
+				'label'      => __( 'Skew X', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-skew-x-to: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->add_responsive_control(
-			'mui_scroll_ani_skew_y_hover',
-			[
-				'label' => __( 'Skew Y', 'motionui-addons-for-elementor' ),
-				'type' => Controls_Manager::SLIDER,
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['deg'],
-				'range' => [
-					'px' => [
-						'min' => -180,
-						'max' => 180,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-skew-y-to: {{SIZE}}deg;'
-				],
-			]
+			'mui_scroll_skew_y_to',
+			array(
+				'label'      => __( 'Skew Y', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'size_units' => array( 'deg' ),
+				'range'      => array(
+					'deg' => array( 'min' => -180, 'max' => 180 ),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-skew-y-to: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$element->end_popover();
+
+		// Opacity.
 		$element->add_responsive_control(
-			'mui_scroll_ani_opacity_to',
-			[
-				'label' => esc_html__( 'Opacity', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 1,
-						'step' => 0.01,
-					],
-				],
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],     
-				'selectors' => [
-					'{{WRAPPER}} .your-class' => '--mui-scroll-opacity-to: {{SIZE}};',
-				],
-			]
+			'mui_scroll_opacity_to',
+			array(
+				'label'      => esc_html__( 'Opacity', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 1, 'step' => 0.01 ),
+				),
+				'condition'  => array( 'mui_scroll_ani_enable' => 'yes' ),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--mui-opacity-to: {{SIZE}};',
+				),
+			)
 		);
+
 		$element->end_controls_tab();
-
 		$element->end_controls_tabs();
-
-		Motion::add_motion_settings_controls($element);
+		Motion::add_motion_settings_controls($element, [
+			'with_scroll'=>true
+		]);
         $element->end_controls_section();
     }
-}
+}  
