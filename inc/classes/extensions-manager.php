@@ -18,6 +18,10 @@ class Extensions_Manager{
 		foreach ( self::get_text_widgets() as $widget ) {
 			add_action( 'elementor/element/' . $widget['name'] . '/' . $widget['section'] . '/after_section_end', [Extensions\Text_Animation::class, 'register_controls'], 10, 2 );
 		}
+		// Add Extension to Image Widgets
+		foreach ( self::get_img_widgets() as $widget ) {
+			add_action( 'elementor/element/' . $widget['name'] . '/' . $widget['section'] . '/after_section_end', [Extensions\Image_Animation::class, 'register_controls'], 10, 2 );
+		}
 		// Add Advance Position Extension to All Widgets
 		add_action( 'elementor/element/common/_section_style/after_section_end', [ Extensions\Scroll_Animation::class, 'register_controls' ], 1 );
 		add_action( 'elementor/element/container/section_layout/after_section_end', [ Extensions\Scroll_Animation::class, 'register_controls' ], 1 );
@@ -45,6 +49,10 @@ class Extensions_Manager{
 			[
 				'name'    => 'image',
 				'section' => 'section_image',
+			],
+			[
+				'name'    => 'muia-animated-image',
+				'section' => 'section_content',
 			],
         ];
 	}

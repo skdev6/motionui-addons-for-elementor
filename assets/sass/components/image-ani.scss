@@ -1,0 +1,45 @@
+.muia-ani-wrap {
+    position: relative;
+}
+.has-muia-img-ani{
+    --cl:0%;
+    --cr:0%;
+    --ct:0%;
+    --cb:0%;
+}
+.muia-ani-wrap{
+    .muia-img-grid-reveal {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: repeat(3,minmax(0,1fr));
+        span {
+            background-size: var(--elw);
+            background-position-x: calc(var(--col-index) * 50%);
+            background-repeat: no-repeat;
+            background-position-y: calc(var(--row-index) * 100%);
+            clip-path: inset(var(--ct) var(--cr) var(--cb) var(--cl));
+        }
+    }
+}  
+.muia-img-column-reveal .muia-img-grid-reveal { 
+    grid-template-columns: none;
+    span {
+        background-position-x: 0;
+        background-position-y: calc(var(--col-index) * 50%);
+    }
+} 
+.has-muia-img-ani.muia-img-reveal {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    --cr1:0%;
+    --cb1:0%;
+    --cl1:100%;
+    --cb1:0%;
+    --cl2:100%;
+    --ct1: 100%;
+    --cr2: 0;
+    --ct2: 100%;
+    img{
+        clip-path: polygon(var(--cr1) var(--cb1), var(--cl1) var(--cb1), var(--cl2) var(--ct1), var(--cr2) var(--ct2));    
+    }
+}      

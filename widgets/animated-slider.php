@@ -25,7 +25,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Animated_Slider extends Muia_Base {
 
-
     /**
      * Retrieve widget keywords.
      */
@@ -248,7 +247,7 @@ class Animated_Slider extends Muia_Base {
                 foreach ( $slides as $slide ) : 
                     $slide_count++;
                 ?>
-                    <div class="slide-bg-item elementor-repeater-item-<?php echo esc_attr( $slide['_id'] ); ?>" 
+                    <div class="slide-bg-item elementor-repeater-item-<?php printf( '%s%s', esc_attr( $slide['_id'] ), $slide_count === 0 ? ' active' : '' ); ?>" 
                          style="--index: <?php echo esc_attr( $slide_count ); ?>;">
                          <div class="sb-item"></div>
                     </div>
@@ -284,14 +283,14 @@ class Animated_Slider extends Muia_Base {
             <div class="pagi-wrapper">
                 <div class="muia-dot-pagi">
                     <?php $count=0;  foreach ( $slides as $slide ) : ?>
-                            <div class="dot-item<?php echo $count === 0 ? ' active' : ''; ?>"><span></span></div>  
+                            <div class="dot-item<?php echo $count === 0 ? ' active' : ''; ?>" data-go="<?php echo esc_attr($count) ?>"><span></span></div>  
                         <?php $count++; endforeach; ?>
                 </div>
                 <div class="muia-thumb-pagi-wrapper">
                     <div class="muia-thumb-pagi">
-                        <?php foreach ( $slides as $slide ) : ?>
-                            <div class="pagi-thumb sb-item elementor-repeater-item-<?php echo esc_attr( $slide['_id'] ); ?>"></div>
-                        <?php endforeach; ?>
+                        <?php $count=0; foreach ( $slides as $slide ) : ?>
+                            <div class="pagi-thumb sb-item elementor-repeater-item-<?php echo esc_attr( $slide['_id'] ); echo $count === 0 ? ' active' : ''; ?>" data-go="<?php echo esc_attr($count) ?>"></div>
+                        <?php $count++; endforeach; ?>
                     </div>
                     <div class="muia-slide-nav">
                         <button class="muia-prev"><i class="th-icon-angle-left"></i></button>

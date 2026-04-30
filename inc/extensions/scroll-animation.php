@@ -658,30 +658,7 @@ class Scroll_Animation{
 
 		$element->end_controls_tabs();
 
-
-		$element->add_control( 
-			'mui_scroll_ani_delay',
-			[
-				'label' => esc_html__( 'Delay (optional)', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SLIDER,
-				'separator' => 'before',
-				'condition' => [
-					'mui_scroll_ani_enable' => 'yes',
-				],
-				'size_units' => ['px'],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 10,
-						'step' => .1,
-					]
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--mui-scroll-delay:{{SIZE}}',
-				]
-			]
-		);
-		Motion::add_motion_settings_controls($element, 'scroll_');
+		Motion::add_motion_settings_controls($element);
         $element->end_controls_section();
     }
 }

@@ -6,6 +6,9 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    [data-go]{
+        cursor: pointer; 
+    }
     .overlay{
         background-color: rgba(0,0,0,.3);
         position: absolute;
@@ -34,6 +37,7 @@
             padding-left: 0.227em;
             padding-right: 0.227em; 
             width: 100%;
+            --color:white;
               -webkit-text-stroke-width: 1px; 
   -webkit-text-stroke-color: var(--color);
   font-family: "Poppins", Sans-serif; 
@@ -102,9 +106,32 @@
     .muia-slide-nav {
         display: flex;
         gap: 15px;
-    }
+    }   
     .muia-dot-pagi{
-        margin-left: 40px;
+        margin-left: 40px; 
+    }
+    @media (max-width:991px){
+        padding-bottom: 50px;
+        padding-top: 50px; 
+        .muia-dot-pagi{
+            margin-left: 20px;
+            font-size: 9px; 
+        }
+        .muia-thumb-pagi-wrapper{
+            width: 70%;
+        }
+       .pagi-wrapper{
+        font-size: 45px;
+       }
+       .muia-prev,.muia-next {  
+            font-size: 15px;
+        }
+        .title-wrapper .slide-title-item{ 
+            font-size: 11.5vw; 
+        }
+        .title-wrapper { 
+            width: 70%;
+        }
     }
 }
 

@@ -288,6 +288,9 @@
   flex-direction: column;
   overflow: hidden;
 }
+.muia-slide-basic [data-go] {
+  cursor: pointer;
+}
 .muia-slide-basic .overlay {
   background-color: rgba(0, 0, 0, 0.3);
   position: absolute;
@@ -317,6 +320,7 @@
   padding-left: 0.227em;
   padding-right: 0.227em;
   width: 100%;
+  --color:white;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: var(--color);
   font-family: "Poppins", Sans-serif;
@@ -392,6 +396,79 @@
 }
 .muia-slide-basic .muia-dot-pagi {
   margin-left: 40px;
+}
+@media (max-width: 991px) {
+  .muia-slide-basic {
+    padding-bottom: 50px;
+    padding-top: 50px;
+  }
+  .muia-slide-basic .muia-dot-pagi {
+    margin-left: 20px;
+    font-size: 9px;
+  }
+  .muia-slide-basic .muia-thumb-pagi-wrapper {
+    width: 70%;
+  }
+  .muia-slide-basic .pagi-wrapper {
+    font-size: 45px;
+  }
+  .muia-slide-basic .muia-prev, .muia-slide-basic .muia-next {
+    font-size: 15px;
+  }
+  .muia-slide-basic .title-wrapper .slide-title-item {
+    font-size: 11.5vw;
+  }
+  .muia-slide-basic .title-wrapper {
+    width: 70%;
+  }
+}
+
+.muia-ani-wrap {
+  position: relative;
+}
+
+.has-muia-img-ani {
+  --cl:0%;
+  --cr:0%;
+  --ct:0%;
+  --cb:0%;
+}
+
+.muia-ani-wrap .muia-img-grid-reveal {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.muia-ani-wrap .muia-img-grid-reveal span {
+  background-size: var(--elw);
+  background-position-x: calc(var(--col-index) * 50%);
+  background-repeat: no-repeat;
+  background-position-y: calc(var(--row-index) * 100%);
+  clip-path: inset(var(--ct) var(--cr) var(--cb) var(--cl));
+}
+
+.muia-img-column-reveal .muia-img-grid-reveal {
+  grid-template-columns: none;
+}
+.muia-img-column-reveal .muia-img-grid-reveal span {
+  background-position-x: 0;
+  background-position-y: calc(var(--col-index) * 50%);
+}
+
+.has-muia-img-ani.muia-img-reveal {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  --cr1:0%;
+  --cb1:0%;
+  --cl1:100%;
+  --cb1:0%;
+  --cl2:100%;
+  --ct1: 100%;
+  --cr2: 0;
+  --ct2: 100%;
+}
+.has-muia-img-ani.muia-img-reveal img {
+  clip-path: polygon(var(--cr1) var(--cb1), var(--cl1) var(--cb1), var(--cl2) var(--ct1), var(--cr2) var(--ct2));
 }
 
 /*header styles*/
