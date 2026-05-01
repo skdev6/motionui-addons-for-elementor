@@ -449,6 +449,30 @@
             }
         });
     }
+    //
+    function gallery($scope){
+        let gallery = $scope.find('.muia-gallery-wrap');
+
+        if(gallery.hasClass('muia-layout-masonry')){
+            let gap = parseInt(gallery.css('--gap')); 
+            let gh = parseInt(gallery.css('height')); 
+            
+            gallery.isotope({
+                itemSelector: '.muia-gallery-item',
+                masonry: {
+                    columnWidth: '.muia-gallery-item',
+                    fitWidth: true,
+                    gutter: gap
+                }
+            });
+
+            setTimeout(() => {   
+                let gallery = $scope.find('.muia-gallery-wrap');
+                let afteGh = parseInt(gallery.css('height')); 
+                gallery.css('min-height', afteGh < 50 ? gh : 'auto'); 
+            }, 50);
+        }
+    }
     // Scroll Animation
     function scrollAnimation( $scope, settings ) {
         const wrapper     = $scope[0];
@@ -528,6 +552,7 @@
     const widgets = {
         'muia-animate-button.default':button,
         'muia-animated-slider.default':muiaSlide,
+        'muia-animated-gallery.default':gallery,
     }
     // init elementor frontend
     $(window).on('elementor/frontend/init', function(){

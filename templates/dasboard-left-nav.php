@@ -16,21 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     <span class="logo-text2">Menu</span>
     <ul class="th-das-navbar">
         <li class="current-menu-item">
-            <a href="#">
+            <a href="#muia-widgets">
                 <i class="eicon-shape"></i>
                 Widgets
             </a>
         </li>
         <li>
-            <a href="#">
+            <a href="#muia-extensions">
                 <i class="th-icon-mouse-click"></i>
-                Animations
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="eicon-spinner"></i>
-                Preloaders
+                Extensions
             </a>
         </li>
     </ul>

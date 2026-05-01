@@ -51,8 +51,19 @@ class Dashboard{
                 THEMEIC_MUIA_VERSION
             );
             
-            // If you have JS for the dashboard:
-            // wp_enqueue_script('themeic-das-motionui-js', THEMEIC_MUIA_ASSETS . 'js/dashboard.js', ['jquery'], THEMEIC_MUIA_VERSION, true);
+            wp_enqueue_script('muia-dashboard', THEMEIC_MUIA_ASSETS . 'js/dashboard.js', ['jquery'], THEMEIC_MUIA_VERSION, true);
+
+            wp_localize_script(
+                'muia-dashboard',
+                'muiaDashboard',
+                [
+                    'nonce' => wp_create_nonce( 'muia-dashboard-save-data' ),
+                    'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+                    'action' => 'muia_dashboard',
+                    'saveChangesLabel' => esc_html__( 'Save Settings', 'motionui-addons-for-elementor' ),
+                    'savedLabel' => esc_html__( 'Changes Saved', 'motionui-addons-for-elementor' ),
+                ]
+            );
         }
         wp_enqueue_style(
             'themeic-das-main', 
@@ -70,5 +81,53 @@ class Dashboard{
             include_once $dasboard_file;
         }
 
+    }
+    public static function save_widgets_data($data) {
+
+        $widgets_to_remove = !empty($data['widgets']) ? (array) $data['widgets'] : [];
+        $real_map = Widgets_Manager::local_widgets_map();
+        $filtered_map = array_diff_key($real_map, array_flip($widgets_to_remove));
+
+        Widgets_Manager::save_widgets(array_keys($filtered_map));    
+    }
+    public static function save_extensions_data($data){
+
+        $extensions_to_remove = !empty($data['extensions']) ? $data['extensions'] : [];
+        $real_map = Extensions_Manager::local_extensions_map();
+        $filtered_map = array_diff_key($real_map, array_flip($extensions_to_remove));
+
+        Extensions_Manager::save_extensions(array_keys($filtered_map));
+    }
+    public static function save_data(){  
+        // 1. Security Check
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( 'Unauthorized' );
+        }
+
+        // 2. Nonce Check
+        if ( ! check_ajax_referer( 'muia-dashboard-save-data', 'nonce' ) ) {
+            wp_send_json_error( 'Invalid Nonce' );
+        }
+
+        $raw_data = isset($_POST['data']) ? $_POST['data'] : '';
+        $type     = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
+
+        $parsed_data = [];
+        parse_str( $raw_data, $parsed_data );
+
+        $final_data = muia_sanitize_array_recursively($parsed_data);
+        
+        if($type === 'widgets'){
+            self::save_widgets_data($final_data);
+        }
+        if($type === 'extensions'){
+            self::save_extensions_data($final_data);
+        }
+
+        wp_send_json_success(array(
+            'message' => __( 'Settings saved successfully!', 'motionui-addons' ),
+            'type'    => $type,
+            'data'   => $final_data
+        ));
     }
 }

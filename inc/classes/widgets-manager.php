@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Widgets_Manager{
 
-    const WIDGET_DB_KEY = 'muia_active_widgets';
+    const WIDGET_DB_KEY = 'muia_inactive_widgets';
 
     public static function get_inactive_widgets(){
         return get_option(self::WIDGET_DB_KEY, []);
@@ -15,12 +15,23 @@ class Widgets_Manager{
     public static function update_inactive_widgets($widgets = []){
         update_option(self::WIDGET_DB_KEY, $widgets);
     }
-    public static function get_widgets_map(){
+    public static function get_widgets_map(){     
+        $get_inactive_widgets = get_option(self::WIDGET_DB_KEY, []);
+        $local_widgets = self::local_widgets_map();
+
+        foreach ($get_inactive_widgets as $key) {
+            if (isset($local_widgets[$key])) {
+                $local_widgets[$key]['is_active'] = false;
+            }
+        }
+
+        return $local_widgets;
+    }
+    public static function local_widgets_map(){
         return [
             'animated-button'=>[
                 'title' => __('Animated Button', 'motionui-addons-for-elementor'),
                 'category'=> 'button',
-                'tags'    => ['button', 'animation'],
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
@@ -30,8 +41,7 @@ class Widgets_Manager{
             ],
             'animated-slider'=>[  
                 'title' => __('Animated Slider', 'motionui-addons-for-elementor'),
-                'category'=> 'general',
-                'tags'    => ['slider', 'slide show', 'hero'],
+                'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
@@ -41,8 +51,7 @@ class Widgets_Manager{
             ],
             'animated-image'=>[  
                 'title' => __('Animated Image', 'motionui-addons-for-elementor'),
-                'category'=> 'general',
-                'tags'    => ['image'],
+                'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
@@ -52,12 +61,11 @@ class Widgets_Manager{
             ],
             'animated-gallery'=>[  
                 'title' => __('Animated Gallery', 'motionui-addons-for-elementor'),
-                'category'=> 'general',
-                'tags'    => ['image', 'gallery'], 
+                'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
-                'icon'=>'eicon-button',
+                'icon'=>'eicon-gallery-justified',
                 'demo'=> '',
                 'tutorial'=> '',
             ]
@@ -79,5 +87,8 @@ class Widgets_Manager{
             }
 
         }
+    }
+    public static function save_widgets($widgets = []){
+        update_option( self::WIDGET_DB_KEY, $widgets);
     }
 }

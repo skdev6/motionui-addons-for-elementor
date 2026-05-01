@@ -9,7 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Extensions_Manager{
-    public static $logo = '';
+
+    const WIDGET_DB_KEY = 'muia_inactive_extensions';
 
     public static function init(){
 		// Enqueue Editor CSS
@@ -64,4 +65,73 @@ class Extensions_Manager{
             THEMEIC_MUIA_VERSION
         );
     }
-}
+    public static function extension_map() {
+        $get_inactive_extensions = get_option(self::WIDGET_DB_KEY, []);
+        $local_extensions = self::local_extensions_map();
+
+        foreach ($get_inactive_extensions as $key) {
+            if (isset($local_extensions[$key])) {
+                $local_extensions[$key]['is_active'] = false;
+            }
+        }
+
+        return $local_extensions;
+    }
+    public static function local_extensions_map(){
+        return [
+            'scroll-animation' => [
+                'title'       => __( 'Scroll Animation', 'motionui-addons-for-elementor' ),
+                'description' => __( 'Animate elements as they enter the viewport on scroll.', 'motionui-addons-for-elementor' ),
+                'is_active'   => true,   // default state (used on first install)
+                'is_pro'      => false,
+                'is_upcoming' => false,
+                'icon'        => 'eicon-scroll',
+                'demo'        => '',
+                'tutorial'    => '',
+            ],
+            'text-animation' => [
+                'title'       => __( 'Text Animation', 'motionui-addons-for-elementor' ),
+                'description' => __( 'Add entrance animations to heading and text editor widgets.', 'motionui-addons-for-elementor' ),
+                'is_active'   => true,
+                'is_pro'      => false,
+                'is_upcoming' => false,
+                'icon'        => 'eicon-t-letter',
+                'demo'        => '',
+                'tutorial'    => '',
+            ],
+            'image-animation' => [
+                'title'       => __( 'Image Animation', 'motionui-addons-for-elementor' ),
+                'description' => __( 'Add entrance animations to image widgets.', 'motionui-addons-for-elementor' ),
+                'is_active'   => true,
+                'is_pro'      => false,
+                'is_upcoming' => false,
+                'icon'        => 'eicon-image',
+                'demo'        => '',
+                'tutorial'    => '',
+            ],
+            'advance-position' => [
+                'title'       => __( 'Advance Position', 'motionui-addons-for-elementor' ),
+                'description' => __( 'Fine-tune widget positioning with advanced CSS controls.', 'motionui-addons-for-elementor' ),
+                'is_active'   => true,
+                'is_pro'      => false,
+                'is_upcoming' => false,
+                'icon'        => 'eicon-page-transition',
+                'demo'        => '',
+                'tutorial'    => '',
+            ],
+            'motion' => [
+                'title'       => __( 'Motion Effects', 'motionui-addons-for-elementor' ),
+                'description' => __( 'Apply continuous motion and parallax effects to any widget.', 'motionui-addons-for-elementor' ),
+                'is_active'   => true,
+                'is_pro'      => false,
+                'is_upcoming' => false,
+                'icon'        => 'eicon-animation',
+                'demo'        => '',
+                'tutorial'    => '',
+            ],
+        ]; 
+    }
+    public static function save_extensions($extensions = []){
+        update_option( self::WIDGET_DB_KEY, $extensions);
+    }
+}   

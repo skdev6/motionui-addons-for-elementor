@@ -94,7 +94,7 @@ class Base {
         add_action('elementor/frontend/after_enqueue_styles', [MotionUiClasses\Assets::class, 'enqueue_styles']);    
         // Register Widgets
         add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
-        
+        add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );
     }
     /**
      * Get Short Class Name
@@ -166,6 +166,7 @@ class Base {
      * * Uses spl_autoload_register to handle automatic class loading.
      */
     public function autoload(){
+        include_once THEMEIC_MUIA_DIR_PATH . 'inc/functions.php';
         spl_autoload_register([$this, 'include_class_files']);
     }
 }
