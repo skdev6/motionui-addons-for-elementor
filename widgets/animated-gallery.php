@@ -248,7 +248,6 @@ class Animated_Gallery extends Muia_Base {
             'muia-gallery-wrap',
             'muia-layout-' . esc_attr( $layout ),
         ] );
-
         ?>
 
         <div class="<?php echo esc_attr( $wrap_classes ); ?>">
@@ -257,22 +256,24 @@ class Animated_Gallery extends Muia_Base {
                 $image_url = $item['gallery_image']['url'] ?? \Elementor\Utils::get_placeholder_image_src();
                 $title     = $item['gallery_title'] ?? '';
                 $link      = $item['gallery_link']  ?? [];
+                $item_key  = 'gallery-item-' . $item['_id'];
 
-                // Build link attributes
-                $link_attr = '';
+                // Base attributes always present on the <a>
+                $this->add_render_attribute( $item_key, [
+                    'class' => [
+                        'muia-gallery-item',
+                        'elementor-repeater-item-' . $item['_id'],
+                    ],
+                    'href'  => ! empty( $link['url'] ) ? esc_url( $link['url'] ) : esc_url( $image_url ),
+                ] );
+
+                // Let Elementor handle target, rel, nofollow, noopener automatically
                 if ( ! empty( $link['url'] ) ) {
-                    $link_attr .= ' href="' . esc_url( $link['url'] ) . '"';
-                    if ( ! empty( $link['is_external'] ) ) {
-                        $link_attr .= ' target="_blank"';
-                    }
-                    if ( ! empty( $link['nofollow'] ) ) {
-                        $link_attr .= ' rel="nofollow"';
-                    }
+                    $this->add_link_attributes( $item_key, $link );
                 }
-                $link_url = ! empty( $link['url'] ) ? $link['url'] :  $image_url;
                 ?>
 
-                <a href="<?php echo esc_url($link_url) ?>" class="muia-gallery-item elementor-repeater-item-<?php echo esc_attr( $item['_id'] ); ?>"<?php echo $link_attr; ?>>
+                <a <?php $this->print_render_attribute_string( $item_key ); ?>>
 
                     <img
                         class="muia-gallery-image"
@@ -290,7 +291,7 @@ class Animated_Gallery extends Muia_Base {
                     </div>
 
                 </a>
-                
+
             <?php endforeach; ?>
 
         </div>

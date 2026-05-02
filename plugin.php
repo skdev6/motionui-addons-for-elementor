@@ -90,8 +90,8 @@ function themeic_muia_notice_missing_main_plugin() {
         unset( $_GET['activate'] );
     }
 
-    /* translators: 1: Plugin name, 2: Required plugin name */
     $message = sprintf(
+        /* translators: 1: Plugin name, 2: Required plugin name */
         esc_html__( '"%1$s" requires "%2$s" to be installed and activated.', 'motionui-addons-for-elementor' ),
         '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons-for-elementor' ) . '</strong>',
         '<strong>Elementor</strong>'
@@ -111,8 +111,8 @@ function themeic_muia_notice_minimum_elementor_version() {
         unset( $_GET['activate'] );
     }
 
-    /* translators: 1: Plugin name, 2: Required plugin name, 3: Required version number */
     $message = sprintf(
+        /* translators: 1: Plugin name, 2: Required plugin name, 3: Required version number */
         esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'motionui-addons-for-elementor' ),
         '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons-for-elementor' ) . '</strong>',
         '<strong>' . esc_html__( 'Elementor', 'motionui-addons-for-elementor' ) . '</strong>',
@@ -130,8 +130,8 @@ function themeic_muia_notice_minimum_php_version() {
         unset( $_GET['activate'] );
     }
 
-    /* translators: 1: Plugin name, 2: Required technology name, 3: Required version number */
     $message = sprintf(
+        /* translators: 1: Plugin name, 2: Required technology name, 3: Required version number */
         esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'motionui-addons-for-elementor' ),
         '<strong>' . esc_html__( 'MotionUI Addons', 'motionui-addons-for-elementor' ) . '</strong>',
         '<strong>' . esc_html__( 'PHP', 'motionui-addons-for-elementor' ) . '</strong>',
