@@ -37,21 +37,10 @@ class Base {
      * * Sets up autoloading, file inclusion, and main WordPress/Elementor hooks.
      */
     private function __construct(){
-        // Load Text Domain for Translations
-        add_action( 'init', array( $this, 'i18n' ), 100);
         // Include Essential Files
         $this->autoload();
         $this->init();
     }
-
-    /**
-     * Load Text Domain
-     * * Makes the plugin translation-ready.
-     */
-    public function i18n(){
-        load_plugin_textdomain('motionui-addons-for-elementor', false, dirname(THEMEIC_MUIA_FILE) . '/languages');
-    }
-
     /**
      * Initialize Plugin Hooks
      * * Registers actions specifically for Elementor categories and controls.
@@ -59,10 +48,17 @@ class Base {
     public function init(){     
         // Elementor Hooks
         add_action( 'elementor/elements/categories_registered', [ $this, 'add_category' ] );
-        // Hook Manager
-        $this->hook_manager();
-        // Initialize Extensions Manager
-        MotionUiClasses\Extensions_Manager::init();
+       // Admin Menu and Scripts
+        add_action( 'admin_menu', [ MotionUiClasses\Dashboard::class, 'add_menu' ] );
+        add_action('admin_enqueue_scripts', [MotionUiClasses\Dashboard::class, 'enqueue_scripts']);
+        // Frontend Scripts 
+        add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'register_scripts']);
+        add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'enqueue_scripts']);   
+        add_action('elementor/frontend/after_enqueue_styles', [MotionUiClasses\Assets::class, 'enqueue_styles']);    
+        // Register Widgets
+        add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
+        add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );
+        add_action( 'elementor/init', [ MotionUiClasses\Extensions_Manager::class, 'init' ] );
     }
 
     /**
@@ -85,16 +81,7 @@ class Base {
      * * Centralized place to manage various WordPress hooks like admin menus.
      */
     public function hook_manager(){    
-        // Admin Menu and Scripts
-        add_action( 'admin_menu', [ MotionUiClasses\Dashboard::class, 'add_menu' ] );
-        add_action('admin_enqueue_scripts', [MotionUiClasses\Dashboard::class, 'enqueue_scripts']);
-        // Frontend Scripts 
-        add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'register_scripts']);
-        add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'enqueue_scripts']);   
-        add_action('elementor/frontend/after_enqueue_styles', [MotionUiClasses\Assets::class, 'enqueue_styles']);    
-        // Register Widgets
-        add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
-        add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );
+ 
     }
     /**
      * Get Short Class Name

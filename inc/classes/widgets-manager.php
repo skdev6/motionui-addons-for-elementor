@@ -80,7 +80,7 @@ class Widgets_Manager{
         ];
     }
     public static function register_widgets($widgets_manager = null){
-
+        
         foreach (self::get_active_widgets() as $widget_key => $widget_data) {
             $file = THEMEIC_MUIA_DIR_PATH . 'widgets/' . $widget_key . '.php';
 

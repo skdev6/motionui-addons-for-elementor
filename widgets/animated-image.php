@@ -48,14 +48,14 @@ class animated_image extends Muia_Base {
 		$this->start_controls_section(
 			'section_content',
 			array(
-				'label' => esc_html__( 'Image', 'animation-addons-for-elementor' ),
+				'label' => esc_html__( 'Image', 'motionui-addons-for-elementor' ),
 			)
 		);
 
 		$this->add_control(
 			'image',
 			array(
-				'label'   => esc_html__( 'Choose Image', 'animation-addons-for-elementor' ),
+				'label'   => esc_html__( 'Choose Image', 'motionui-addons-for-elementor' ),
 				'type'    => Controls_Manager::MEDIA,
 				'dynamic' => array(
 					'active' => true,
@@ -80,7 +80,7 @@ class animated_image extends Muia_Base {
 		$this->add_control(
 			'link',
 			array(
-				'label'       => esc_html__( 'Link', 'animation-addons-for-elementor' ),
+				'label'       => esc_html__( 'Link', 'motionui-addons-for-elementor' ),
 				'type'        => Controls_Manager::URL,
 				'options'     => array( 'url', 'is_external', 'nofollow' ),
 				'default'     => array(
@@ -98,19 +98,19 @@ class animated_image extends Muia_Base {
 		$this->add_responsive_control(
 			'align',
 			array(
-				'label'     => esc_html__( 'Alignment', 'animation-addons-for-elementor' ),
+				'label'     => esc_html__( 'Alignment', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::CHOOSE,
 				'options'   => array(
 					'left'   => array(
-						'title' => esc_html__( 'Left', 'animation-addons-for-elementor' ),
+						'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-text-align-left',
 					),
 					'center' => array(
-						'title' => esc_html__( 'Center', 'animation-addons-for-elementor' ),
+						'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-text-align-center',
 					),
 					'right'  => array(
-						'title' => esc_html__( 'Right', 'animation-addons-for-elementor' ),
+						'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-text-align-right',
 					),
 				),
@@ -127,7 +127,7 @@ class animated_image extends Muia_Base {
 		$this->start_controls_section(
 			'section_style_image',
 			array(
-				'label' => esc_html__( 'Image', 'animation-addons-for-elementor' ),
+				'label' => esc_html__( 'Image', 'motionui-addons-for-elementor' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 			)
 		);
@@ -135,7 +135,7 @@ class animated_image extends Muia_Base {
 		$this->add_responsive_control(
 			'width',
 			array(
-				'label'          => esc_html__( 'Width', 'animation-addons-for-elementor' ),
+				'label'          => esc_html__( 'Width', 'motionui-addons-for-elementor' ),
 				'type'           => Controls_Manager::SLIDER,
 				'default'        => array(
 					'unit' => '%',
@@ -170,7 +170,7 @@ class animated_image extends Muia_Base {
 		$this->add_responsive_control(
 			'space',
 			array(
-				'label'          => esc_html__( 'Max Width', 'animation-addons-for-elementor' ),
+				'label'          => esc_html__( 'Max Width', 'motionui-addons-for-elementor' ),
 				'type'           => Controls_Manager::SLIDER,
 				'default'        => array(
 					'unit' => '%',
@@ -205,7 +205,7 @@ class animated_image extends Muia_Base {
 		$this->add_responsive_control(
 			'height',
 			array(
-				'label'      => esc_html__( 'Height', 'animation-addons-for-elementor' ),
+				'label'      => esc_html__( 'Height', 'motionui-addons-for-elementor' ),
 				'type'       => Controls_Manager::SLIDER,
 				'size_units' => array( 'px', '%', 'em', 'rem', 'vh', 'custom' ),
 				'range'      => array(
@@ -227,17 +227,17 @@ class animated_image extends Muia_Base {
 		$this->add_responsive_control(
 			'object-fit',
 			array(
-				'label'     => esc_html__( 'Object Fit', 'animation-addons-for-elementor' ),
+				'label'     => esc_html__( 'Object Fit', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::SELECT,
 				'condition' => array(
 					'height[size]!' => '',
 				),
 				'options'   => array(
-					''        => esc_html__( 'Default', 'animation-addons-for-elementor' ),
-					'fill'    => esc_html__( 'Fill', 'animation-addons-for-elementor' ),
-					'cover'   => esc_html__( 'Cover', 'animation-addons-for-elementor' ),
-					'contain' => esc_html__( 'Contain', 'animation-addons-for-elementor' ),
-					'none'    => esc_html__( 'None', 'animation-addons-for-elementor' ),
+					''        => esc_html__( 'Default', 'motionui-addons-for-elementor' ),
+					'fill'    => esc_html__( 'Fill', 'motionui-addons-for-elementor' ),
+					'cover'   => esc_html__( 'Cover', 'motionui-addons-for-elementor' ),
+					'contain' => esc_html__( 'Contain', 'motionui-addons-for-elementor' ),
+					'none'    => esc_html__( 'None', 'motionui-addons-for-elementor' ),
 				),
 				'default'   => '',
 				'selectors' => array(
@@ -249,18 +249,18 @@ class animated_image extends Muia_Base {
 		$this->add_responsive_control(
 			'object-position',
 			array(
-				'label'     => esc_html__( 'Object Position', 'animation-addons-for-elementor' ),
+				'label'     => esc_html__( 'Object Position', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::SELECT,
 				'options'   => array(
-					'center center' => esc_html__( 'Center Center', 'animation-addons-for-elementor' ),
-					'center left'   => esc_html__( 'Center Left', 'animation-addons-for-elementor' ),
-					'center right'  => esc_html__( 'Center Right', 'animation-addons-for-elementor' ),
-					'top center'    => esc_html__( 'Top Center', 'animation-addons-for-elementor' ),
-					'top left'      => esc_html__( 'Top Left', 'animation-addons-for-elementor' ),
-					'top right'     => esc_html__( 'Top Right', 'animation-addons-for-elementor' ),
-					'bottom center' => esc_html__( 'Bottom Center', 'animation-addons-for-elementor' ),
-					'bottom left'   => esc_html__( 'Bottom Left', 'animation-addons-for-elementor' ),
-					'bottom right'  => esc_html__( 'Bottom Right', 'animation-addons-for-elementor' ),
+					'center center' => esc_html__( 'Center Center', 'motionui-addons-for-elementor' ),
+					'center left'   => esc_html__( 'Center Left', 'motionui-addons-for-elementor' ),
+					'center right'  => esc_html__( 'Center Right', 'motionui-addons-for-elementor' ),
+					'top center'    => esc_html__( 'Top Center', 'motionui-addons-for-elementor' ),
+					'top left'      => esc_html__( 'Top Left', 'motionui-addons-for-elementor' ),
+					'top right'     => esc_html__( 'Top Right', 'motionui-addons-for-elementor' ),
+					'bottom center' => esc_html__( 'Bottom Center', 'motionui-addons-for-elementor' ),
+					'bottom left'   => esc_html__( 'Bottom Left', 'motionui-addons-for-elementor' ),
+					'bottom right'  => esc_html__( 'Bottom Right', 'motionui-addons-for-elementor' ),
 				),
 				'default'   => 'center center',
 				'selectors' => array(
@@ -285,14 +285,14 @@ class animated_image extends Muia_Base {
 		$this->start_controls_tab(
 			'normal',
 			array(
-				'label' => esc_html__( 'Normal', 'animation-addons-for-elementor' ),
+				'label' => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
 			)
 		);
 
 		$this->add_control(
 			'opacity',
 			array(
-				'label'     => esc_html__( 'Opacity', 'animation-addons-for-elementor' ),
+				'label'     => esc_html__( 'Opacity', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::SLIDER,
 				'range'     => array(
 					'px' => array(
@@ -320,14 +320,14 @@ class animated_image extends Muia_Base {
 		$this->start_controls_tab(
 			'hover',
 			array(
-				'label' => esc_html__( 'Hover', 'animation-addons-for-elementor' ),
+				'label' => esc_html__( 'Hover', 'motionui-addons-for-elementor' ),
 			)
 		);
 
 		$this->add_control(
 			'opacity_hover',
 			array(
-				'label'     => esc_html__( 'Opacity', 'animation-addons-for-elementor' ),
+				'label'     => esc_html__( 'Opacity', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::SLIDER,
 				'range'     => array(
 					'px' => array(
@@ -353,7 +353,7 @@ class animated_image extends Muia_Base {
 		$this->add_control(
 			'background_hover_transition',
 			array(
-				'label'     => esc_html__( 'Transition Duration', 'animation-addons-for-elementor' ),
+				'label'     => esc_html__( 'Transition Duration', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::SLIDER,
 				'range'     => array(
 					'px' => array(
@@ -370,7 +370,7 @@ class animated_image extends Muia_Base {
 		$this->add_control(
 			'hover_animation',
 			array(
-				'label' => esc_html__( 'Hover Animation', 'animation-addons-for-elementor' ),
+				'label' => esc_html__( 'Hover Animation', 'motionui-addons-for-elementor' ),
 				'type'  => Controls_Manager::HOVER_ANIMATION,
 			)
 		);
@@ -391,7 +391,7 @@ class animated_image extends Muia_Base {
 		$this->add_responsive_control(
 			'image_border_radius',
 			array(
-				'label'      => esc_html__( 'Border Radius', 'animation-addons-for-elementor' ),
+				'label'      => esc_html__( 'Border Radius', 'motionui-addons-for-elementor' ),
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
 				'selectors'  => array(

@@ -75,7 +75,7 @@ class Animated_Slider extends Muia_Base {
 		$slide_repeater->add_control(
 			'slide_background',
 			[
-				'label' => esc_html__( 'Choose Image', 'textdomain' ),
+				'label' => esc_html__( 'Choose Image', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::MEDIA,
 				'default' => [
 					'url' => \Elementor\Utils::get_placeholder_image_src(),
@@ -157,7 +157,7 @@ class Animated_Slider extends Muia_Base {
         $this->add_control(
             'text_color',
             [
-                'label' => esc_html__( 'Overlay', 'textdomain' ),
+                'label' => esc_html__( 'Overlay', 'motionui-addons-for-elementor' ),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .overlay' => 'background-color: {{VALUE}}',

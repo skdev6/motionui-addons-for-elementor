@@ -51,6 +51,12 @@ define( 'THEMEIC_MUIA_MIN_PHP_VERSION', '7.4' );
  */
 function themeic_muia_base_begin() {
 
+    load_plugin_textdomain(
+        'motionui-addons-for-elementor',
+        false,
+        dirname( plugin_basename( THEMEIC_MUIA_FILE ) ) . '/languages'
+    );
+
     // 1. Check if Elementor is installed and activated
     if ( ! did_action( 'elementor/loaded' ) ) {
         add_action( 'admin_notices', 'themeic_muia_notice_missing_main_plugin' );

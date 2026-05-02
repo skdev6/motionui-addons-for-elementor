@@ -127,7 +127,7 @@ class Dashboard{
             self::save_extensions_data($final_data);
         }
         wp_send_json_success(array(  
-            'message' => __( 'Settings saved successfully!', 'motionui-addons' ),
+            'message' => __( 'Settings saved successfully!', 'motionui-addons-for-elementor' ),
             'type'    => $type,
         ));
     }
