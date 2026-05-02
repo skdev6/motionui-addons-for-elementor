@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Dashboard{
 
-    public $slug = 'motionui-addons-for-elementor';
+    const MUIA_NONCE = 'muia-dashboard-save-data';
 
     public static function add_menu(){ 
 
@@ -57,7 +57,7 @@ class Dashboard{
                 'muia-dashboard',
                 'muiaDashboard',
                 [
-                    'nonce' => wp_create_nonce( 'muia-dashboard-save-data' ),
+                    'nonce' => wp_create_nonce(self::MUIA_NONCE),
                     'ajaxUrl' => admin_url( 'admin-ajax.php' ),
                     'action' => 'muia_dashboard',
                     'saveChangesLabel' => esc_html__( 'Save Settings', 'motionui-addons-for-elementor' ),
@@ -101,13 +101,11 @@ class Dashboard{
 
     }
     public static function save_data(){  
-        // 1. Security Check
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( 'Unauthorized' );
         }
 
-        // 2. Nonce Check
-        if ( ! check_ajax_referer( 'muia-dashboard-save-data', 'nonce' ) ) {
+        if ( ! check_ajax_referer(self::MUIA_NONCE, 'nonce' ) ) {
             wp_send_json_error( 'Invalid Nonce' );
         }
 

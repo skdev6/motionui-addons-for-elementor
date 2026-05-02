@@ -46,19 +46,15 @@ class Base {
      * * Registers actions specifically for Elementor categories and controls.
      */
     public function init(){     
-        // Elementor Hooks
-        add_action( 'elementor/elements/categories_registered', [ $this, 'add_category' ] );
-       // Admin Menu and Scripts
         add_action( 'admin_menu', [ MotionUiClasses\Dashboard::class, 'add_menu' ] );
         add_action('admin_enqueue_scripts', [MotionUiClasses\Dashboard::class, 'enqueue_scripts']);
-        // Frontend Scripts 
+        add_action( 'elementor/elements/categories_registered', [ $this, 'add_category' ] );
         add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'register_scripts']);
         add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'enqueue_scripts']);   
         add_action('elementor/frontend/after_enqueue_styles', [MotionUiClasses\Assets::class, 'enqueue_styles']);    
-        // Register Widgets
         add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
-        add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );
         add_action( 'elementor/init', [ MotionUiClasses\Extensions_Manager::class, 'init' ] );
+        add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );
     }
 
     /**

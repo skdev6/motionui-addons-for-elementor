@@ -42,14 +42,6 @@ $muia_all_active = ! empty( $muia_extensions_map ) && ! array_filter(
 	method="post"
 	action=""
 >
-	<?php
-	/**
-	 * Nonce field for CSRF protection.
-	 * Verify server-side with: check_admin_referer( 'muia_save_extensions_settings', 'muia_extensions_nonce' )
-	 */
-	wp_nonce_field( 'muia_save_extensions_settings', 'muia_extensions_nonce' );
-	?>
-
 	<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
 
 		<h4 class="title-md">

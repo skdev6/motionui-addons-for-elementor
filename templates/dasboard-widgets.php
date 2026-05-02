@@ -54,13 +54,6 @@ $muia_all_active = ! empty( $muia_widgets_map ) && ! array_filter(
 	method="post"
 	action=""
 >
-	<?php
-	/**
-	 * Nonce field for CSRF protection.
-	 * Verified server-side when the form is processed.
-	 */
-	wp_nonce_field( 'muia_save_widgets_settings', 'muia_widgets_nonce' );
-	?>
 
 	<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
 
