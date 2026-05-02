@@ -1,0 +1,219 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2026-05-03 02:04+0600\n"
+"PO-Revision-Date: 2026-05-03 02:04+0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: assets\n"
+
+#: base.php:69
+msgid "MotionUi Addons"
+msgstr ""
+
+#: inc/classes/dashboard.php:128
+msgid "Settings saved successfully!"
+msgstr ""
+
+#: inc/classes/extensions-manager.php:215
+#: inc/extensions/scroll-animation.php:19
+msgid "Scroll Animation"
+msgstr ""
+
+#: inc/classes/extensions-manager.php:216
+msgid "Animate elements as they enter the viewport on scroll."
+msgstr ""
+
+#: inc/classes/extensions-manager.php:225 inc/extensions/text-animation.php:17
+msgid "Text Animation"
+msgstr ""
+
+#: inc/classes/extensions-manager.php:226
+msgid "Add entrance animations to heading and text editor widgets."
+msgstr ""
+
+#: inc/classes/extensions-manager.php:235
+msgid "Image Animation"
+msgstr ""
+
+#: inc/classes/extensions-manager.php:236
+msgid "Add entrance animations to image widgets."
+msgstr ""
+
+#: inc/classes/extensions-manager.php:245
+#: inc/extensions/advance-position.php:27
+msgid "Advance Position"
+msgstr ""
+
+#: inc/classes/extensions-manager.php:246
+msgid "Fine-tune widget positioning with advanced CSS controls."
+msgstr ""
+
+#: inc/classes/extensions-manager.php:255
+msgid "Motion Effects"
+msgstr ""
+
+#: inc/classes/extensions-manager.php:256
+msgid "Apply continuous motion and parallax effects to any widget."
+msgstr ""
+
+#: inc/classes/motionui.php:30 inc/classes/motionui.php:36
+msgid "MotionUI Addons"
+msgstr ""
+
+#: inc/classes/widgets-manager.php:41
+msgid "Animated Button"
+msgstr ""
+
+#: inc/classes/widgets-manager.php:51
+msgid "Slider"
+msgstr ""
+
+#: inc/classes/widgets-manager.php:61
+msgid "Image"
+msgstr ""
+
+#: inc/classes/widgets-manager.php:71
+msgid "Gallery"
+msgstr ""
+
+#: inc/extensions/advance-position.php:34
+msgid "Position Type"
+msgstr ""
+
+#: inc/extensions/advance-position.php:38
+msgid "Default"
+msgstr ""
+
+#: inc/extensions/advance-position.php:39
+msgid "Static"
+msgstr ""
+
+#: inc/extensions/advance-position.php:40
+msgid "Sticky"
+msgstr ""
+
+#: inc/extensions/advance-position.php:41
+msgid "Relative"
+msgstr ""
+
+#: inc/extensions/advance-position.php:42
+msgid "fixed"
+msgstr ""
+
+#: inc/extensions/advance-position.php:43
+msgid "Absolute"
+msgstr ""
+
+#: inc/extensions/advance-position.php:55
+msgid "Top"
+msgstr ""
+
+#: inc/extensions/advance-position.php:87
+msgid "Right"
+msgstr ""
+
+#: inc/extensions/advance-position.php:119
+msgid "Bottom"
+msgstr ""
+
+#: inc/extensions/advance-position.php:150
+msgid "Left"
+msgstr ""
+
+#: inc/extensions/advance-position.php:182
+msgid "From Center"
+msgstr ""
+
+#: inc/extensions/advance-position.php:183
+msgid "Please avoid using \"From Center\" and \"Left\" options at the same time."
+msgstr ""
+
+#: inc/extensions/image-animation.php:14
+msgid "Image Animations"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:28
+msgid "Enable"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:42
+msgid "From"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:51
+#: inc/extensions/scroll-animation.php:301
+msgid "Translate"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:63
+#: inc/extensions/scroll-animation.php:313
+msgid "Translate X"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:79
+#: inc/extensions/scroll-animation.php:329
+msgid "Translate Y"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:98
+#: inc/extensions/scroll-animation.php:348
+msgid "Rotation"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:117
+#: inc/extensions/scroll-animation.php:367
+msgid "Rotation X"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:133
+#: inc/extensions/scroll-animation.php:383
+msgid "Rotation Y"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:149
+#: inc/extensions/scroll-animation.php:399
+msgid "Rotation (Z)"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:168
+#: inc/extensions/scroll-animation.php:418
+msgid "Scale"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:188
+#: inc/extensions/scroll-animation.php:438
+msgid "Scale (X)"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:205
+#: inc/extensions/scroll-animation.php:455
+msgid "Scale Y"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:225
+#: inc/extensions/scroll-animation.php:475
+msgid "Skew"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:237
+#: inc/extensions/scroll-animation.php:487
+msgid "Skew X"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:253
+#: inc/extensions/scroll-animation.php:503
+msgid "Skew Y"
+msgstr ""
+
+#: inc/extensions/scroll-animation.php:292
+msgid "To"
+msgstr ""
