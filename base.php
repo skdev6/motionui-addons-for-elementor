@@ -38,7 +38,7 @@ class Base {
      */
     private function __construct(){
         // Load Text Domain for Translations
-        add_action('init', [$this, 'i18n']);
+        add_action( 'init', array( $this, 'i18n' ), 100);
         // Include Essential Files
         $this->autoload();
         $this->init();

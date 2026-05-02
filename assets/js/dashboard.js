@@ -81,5 +81,25 @@
             }
         });
     });
+
+    $('.filter-navbar li a').on('click', function(){    
+        let navbar = $(this).closest('.filter-navbar')
+        let selector = $(navbar.data('area'));
+        let visableItems = $(this).data('filter');
+        let listItems = navbar.find('> li');
+        let listItem = $(this).closest('li');
+
+        listItems.removeClass('current-menu-item');
+        listItem.addClass('current-menu-item');
+
+        if(selector.length){
+            let all = selector.find('> *');
+            let filteredItems = visableItems === '*' ? all : $(visableItems);
+            if(filteredItems.length){
+                all.css('display', 'none');
+                filteredItems.css('display', '');
+            }
+        }
+    })
     
 })(jQuery);

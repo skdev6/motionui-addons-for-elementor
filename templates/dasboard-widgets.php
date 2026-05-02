@@ -64,7 +64,7 @@ $muia_all_active = ! empty( $muia_widgets_map ) && ! array_filter(
 
 	<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
 
-		<ul class="th-das-navbar inline-nav" role="tablist" aria-label="<?php esc_attr_e( 'Filter widgets by category', 'motionui-addons-for-elementor' ); ?>">
+		<ul class="th-das-navbar inline-nav filter-navbar" role="tablist" data-area="#widgets-area" aria-label="<?php esc_attr_e( 'Filter widgets by category', 'motionui-addons-for-elementor' ); ?>">
 
 			<li class="current-menu-item" role="presentation">
 				<a
@@ -120,7 +120,7 @@ $muia_all_active = ! empty( $muia_widgets_map ) && ! array_filter(
 
 	</div><!-- .th-das-header-sm -->
 
-	<div class="widget-card-wrap">
+	<div id="widgets-area" class="widget-card-wrap">
 		<?php foreach ( $muia_widgets_map as $muia_widget_slug => $muia_widget ) :
 
 			// Sanitize slug used in attributes and IDs.
