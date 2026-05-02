@@ -62,10 +62,23 @@
         
         allCheckbox.trigger('change'); 
     });
-    $('.muia-dashboard-form').each(function(){
-        let submitBtn = $(this).find('[type="submit"]');
-        $(this).find('.th-switch-control input[type="checkbox"]').on('change', function(){
+    $('.muia-dashboard-form').each(function() {
+        let $form = $(this);
+        let submitBtn = $form.find('[type="submit"]');
+        let enableCheckbox = $form.find('.muia-enable-all');
+        let itemCheckboxes = $form.find('.th-switch-control input[type="checkbox"]').not('.muia-enable-all');
+
+        itemCheckboxes.on('change', function() {
             submitBtn.removeAttr('disabled');
+
+            let totalItems = itemCheckboxes.length;
+            let checkedItems = itemCheckboxes.filter(':checked').length;
+
+            if (totalItems === checkedItems) {
+                enableCheckbox.prop('checked', true);
+            } else {
+                enableCheckbox.prop('checked', false);
+            }
         });
     });
     

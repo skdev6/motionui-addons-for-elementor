@@ -27,6 +27,13 @@ $muia_extensions_map = Extensions_Manager::extension_map();
 if ( empty( $muia_extensions_map ) || ! is_array( $muia_extensions_map ) ) {
 	return;
 }
+
+$muia_all_active = ! empty( $muia_extensions_map ) && ! array_filter(
+    $muia_extensions_map,
+    function( $muia_extensions ) {
+        return empty( $muia_extensions['is_active'] );
+    }
+);
 ?>
 
 <form
@@ -56,6 +63,7 @@ if ( empty( $muia_extensions_map ) || ! is_array( $muia_extensions_map ) ) {
 					type="checkbox"
 					id="enable-all-extensions"
 					class="muia-enable-all"
+					<?php checked( $muia_all_active, true ); ?>  
 					aria-label="<?php esc_attr_e( 'Enable all extensions', 'motionui-addons-for-elementor' ); ?>"
 				/>
 				<span class="switch-label" aria-hidden="true"></span>
@@ -65,7 +73,7 @@ if ( empty( $muia_extensions_map ) || ! is_array( $muia_extensions_map ) ) {
 			</div>
 
 			<div class="btn-wrap">
-				<button class="th-das-btn btn-sm" type="submit">
+				<button class="th-das-btn btn-sm" type="submit" disabled>
 					<div class="btn-text"><?php esc_html_e( 'Save Settings', 'motionui-addons-for-elementor' ); ?></div>
 				</button>
 			</div>

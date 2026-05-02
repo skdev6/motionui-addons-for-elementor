@@ -27,10 +27,18 @@ class Widgets_Manager{
 
         return $local_widgets;
     }
+    public static function get_active_widgets() {
+        return array_filter(
+            self::get_widgets_map(),
+            function( $widget ) {
+                return isset( $widget['is_active'] ) && $widget['is_active'] === true;
+            }
+        );
+    }
     public static function local_widgets_map(){
         return [
             'animated-button'=>[
-                'title' => __('Animated Button', 'motionui-addons-for-elementor'),
+                'title' => __('Button', 'motionui-addons-for-elementor'),
                 'category'=> 'button',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -40,7 +48,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-slider'=>[  
-                'title' => __('Animated Slider', 'motionui-addons-for-elementor'),
+                'title' => __('Slider', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -50,7 +58,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-image'=>[  
-                'title' => __('Animated Image', 'motionui-addons-for-elementor'),
+                'title' => __('Image', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -60,7 +68,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-gallery'=>[  
-                'title' => __('Animated Gallery', 'motionui-addons-for-elementor'),
+                'title' => __('Gallery', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -73,7 +81,7 @@ class Widgets_Manager{
     }
     public static function register_widgets($widgets_manager = null){
 
-        foreach (self::get_widgets_map() as $widget_key => $widget_data) {
+        foreach (self::get_active_widgets() as $widget_key => $widget_data) {
             $file = THEMEIC_MUIA_DIR_PATH . 'widgets/' . $widget_key . '.php';
 
             if(is_readable($file)){

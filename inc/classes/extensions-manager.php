@@ -13,6 +13,7 @@ class Extensions_Manager{
     const WIDGET_DB_KEY = 'muia_inactive_extensions';
 
     public static function init(){
+        $extensions = self::get_active_extensions();
 		// Enqueue Editor CSS
 		add_action('elementor/editor/after_enqueue_styles', [__CLASS__, 'enqueue_editor_css']);
 		// Add Extension to Text Widgets
@@ -74,8 +75,15 @@ class Extensions_Manager{
                 $local_extensions[$key]['is_active'] = false;
             }
         }
-
         return $local_extensions;
+    }
+    public static function get_active_extensions() {
+        return array_filter(
+            self::extension_map(),
+            function( $extension ) {
+                return isset( $extension['is_active'] ) && $extension['is_active'] === true;
+            }
+        );
     }
     public static function local_extensions_map(){
         return [

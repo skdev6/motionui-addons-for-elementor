@@ -89,6 +89,7 @@ class Dashboard{
         $filtered_map = array_diff_key($real_map, array_flip($widgets_to_remove));
 
         Widgets_Manager::save_widgets(array_keys($filtered_map));    
+
     }
     public static function save_extensions_data($data){
 
@@ -97,6 +98,7 @@ class Dashboard{
         $filtered_map = array_diff_key($real_map, array_flip($extensions_to_remove));
 
         Extensions_Manager::save_extensions(array_keys($filtered_map));
+
     }
     public static function save_data(){  
         // 1. Security Check
@@ -116,18 +118,17 @@ class Dashboard{
         parse_str( $raw_data, $parsed_data );
 
         $final_data = muia_sanitize_array_recursively($parsed_data);
-        
+        $saved_all  = false;
+
         if($type === 'widgets'){
             self::save_widgets_data($final_data);
         }
         if($type === 'extensions'){
             self::save_extensions_data($final_data);
         }
-
-        wp_send_json_success(array(
+        wp_send_json_success(array(  
             'message' => __( 'Settings saved successfully!', 'motionui-addons' ),
             'type'    => $type,
-            'data'   => $final_data
         ));
     }
 }
