@@ -176,7 +176,7 @@ $muia_all_active = ! empty( $muia_widgets_map ) && ! array_filter(
 						</span>
 					<?php endif; ?>
 				</h4>
-
+				<?php if(! empty( $muia_demo_url ) || ! empty( $muia_tutorial )): ?>
 				<div class="gap-2 d-flex align-items-center">
 
 					<?php if ( ! empty( $muia_demo_url ) ) : ?>
@@ -193,11 +193,6 @@ $muia_all_active = ! empty( $muia_widgets_map ) && ! array_filter(
 							<i class="th-icon-link" aria-hidden="true"></i>
 							<?php esc_html_e( 'Demo', 'motionui-addons-for-elementor' ); ?>
 						</a>
-					<?php else : ?>
-						<span class="th-doc-link th-doc-link--disabled" aria-hidden="true">
-							<i class="th-icon-link" aria-hidden="true"></i>
-							<?php esc_html_e( 'Demo', 'motionui-addons-for-elementor' ); ?>
-						</span>
 					<?php endif; ?>
 
 					<?php if ( ! empty( $muia_tutorial ) ) : ?>
@@ -214,15 +209,10 @@ $muia_all_active = ! empty( $muia_widgets_map ) && ! array_filter(
 							<i class="th-icon-video" aria-hidden="true"></i>
 							<?php esc_html_e( 'Tutorial', 'motionui-addons-for-elementor' ); ?>
 						</a>
-					<?php else : ?>
-						<span class="th-doc-link th-doc-link--disabled" aria-hidden="true">
-							<i class="th-icon-video" aria-hidden="true"></i>
-							<?php esc_html_e( 'Tutorial', 'motionui-addons-for-elementor' ); ?>
-						</span>
 					<?php endif; ?>
 
-				</div><!-- .d-flex -->
-
+				</div>
+				<?php endif; ?>
 			</div><!-- .card-con -->
 
 			<div class="th-switch-control d-flex align-items-center ml-auto">

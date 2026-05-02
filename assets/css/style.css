@@ -128,3 +128,11 @@ button[disabled] {
     opacity: .5;
     pointer-events: none;
 } 
+.th-widget-card .title{
+    margin-bottom: 0;
+}
+.th-widget-card .card-con {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+} 

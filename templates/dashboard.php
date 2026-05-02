@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             
             <div class="th-right-content">
                 <div id="muia-widgets" class="tab-content active">
-                    <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/dasboard-widgets.php'; ?>
+                    <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/widgets.php'; ?>
                 </div>
                 <div id="muia-extensions" class="tab-content">
                     <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/extensions.php'; ?>
