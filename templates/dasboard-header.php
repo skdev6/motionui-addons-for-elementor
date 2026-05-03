@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php esc_html_e( 'MotionUI Addons', 'motionui-addons-for-elementor' ); ?>
         </span>
         
-        <a href="#" class="th-das-btn btn-sm btn-secondary">
+        <a href="https://motionuiaddons.com/" target="_blank" class="th-das-btn btn-sm btn-secondary">
             <?php esc_html_e( 'View All Demo', 'motionui-addons-for-elementor' ); ?>
         </a>
     </div>

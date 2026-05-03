@@ -458,16 +458,16 @@ trait Button_Controls {
 			)
 		);
 
-		$this->add_control(
-			"{$id_prefix}_muia_magnetic_effect",
-			array(
-				'label'        => esc_html__( 'Magnetic Effect', 'motionui-addons-for-elementor' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'label_block'  => false,
-				'return_value' => 'yes',
-				'separator'    => 'after',
-			)
-		);
+		// $this->add_control(
+		// 	"{$id_prefix}_muia_magnetic_effect",
+		// 	array(
+		// 		'label'        => esc_html__( 'Magnetic Effect', 'motionui-addons-for-elementor' ),
+		// 		'type'         => Controls_Manager::SWITCHER,
+		// 		'label_block'  => false,
+		// 		'return_value' => 'yes',
+		// 		'separator'    => 'after',
+		// 	)
+		// );
 
 		if($is_content_cntrols):
 		$this->add_control(

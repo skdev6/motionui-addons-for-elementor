@@ -13,22 +13,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="th-left-nav d-lg-flex">
-    <span class="logo-text2">Menu</span>
+    <span class="logo-text2"><?php _e('Menu', 'motionui-addons-for-elementor'); ?></span>
     <ul class="th-das-navbar">
         <li class="current-menu-item">
             <a href="#muia-widgets">
                 <i class="eicon-shape"></i>
-                Widgets
+                <?php _e('Widgets', 'motionui-addons-for-elementor'); ?>
             </a>
         </li>
         <li>
             <a href="#muia-extensions">
                 <i class="th-icon-mouse-click"></i>
-                Extensions
+                <?php _e('Extensions', 'motionui-addons-for-elementor'); ?>
             </a>
         </li>
     </ul>
     <div class="nav-left-footer">
-        <a href="#" class="th-das-btn">View Demo</a>
+        <a href="https://motionuiaddons.com/" target=_blank"" class="th-das-btn"><?php _e('View Demo', 'motionui-addons-for-elementor'); ?></a>
     </div>
 </div>

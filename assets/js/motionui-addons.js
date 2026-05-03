@@ -545,7 +545,7 @@
      * Initialized all widgets
     */
     const widgets = {
-        'muia-animate-button.default':button,
+        'muia-animated-button.default':button,
         'muia-animated-slider.default':muiaSlide,
         'muia-animated-gallery.default':gallery,
     }
