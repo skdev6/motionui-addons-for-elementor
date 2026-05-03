@@ -19,8 +19,6 @@
             const n = parseFloat( val?.size ?? val );
             return isNaN( n ) ? fallback : n;
         };
-        console.log(settings);
-        
         return {
             duration:     toNum( settings[ prefix + 'mui_motion_duration' ], degaultDuration ),
             delay:        toNum( settings[ prefix + 'mui_motion_delay' ], degaultDelay ),
@@ -161,7 +159,6 @@
         }
     }
     function imageAnimation($scope, settings){    
-        // console.log(settings);
         let imgElement = $scope.find('img');
         let aniSettings = getAniSettings(settings, 'img', 1, 0, 'expo.out', 0.05);
         let wrap = $scope.find('.muia-ani-wrap');
@@ -537,8 +534,6 @@
 
         let animateEl = $scope.find('> *:not(.elementor-element-overlay,.ui-resizable-handle)')[0];
         afterLoad( () => {
-            console.log('scroll animations', animateEl);
-            
             gsap.fromTo( animateEl, fromVars, {
                 ...toVars,
                 scrollTrigger: initScrollTrigger(wrapper, aniSettings),

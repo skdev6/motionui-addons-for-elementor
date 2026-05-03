@@ -42,7 +42,11 @@
             success: function success(response) {
                 submitBtn.removeClass('loading');
                 submitBtn.find('.spinner-border').remove();
-                submitBtn.attr('disabled', 'true');
+                submitBtn.prop('disabled', true);
+            },
+            error: function() {
+                submitBtn.removeClass('loading');
+                submitBtn.find('.spinner-border').remove();
             }
         });
     });
@@ -96,8 +100,8 @@
             let all = selector.find('> *');
             let filteredItems = visableItems === '*' ? all : $(visableItems);
             if(filteredItems.length){
-                all.css('display', 'none');
-                filteredItems.css('display', '');
+                all.addClass('hidden');
+                filteredItems.removeClass('hidden');
             }
         }
     })

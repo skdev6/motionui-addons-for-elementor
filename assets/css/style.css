@@ -136,3 +136,6 @@ button[disabled] {
     flex-direction: column;
     gap: 10px;
 } 
+.hidden{
+    display: none !important;
+} 
