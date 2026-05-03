@@ -29,7 +29,6 @@ class Assets{
         wp_enqueue_script('split-type');      
         wp_enqueue_script('isotope');      
         wp_enqueue_script('motionui-addons');  
-        // wp_enqueue_script('motionui-addons-init'); 
     }
     public static function enqueue_styles(){  
          wp_enqueue_style(

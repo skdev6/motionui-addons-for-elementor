@@ -440,7 +440,7 @@ class animated_image extends Muia_Base {
 			<?php if ( $link['url'] ) { ?>
 				<a <?php $this->print_render_attribute_string( 'link' ); ?>>
 				<?php } ?>
-				<?php echo Group_Control_Image_Size::get_attachment_image_html( $settings, 'image_size', 'image' ); ?>
+				<?php echo wp_kses_post( Group_Control_Image_Size::get_attachment_image_html( $settings, 'image_size', 'image' ) );?>
 				<?php if ( $link['url'] ) { ?>
 				</a>
 			<?php } ?>

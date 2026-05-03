@@ -1,4 +1,5 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 function muia_sanitize_array_recursively($array) {
 

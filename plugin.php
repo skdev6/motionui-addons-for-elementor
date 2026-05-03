@@ -5,7 +5,7 @@
  * Description:           Bring powerful GSAP animations to Elementor with ease. Includes advanced widgets like Animated Slider, Testimonial Carousel, News Ticker, Floating Effects, and more.
  * Version:               1.0.0
  * Requires at least:     6.4
- * Tested up to:          6.7
+ * Tested up to:          6.9
  * Requires PHP:          7.4
  * Requires Plugins:      elementor
  * Elementor tested up to: 3.25
