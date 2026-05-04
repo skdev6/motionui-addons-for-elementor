@@ -21,7 +21,7 @@ class Dashboard{
             $page_slug,
             [__CLASS__, "init_page"],
             THEMEIC_MUIA_ASSETS . "/img/motionui-logo-white.svg",
-            3
+            60
         );
         add_submenu_page(
             $page_slug,

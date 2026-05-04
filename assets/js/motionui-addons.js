@@ -1,9 +1,6 @@
 ;(function($){
     'use strict';
 
-    gsap.registerPlugin(SplitText, ScrollTrigger);   
-    
-
     function initScrollTrigger(trigger, settings){   
         let start = settings?.isWithScroll ? 'top 95%' : "top 80%";
         let end = settings?.isWithScroll ? 'top 5%' : "+=100%";
@@ -39,7 +36,7 @@
         if(btn.hasClass('muia-btn-reveal')){
             var chars = new SplitType(buttonTextElement[0], {types:"chars"}).chars;    
             chars.forEach((el, index)=>{
-                gsap.set(el, {'--index':index}); 
+                motionuiAni.set(el, {'--index':index}); 
             })
         }
     }
@@ -47,118 +44,144 @@
 
     // Text Animations
     function textAnimation( $scope, settings ) {
-        const textElement = $scope.find( '.elementor-heading-title' );
-        const aniSettings = getAniSettings( settings );
-        const aniType     = settings?.muia_text_ani    ?? '';
-        const aniBy       = settings?.muia_text_ani_by ?? 'words';
+        var textElement = $scope.find( '.elementor-heading-title' );
+        var aniSettings = getAniSettings( settings );
+        var aniType     = settings && settings.muia_text_ani    ? settings.muia_text_ani    : '';
+        var aniBy       = settings && settings.muia_text_ani_by ? settings.muia_text_ani_by : 'words';
 
         if ( ! textElement.length || ! aniType ) return;
 
         if ( ! textElement.hasClass( 'muia-split-initialized' ) ) {
             textElement.addClass( 'muia-split-initialized' );
-            SplitText.create( textElement[0], {
-                type:        'lines,words,chars',
-                linesClass:  'line-text',
-                wordsClass:  'word-text',
-                charsClass:  'char-text',
+            new SplitType( textElement[0], {
+                types:      'lines, words, chars',
+                lineClass:  'line-text',
+                wordClass:  'word-text',
+                charClass:  'char-text',
             } );
         }
 
-        const selectorMap = {
+        var selectorMap = {
             lines: '.line-text',
             words: '.word-text',
             chars: '.char-text',
         };
-        const elements = textElement.find( selectorMap[ aniBy ] || '.word-text' );
 
+        var elements = textElement.find( selectorMap[ aniBy ] || '.word-text' );
         if ( ! elements.length ) return;
 
         $scope.removeClass( 'visibility__hidden' );
 
-        const stagger  = s => s.stagger  || 0.04;
-        const duration = s => s.duration || 0.8;
-        const delay    = s => s.delay    || 0;
-        const ease     = ( s, fallback ) => s.ease || fallback;
+        var getDuration = function ( s ) { return s.duration || 0.8; };
+        var getDelay    = function ( s ) { return s.delay    || 0;   };
+        var getStagger  = function ( s ) { return s.stagger  || 0.04; };
+        var getEase     = function ( s, fallback ) { return s.ease || fallback; };
 
-        const animations = {
+        function scrambleText( el, duration, delay, original ) {
+            var chars    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var fps      = 30;
+            var steps    = Math.round( duration * fps );
+            var step     = 0;
 
-            'fade-up': ( els, s ) => {
-                gsap.set( els, { opacity: 0, y: 40 } );
-                gsap.to( els, {
-                    opacity:  1,
-                    y:        0,
-                    duration: duration( s ),
-                    delay:    delay( s ),
-                    stagger:  stagger( s ),
-                    ease:     ease( s, 'power4.out' ),
-                } );
-            },
-            'reveal': ( els, s ) => {
-                els.css( { overflow: 'hidden', display: 'inline-block' } );
-                gsap.set( els, { y: '110%' } );
-                gsap.to( els, {
-                    y:        '0%',
-                    duration: duration( s ),
-                    delay:    delay( s ),
-                    stagger:  stagger( s ),
-                    ease:     ease( s, 'expo.out' ),
-                } );
-            },
-            'slide-in': ( els, s ) => {
-                gsap.set( els, { opacity: 0, x: -30, rotation: -8 } );
-                gsap.to( els, {
-                    opacity:  1,
-                    x:        0,
-                    rotation: 0,
-                    duration: duration( s ),
-                    delay:    delay( s ),
-                    stagger:  stagger( s ),
-                    ease:     ease( s, 'back.out(1.7)' ),
-                } );
-            },
-            'scramble': ( els, s ) => {
-                const original = textElement.text();
-                gsap.to( textElement[0], {
-                    duration:     duration( s ) * 2,
-                    delay:        delay( s ),
-                    ease:         'none',
-                    scrambleText: {
-                        text:      original,
-                        chars:     'upperCase',
-                        speed:     0.5,
-                        delimiter: '',
-                    },
-                } );
-            },
-            'wave': ( els, s ) => {
-                gsap.set( els, { opacity: 0 } );
-                gsap.to( els, {
-                    opacity:  1,
-                    duration: duration( s ),
-                    delay:    delay( s ),
-                    stagger:  stagger( s ),
-                    ease:     ease( s, 'sine.out' ),
-                } );
-                gsap.fromTo( els,
-                    { y: 24 },
-                    {
-                        y:        0,
-                        duration: duration( s ),
-                        delay:    delay( s ),
-                        stagger: {
-                            each: stagger( s ),
-                            ease: 'sine.inOut',
-                        },
-                        ease: ease( s, 'sine.out' ),
+            setTimeout( function () {
+                var interval = setInterval( function () {
+                    step++;
+                    var progress = step / steps;
+                    var output   = original.split( '' ).map( function ( ch, i ) {
+                        if ( ch === ' ' ) return ' ';
+                        if ( i / original.length < progress ) return ch;
+                        return chars[ Math.floor( Math.random() * chars.length ) ];
+                    } ).join( '' );
+
+                    el.innerText = output;
+
+                    if ( step >= steps ) {
+                        clearInterval( interval );
+                        el.innerText = original;
                     }
+                }, 1000 / fps );
+            }, delay * 1000 );
+        }
+
+        var animations = {
+
+            'fade-up': function ( els, s ) {
+                motionuiAni.set( els, { opacity: 0, translateY: '40px' } );
+                motionuiAni.to( els, {
+                    opacity:    1,
+                    translateY: '0px',
+                    duration:   getDuration( s ),
+                    delay:      getDelay( s ),
+                    stagger:    getStagger( s ),
+                    ease:       getEase( s, 'power4.out' ),
+                } );
+            },
+
+            'reveal': function ( els, s ) {
+                els.each( function () {
+                    var $el = $( this );
+                    if ( ! $el.parent().hasClass( 'muia-reveal-wrap' ) ) {
+                        $el.wrap( '<span class="muia-reveal-wrap" style="overflow:hidden;display:inline-block;"></span>' );
+                    }
+                } );
+                motionuiAni.set( els.toArray(), { translateY: '110%' } );
+                motionuiAni.to( els.toArray(), {
+                    translateY: '0%',
+                    duration:   getDuration( s ),
+                    delay:      getDelay( s ),
+                    stagger:    getStagger( s ),
+                    ease:       getEase( s, 'expo.out' ),
+                } );
+            },
+
+            'slide-in': function ( els, s ) {
+                motionuiAni.set( els.toArray(), { opacity: 0, translateX: '-30px', rotateZ: '-8deg' } );
+                motionuiAni.to( els.toArray(), {
+                    opacity:    1,
+                    translateX: '0px',
+                    rotateZ:    '0deg',
+                    duration:   getDuration( s ),
+                    delay:      getDelay( s ),
+                    stagger:    getStagger( s ),
+                    ease:       getEase( s, 'back.out' ),
+                } );
+            },
+
+            'scramble': function ( els, s ) {
+                var original = textElement.text();
+                textElement[0].innerText = original;
+                scrambleText(
+                    textElement[0],
+                    getDuration( s ) * 2,
+                    getDelay( s ),
+                    original
                 );
             },
+
+            'wave': function ( els, s ) {
+                motionuiAni.set( els.toArray(), { opacity: 0, translateY: '24px' } );
+                motionuiAni.to( els.toArray(), {
+                    opacity:    1,
+                    translateY: '0px',
+                    duration:   getDuration( s ),
+                    delay:      getDelay( s ),
+                    stagger:    getStagger( s ),
+                    ease:       getEase( s, 'sine.out' ),
+                } );
+            },
         };
+
         if ( animations[ aniType ] ) {
-            afterLoad( () => animations[ aniType ]( elements, aniSettings ) );
+            motionuiAni.addScrollTrigger( $scope[0], {
+                start: 'top 90%',
+                once:  true,
+                onEnter: function () {
+                    animations[ aniType ]( elements, aniSettings );
+                }
+            } );
         }
     }
-    function imageAnimation($scope, settings){    
+    function imageAnimation($scope, settings){
         let imgElement = $scope.find('img');
         let aniSettings = getAniSettings(settings, 'img', 1, 0, 'expo.out', 0.05);
         let wrap = $scope.find('.muia-ani-wrap');
@@ -169,7 +192,7 @@
 
         wrap = $scope.find('.muia-ani-wrap');
 
-        gsap.set(wrap, {
+        motionuiAni.set(wrap, {
             'overflow':'hidden',
             'display':'inline-block',
         })
@@ -234,7 +257,7 @@
             // Clean up previous grid if exists
             $scope.find('.muia-img-grid-reveal').remove();
 
-            gsap.set(imgElement, { opacity: 0 });
+            motionuiAni.set(imgElement, { opacity: 0 });
 
             const src = imgElement.attr('src');
             const cols = 3;
@@ -254,51 +277,58 @@
 
             const gridItems = $scope.find('.muia-img-grid-reveal span');
 
-            gsap.set(gridItems, fromVars);
+            motionuiAni.set(gridItems, fromVars);
 
             // Trigger animation after load
             afterLoad(() => {
-                gsap.to(gridItems, {
-                    '--cb': '0%',
-                    '--cr': '0%',
-                    '--cl': '0%',
-                    '--ct': '0%',
-                    duration: aniSettings.duration,
-                    delay: aniSettings.delay,
-                    ease:aniSettings.isWithScroll ? 'none' : aniSettings.ease,
-                    stagger: aniSettings.stagger,
-                    scrollTrigger:initScrollTrigger(imgElement, aniSettings)    
-                });
+                motionuiAni.addScrollTrigger($scope, { 
+                    start: 'top 75%',
+                    onEnter(){
+                        motionuiAni.to(gridItems, {
+                            '--cb': '0%',
+                            '--cr': '0%',
+                            '--cl': '0%',
+                            '--ct': '0%',
+                            duration: aniSettings.duration,
+                            delay: aniSettings.delay,
+                            ease:aniSettings.isWithScroll ? 'none' : aniSettings.ease,
+                            stagger: aniSettings.stagger,
+                        });
+                    }
+                })
             });
         }
         if (isReveal){
-            gsap.set(imgElement, fromVars);
+            motionuiAni.set(imgElement, fromVars);
             let obj1 = {};
             let obj2 = {};
             obj1[Object.keys(fromVars)[0]] = revealToEmpty ? '0%' : '100%';
             obj2[Object.keys(fromVars)[1]] = revealToEmpty ? '0%' : '100%';
             
             afterLoad(() => {
-                gsap.to(imgElement, {  
-                    ...obj1,
-                    duration: aniSettings.duration,
-                    delay: aniSettings.delay,
-                    ease: aniSettings.isWithScroll ? 'none' : aniSettings.ease,
-                    stagger: aniSettings.stagger,
-                    scrollTrigger:initScrollTrigger(imgElement, aniSettings)
-                });
-                gsap.to(imgElement, {  
-                    ...obj2,
-                    duration: aniSettings.duration,
-                    ease:aniSettings.isWithScroll ? 'none' : aniSettings.ease,
-                    delay: (aniSettings.delay + .05),
-                    stagger: aniSettings.stagger,
-                    scrollTrigger:initScrollTrigger(imgElement, aniSettings)   
-                });
+                motionuiAni.addScrollTrigger($scope, { 
+                    start: 'top 75%',
+                    onEnter(){
+                        motionuiAni.to(imgElement, {  
+                            ...obj1,
+                            duration: aniSettings.duration,
+                            delay: aniSettings.delay,
+                            ease: aniSettings.isWithScroll ? 'none' : aniSettings.ease,
+                            stagger: aniSettings.stagger,
+                        });
+                        motionuiAni.to(imgElement, {  
+                            ...obj2,
+                            duration: aniSettings.duration,
+                            ease:aniSettings.isWithScroll ? 'none' : aniSettings.ease,
+                            delay: (aniSettings.delay + .05),
+                            stagger: aniSettings.stagger,
+                        });
+                    }
+                })
             }); 
         }
         function destroy(){
-            gsap.set(imgElement, {opacity:''})
+            motionuiAni.set(imgElement, {opacity:''})
         }
         if (settings?.muia_img_ani_type === '') destroy();    
         muiaWatchElementWidth(wrap); 
@@ -339,13 +369,14 @@
         let paginationDots = $scope.find('.muia-dot-pagi .dot-item');
         let totalSlide     = bgs.length - 1; 
 
-        gsap.set(bgs, {        
+       motionuiAni.set(bgs, {
             'transition':'none',
             '--cleft':i=> i === 0 ? '0%' : '100%',
             '--cright':i=> i === 0 ? '0%' : '100%',  
-            x:(i)=> i === 0 ? '0%' : '50%',   
-        });
-
+            translateX:(i)=> i === 0 ? '0%' : '50%', 
+            scale:1
+       })
+       
         function goToSlide(nextIndex, direction){ 
             if(isSliding) return;
             isSliding = true;
@@ -354,7 +385,7 @@
             let duration = 1;
             let ease = 'expo.inOut';
             // 
-            gsap.set(slideItems, {   
+            motionuiAni.set(slideItems, {   
                 autoAlpha:1,
                 zIndex:i=> i === 0 ? 1 : 0,
                 '--cleft': (i) => {
@@ -364,7 +395,7 @@
                 '--cright': (i) => {
                     return direction === 'next' ? (i === 0 ? '0%' : '50%') : '0%';
                 },
-                x:(i)=>{
+                translateX:(i)=>{
                     if(direction === 'next'){
                         return i === 1 ? '50%' : '0%'
                     }else{
@@ -372,9 +403,9 @@
                     }
                 }
             });
-            gsap.set(nextBg, {scale:1.2});
-            gsap.to(nextBg, {scale:1, duration:3, delay:0, ease:'expo.out'});  
-            gsap.to(slideItems, {
+            motionuiAni.set(nextBg, {scale:1.2});
+            motionuiAni.to(nextBg, {scale:1, duration:3, delay:0, ease:'expo.out'});  
+            motionuiAni.to(slideItems, {
                 '--cleft': (i) => {
                     return direction === 'prev' ? (i === 0 ? '50%' : '0%') : '0%';
                 },
@@ -382,7 +413,7 @@
                 '--cright': (i) => {
                     return direction === 'next' ? (i === 0 ? '50%' : '0%') : '0%';
                 },
-                x:(i)=>{
+                translateX:(i)=>{
                     if(direction === 'next'){
                         return i === 0 ? '-50%' : '0%'
                     }else{
@@ -399,14 +430,14 @@
             });  
             // 
             let gapX = parseInt(pagiThumbWrap.css('column-gap'));
-            gsap.to(pagiThumbs, {
+            motionuiAni.to(pagiThumbs, {
                 '--x':-nextIndex * 100+'%',
                 '--gx':-nextIndex * gapX+'px',
                 ease:'expo.out',
                 duration,
             })
-            gsap.to(titles, {  
-                x:-nextIndex * 100+'%',
+            motionuiAni.to(titles, {  
+                '--x':-nextIndex * 100+'%',
                 ease:'expo.out',
                 duration,
             })
@@ -430,21 +461,7 @@
             let index = parseInt($(this).data('go'));
             if(currentindex !== index) goToSlide(index, index > currentindex ? 'next' : 'prev');  
         });
-        Observer.create({ 
-            target: $scope.find('.muia-slide-basic')[0],
-            type: "touch,pointer",
-            onLeft: () => {
-                if (isSliding) return;
-                const nextIndex = (currentindex + 1) % totalSlide;
-                goToSlide(nextIndex, 'next');
-            },
-
-            onRight: () => {
-                if (isSliding) return;
-                const prevIndex = (currentindex - 1 + totalSlide) % totalSlide;
-                goToSlide(prevIndex, 'prev');
-            }
-        });
+        
     }
     //
     function gallery($scope){
@@ -534,7 +551,7 @@
 
         let animateEl = $scope.find('> *:not(.elementor-element-overlay,.ui-resizable-handle)')[0];
         afterLoad( () => {
-            gsap.fromTo( animateEl, fromVars, {
+            motionuiAni.fromTo( animateEl, fromVars, {
                 ...toVars,
                 scrollTrigger: initScrollTrigger(wrapper, aniSettings),
             } );
@@ -560,12 +577,10 @@
             onInit: function() {
                 if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
                 if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
-                if(this.$element.hasClass('mui-scroll-ani-yes')) scrollAnimation(this.$element, this.getElementSettings());
             },
             onElementChange: function onElementChange(e){
                 if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
                 if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
-                if(this.$element.hasClass('mui-scroll-ani-yes')) scrollAnimation(this.$element, this.getElementSettings());
             },
             getReadySettings:function (){
                 var settings = {

@@ -211,16 +211,6 @@ class Extensions_Manager {
 	 */
 	public static function local_extensions_map() {
 		return array(
-			'scroll-animation' => array(
-				'title'       => __( 'Scroll Animation', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Animate elements as they enter the viewport on scroll.', 'motionui-addons-for-elementor' ),
-				'is_active'   => true,
-				'is_pro'      => false,
-				'is_upcoming' => false,
-				'icon'        => 'eicon-scroll',
-				'demo'        => '',
-				'tutorial'    => '',
-			),
 			'text-animation'   => array(
 				'title'       => __( 'Text Animation', 'motionui-addons-for-elementor' ),
 				'description' => __( 'Add entrance animations to heading and text editor widgets.', 'motionui-addons-for-elementor' ),
@@ -250,17 +240,7 @@ class Extensions_Manager {
 				'icon'        => 'eicon-page-transition',
 				'demo'        => '',
 				'tutorial'    => '',
-			),
-			'motion'           => array(
-				'title'       => __( 'Motion Effects', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Apply continuous motion and parallax effects to any widget.', 'motionui-addons-for-elementor' ),
-				'is_active'   => true,
-				'is_pro'      => false,
-				'is_upcoming' => false,
-				'icon'        => 'eicon-animation',
-				'demo'        => '',
-				'tutorial'    => '',
-			),
+			)
 		);
 	}
 

@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Define Versioning
  */
-define( 'THEMEIC_MUIA_DEV', true );
+// define( 'THEMEIC_MUIA_DEV', true );
 
 if ( defined( 'THEMEIC_MUIA_DEV' ) && true == THEMEIC_MUIA_DEV ) {
     define( 'THEMEIC_MUIA_VERSION', '1.0.0.' . time() );
@@ -50,12 +50,6 @@ define( 'THEMEIC_MUIA_MIN_PHP_VERSION', '7.4' );
  * Entry Point Function
  */
 function themeic_muia_base_begin() {
-
-    load_plugin_textdomain(
-        'motionui-addons-for-elementor',
-        false,
-        dirname( plugin_basename( THEMEIC_MUIA_FILE ) ) . '/languages'
-    );
 
     // 1. Check if Elementor is installed and activated
     if ( ! did_action( 'elementor/loaded' ) ) {

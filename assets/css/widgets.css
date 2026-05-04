@@ -325,6 +325,7 @@
   -webkit-text-stroke-color: var(--color);
   font-family: "Poppins", Sans-serif;
   transition: color 1s cubic-bezier(0.4, 0, 0, 1);
+  transform: translateX(var(--x));
 }
 .muia-slide-basic .title-wrapper .slide-title-item.active {
   color: var(--color);
