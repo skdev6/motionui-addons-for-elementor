@@ -27,6 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php esc_html_e('Extensions', 'motionui-addons-for-elementor'); ?>
             </a>
         </li>
+        <?php do_action('add_muia_dashboard_menu'); ?>
     </ul>
     <div class="nav-left-footer">
         <a href="https://motionuiaddons.com/" target=_blank"" class="th-das-btn"><?php esc_html_e('View Demo', 'motionui-addons-for-elementor'); ?></a>

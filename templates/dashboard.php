@@ -29,6 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <div id="muia-extensions" class="tab-content">
                     <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/extensions.php'; ?>
                 </div>
+                <?php do_action('add_muia_dashboard_page'); ?>
             </div>
             
         </div>
