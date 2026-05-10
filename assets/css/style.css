@@ -41,7 +41,7 @@
     font-weight: 900;
 }
 [href="admin.php?page=motion-ui-addons"] .wp-menu-image img {
-    width: 19px;
+    width: 18px;
     margin-top: 1px;
 }
 [href="admin.php?page=motion-ui-addons"].current .wp-menu-image img {
