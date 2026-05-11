@@ -48,7 +48,7 @@ const pro_select_fields = [
         elementsCollection.add({
           name: "muia-" + name,
           title: widget.title,
-          icon: widget.icon,
+          icon: widget.icon + ' themeic-muia-logo',
           categories: [CATEGORY_NAME],
           editable: false
         });

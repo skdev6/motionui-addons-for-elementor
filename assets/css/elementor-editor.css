@@ -33,3 +33,6 @@
         background-image: url('../img/motionui-logo-white.svg');
     }
 }   
+.muia-element--promotion .eicon-lock {
+    transform: translateY(20px) translateX(-2px);
+} 
