@@ -36,3 +36,29 @@
 .muia-element--promotion .eicon-lock {
     transform: translateY(20px) translateX(-2px);
 } 
+.muia-pro-notice-content h4 {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4; 
+    margin-top: 20px;
+}
+.muia-pro-notice-content p {
+    line-height: 1.8;
+    font-size: 11px;
+    margin-top: 5px;
+}
+.muia-pro-notice-content .elementor-button {
+    background-color: #d30c5c;
+    color: #fff;
+    padding: 7px 25px;
+    margin-top: 20px;
+    border: none;
+    box-shadow: 0 0 1px rgba(0,0,0,.1),0 2px 2px rgba(0,0,0,.1);
+    transition: .5s;
+}
+.muia-pro-notice-content{
+    text-align:center;
+}
+.muia-pro-notice.no-thumb h4{
+    margin-top: 10px;
+}

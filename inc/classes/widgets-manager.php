@@ -27,6 +27,18 @@ class Widgets_Manager{
 
         return $local_widgets;
     }
+    public static function get_pro_widgets_map(){
+        $get_inactive_widgets = get_option(self::WIDGET_DB_KEY, []);
+        $pro_widgets = self::get_pro_widgets();
+
+        foreach ($get_inactive_widgets as $key) {
+            if (isset($pro_widgets[$key])) {
+                $pro_widgets[$key]['is_active'] = false;
+            }
+        }
+
+        return $pro_widgets;
+    }
     public static function get_active_widgets() {
         return array_filter(
             self::get_widgets_map(),
@@ -38,7 +50,7 @@ class Widgets_Manager{
 
     public static function get_pro_widgets() {
         return array_filter(
-            self::get_widgets_map(),
+            self::local_widgets_map(),
             function( $widget ) {
                 return isset( $widget['is_pro'] ) && $widget['is_pro'] === true;
             }

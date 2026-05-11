@@ -151,8 +151,10 @@ class Dashboard{
 			$muia_is_pro     = isset( $muia_widget['is_pro'] )    ? (bool) $muia_widget['is_pro']          : false;
 			$muia_upcoming   = isset( $muia_widget['is_upcoming'] ) ? (bool) $muia_widget['is_upcoming']   : false;
             $is_active_pro = Motionui::is_active_pro();
-            if($muia_is_pro){
-                $muia_is_active = $is_active_pro;
+            $is_lock = $muia_is_pro && ! $is_active_pro;
+            
+            if(!$is_active_pro && $muia_is_pro){
+                $muia_is_active = false;
             }
 			// Sanitize and validate demo/tutorial URLs — only allow http/https or empty.
 			$muia_demo_url = ! empty( $muia_demo_url ) ? esc_url( $muia_demo_url ) : '';
@@ -169,8 +171,8 @@ class Dashboard{
 			if ( $muia_upcoming ) {
 				$muia_card_classes[] = 'is-upcoming';
 			}
-			if ( !$is_active_pro ) {
-				$muia_card_classes[] = 'not-active-pro';
+			if ( $is_lock ) {
+				$muia_card_classes[] = 'is-active-pro';
 			}
 		?>
 
@@ -181,7 +183,7 @@ class Dashboard{
 					<i class="<?php echo esc_attr( $muia_icon ); ?>"></i>
 				<?php endif; ?>
 			</div>
-            <?php if ( $muia_is_pro ) : ?>
+            <?php if ($is_lock) : ?>
                 <span class="muia-badge muia-badge-pro">
                     <?php esc_html_e( 'Pro', 'motionui-addons-for-elementor' ); ?>
                 </span>
@@ -243,13 +245,13 @@ class Dashboard{
 					name="widgets[]"
 					value="<?php echo esc_attr( $muia_widget_slug ); ?>"
 					<?php checked( $muia_is_active, true ); ?>
-					<?php disabled( $muia_upcoming || $muia_is_pro, true ); ?>
+					<?php disabled( $muia_upcoming || $is_lock, true ); ?>
 					aria-label="<?php
 						/* translators: %s: widget title */
 						printf( esc_attr__( 'Toggle %s widget', 'motionui-addons-for-elementor' ), esc_attr( $muia_title ) );
 					?>"
 				/>
-                <?php echo $muia_is_pro ? '<i class="pro-icon eicon-upgrade-crown"></i>' : ''; ?>
+                <?php echo $is_lock ? '<i class="pro-icon eicon-upgrade-crown"></i>' : ''; ?>
 				<label
 					class="switch-label"
 					for="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"

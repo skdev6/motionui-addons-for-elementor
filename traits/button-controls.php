@@ -657,7 +657,16 @@ trait Button_Controls {
 				),
 			)
 		);
-
+		if(!Motionui::is_active_pro()){
+			$this->add_control(
+				'muia_pro_btn_notice',
+				array(
+				'separator'    => 'before', 
+					'type' => Controls_Manager::RAW_HTML,
+					'raw'  => muia_get_pronotice_html(false),
+				)
+			);
+		}
 		$this->end_controls_section();
 	}
 

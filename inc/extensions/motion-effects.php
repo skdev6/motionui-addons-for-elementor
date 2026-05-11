@@ -4,6 +4,7 @@ namespace Themeic\MotionUI_Addons\Inc\Extensions;
 
 use Elementor\Element_Base;
 use Elementor\Controls_Manager;
+use Themeic\MotionUI_Addons\Inc\Classes\Motionui;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -21,6 +22,20 @@ class Motion_Effects{
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			)
 		);
+		if(Motionui::is_active_pro()){
+			self::get_controls($element);
+		}else{
+			$element->add_control(
+				'muia_pro_motion_effect_notice',
+				array(
+					'type' => Controls_Manager::RAW_HTML,
+					'raw'  => muia_get_pronotice_html(),
+				)
+			);
+		}
+		$element->end_controls_section();
+	}
+	public static function get_controls($element){
 		self::custom_motion_controls($element);
 		self::_get_motions_controls($element, [
 			'condition' => array(
@@ -73,7 +88,6 @@ class Motion_Effects{
 				'muia_child_selector!' => '',
 			),
 		]);
-		$element->end_controls_section();
 	}
     public static function custom_motion_controls($element){
 
