@@ -35,5 +35,7 @@ class Motionui {
     public static function get_extention_logo() {
         return __( 'MotionUI Addons', 'motionui-addons-for-elementor' );
     }
-    
+    public static function is_active_pro() {
+        return class_exists( 'Themeic\MotionUI_Addons_Pro\Base' );
+    }
 }

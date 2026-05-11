@@ -36,4 +36,43 @@ class Assets {
             THEMEIC_MUIA_VERSION
         );
     }
+	/**
+	 * Enqueue editor-only CSS for the Elementor panel.
+	 *
+	 * @since  1.0.0
+	 * @return void
+	 */
+	public static function enqueue_editor_css() {
+		// Bail if required constants are not defined.
+		if ( ! defined( 'THEMEIC_MUIA_ASSETS' ) || ! defined( 'THEMEIC_MUIA_VERSION' ) ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'motionui-elementor-editor',
+			THEMEIC_MUIA_ASSETS . 'css/elementor-editor.css',
+			array(),
+			THEMEIC_MUIA_VERSION
+		);
+	}
+	/**
+	 * Enqueue editor-only JavaScript for the Elementor panel.
+	 *
+	 * @since  1.0.0
+	 * @return void
+	 */
+	public static function enqueue_editor_js() {
+		// Bail if required constants are not defined.
+		if ( ! defined( 'THEMEIC_MUIA_ASSETS' ) || ! defined( 'THEMEIC_MUIA_VERSION' ) ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'motionui-elementor-editor',
+			THEMEIC_MUIA_ASSETS . 'js/elementor-editor.js',
+			array(),
+			THEMEIC_MUIA_VERSION,
+			true
+		);
+	}
 }

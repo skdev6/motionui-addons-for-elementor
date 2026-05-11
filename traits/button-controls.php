@@ -16,6 +16,7 @@ use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use Elementor\Icons_Manager;
+use Themeic\MotionUI_Addons\Inc\Classes\Motionui;
 
 if ( ! defined( 'ABSPATH' ) ) exit;  
 
@@ -450,10 +451,13 @@ trait Button_Controls {
 				'type'    => Controls_Manager::SELECT,
 				'default' => $args['default_btn_effect'],
 				'options' => array(
-					'muia-btn-wave'        => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
-					'muia-btn-reveal' => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
-					// 'muia-btn-reveal-random' => esc_html__( 'Reveal Random', 'motionui-addons-for-elementor' ),
-					// 'muia-btn-symbolab'      => esc_html__( 'Symbolab', 'motionui-addons-for-elementor' ),
+					'muia-btn-wave'          => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
+					'muia-btn-reveal'        => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
+					'muia-btn-reveal-random' => esc_html__(
+						! Motionui::is_active_pro() ? 'Reveal Random (Pro ✦)' : 'Reveal Random',
+						'motionui-addons-for-elementor'
+					),
+					'muia-btn-symbolab'      => esc_html__( 'Symbolab', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);

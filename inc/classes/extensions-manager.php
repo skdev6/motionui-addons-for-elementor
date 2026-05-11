@@ -48,9 +48,6 @@ class Extensions_Manager {
 		$is_position_active = isset( $extensions['advance-position']['is_active'] ) && $extensions['advance-position']['is_active'] === true;
 		$is_motion_active   = isset( $extensions['motion']['is_active'] )           && $extensions['motion']['is_active']           === true;
 
-		// Enqueue editor CSS.
-		add_action( 'elementor/editor/after_enqueue_styles', array( __CLASS__, 'enqueue_editor_css' ) );
-
 		// Text Animation extension.
 		if ( $is_text_active ) {
 			foreach ( self::get_text_widgets() as $widget ) {
@@ -135,26 +132,6 @@ class Extensions_Manager {
 				'name'    => 'muia-animated-image',
 				'section' => 'section_content',
 			),
-		);
-	}
-
-	/**
-	 * Enqueue editor-only CSS for the Elementor panel.
-	 *
-	 * @since  1.0.0
-	 * @return void
-	 */
-	public static function enqueue_editor_css() {
-		// Bail if required constants are not defined.
-		if ( ! defined( 'THEMEIC_MUIA_ASSETS' ) || ! defined( 'THEMEIC_MUIA_VERSION' ) ) {
-			return;
-		}
-
-		wp_enqueue_style(
-			'motionui-elementor-editor',
-			THEMEIC_MUIA_ASSETS . 'css/elementor-editor.css',
-			array(),
-			THEMEIC_MUIA_VERSION
 		);
 	}
 
