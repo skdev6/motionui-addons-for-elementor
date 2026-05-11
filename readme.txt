@@ -1,6 +1,6 @@
-=== MotionUI Addons for Elementor ===
-Contributors:      themeic, themeicteam
-Tags:              elementor, animation, elementor widgets, elementor addons, scroll animation
+=== MotionUI Addons for Elementor – GSAP animation for slide, button, portfolio, motion effect ===
+Contributors:      themeicteam
+Tags:              elementor, animation, elementor addons, gsap, motion
 Requires at least: 6.4
 Tested up to:      6.9
 Requires PHP:      7.4
@@ -85,7 +85,7 @@ Visit our live demo site at [https://motionuiaddons.com/](https://motionuiaddons
 
 = How do I report a bug or request a feature? =
 
-Please use the [WordPress support forum](https://wordpress.org/support/plugin/motionui-addons-for-elementor/) for bug reports and feature requests.
+Please use the [MotionUi Addons forum](https://motionuiaddons.com/contact) for bug reports and feature requests.
 
 == Screenshots ==
 
@@ -95,23 +95,6 @@ Please use the [WordPress support forum](https://wordpress.org/support/plugin/mo
 5. Gallery widget with masonry layout
 6. Button Animation with character split reveal
 7. MotionUI Addons dashboard to manage widgets
-
-== Third Party Libraries ==
-
-This plugin bundles the following third-party libraries:
-
-* **MotionUI Animation Engine** — Custom-built animation library, GPL-2.0-or-later
-  Bundled locally in `assets/js/motionui-ani.js`
-
-* **SplitType v0.3.4** — MIT License
-  Used for splitting text into characters, words, and lines for animation.
-  Source: https://github.com/lukePeavey/SplitType
-  Bundled locally in `assets/js/split-type.min.js`
-
-* **Isotope v3.0.6** — GPL-3.0 License
-  Used for masonry gallery layout and filtering.
-  Source: https://github.com/metafizzy/isotope
-  Bundled locally in `assets/js/isotope.pkgd.min.js`
 
 == Changelog ==
 
