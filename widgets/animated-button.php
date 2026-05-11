@@ -51,4 +51,4 @@ class Animated_Button extends Muia_Base{
         $this->_render_muia_btn();
     }
 
-}
+} 
