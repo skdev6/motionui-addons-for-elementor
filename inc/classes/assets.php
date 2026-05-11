@@ -66,6 +66,21 @@ class Assets {
 		if ( ! defined( 'THEMEIC_MUIA_ASSETS' ) || ! defined( 'THEMEIC_MUIA_VERSION' ) ) {
 			return;
 		}
+		
+		$localize_data = [
+			'placeholder_widgets' => Widgets_Manager::get_pro_widgets(),
+			'hasPro'                  => Motionui::is_active_pro(),
+			'editor_nonce'            => wp_create_nonce('muid_editor_nonce'),
+			'i18n' => [
+				'promotionDialogHeader'     => esc_html__('%s Widget', 'motionui-addons-for-elementor'),
+				'promotionDialogMessage'    => esc_html__('Use %s widget with other exclusive pro widgets and 100% unique features to extend your toolbox and build sites faster and better.', 'motionui-addons-for-elementor'),
+				'promotionDialogBtnTxt'    => esc_html__('Upgrade Now', 'motionui-addons-for-elementor'),
+				'templatesEmptyTitle'       => esc_html__('No Templates Found', 'motionui-addons-for-elementor'),
+				'templatesEmptyMessage'     => esc_html__('Try different category or sync for new templates.', 'motionui-addons-for-elementor'),
+				'templatesNoResultsTitle'   => esc_html__('No Results Found', 'motionui-addons-for-elementor'),
+				'templatesNoResultsMessage' => esc_html__('Please make sure your search is spelled correctly or try a different words.', 'motionui-addons-for-elementor'),
+			],
+		];
 
 		wp_enqueue_script(
 			'motionui-elementor-editor',
@@ -73,6 +88,12 @@ class Assets {
 			array(),
 			THEMEIC_MUIA_VERSION,
 			true
+		);
+
+		wp_localize_script(
+			'motionui-elementor-editor',
+			'MotionUIEditor',
+			$localize_data
 		);
 	}
 }

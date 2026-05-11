@@ -10,6 +10,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+use Themeic\MotionUI_Addons\Inc\Classes\Dashboard;
 ?>
 
 <div class="themeic-das-wrap th-das-root">
@@ -35,3 +36,4 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
     </div>
 </div>
+<?php Dashboard::pro_html(); ?> 

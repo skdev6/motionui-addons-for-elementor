@@ -104,6 +104,21 @@
                 filteredItems.removeClass('hidden');
             }
         }
-    })
+    });
+
+    $('.is-pro.not-active-pro').on('click', function(e){   
+        if(!$(e.target).hasClass('th-doc-link')){
+            $('.muia-popup-wrap').addClass('open');
+        }else{
+            setTimeout(() => {
+                 $('.muia-popup-wrap').addClass('open');
+            }, 1000);
+        }
+    });
+
+    $('.muia-close-btn,.muia-popup-wrap .backdrop').on('click', function(){
+        $('.muia-popup-wrap').removeClass('open');
+    });
+
     
 })(jQuery);

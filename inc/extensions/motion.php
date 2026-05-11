@@ -19,88 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Motion {
 
 	/**
-	 * Register the main Element Motion controls section.
-	 *
-	 * @param \Elementor\Element_Base $element The Elementor element instance.
-	 */
-	public static function register_controls( $element ) {
-		$element->start_controls_section(
-			'mui_addons_motion_effects',
-			array(
-				'label' => sprintf(
-					'<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>',
-					esc_html__( 'Element Motion', 'motionui-addons-for-elementor' )
-				),
-				'tab'   => Controls_Manager::TAB_ADVANCED,
-			)
-		);
-		$element->add_control(
-			'muia_motion_effects_name',
-			array(
-				'label'              => esc_html__( 'Animation', 'motionui-addons-for-elementor' ),
-				'type'               => Controls_Manager::SELECT2,
-				'label_block'        => true,
-				'frontend_available' => true,
-				'options'            => array(
-					''               => esc_html__( 'None', 'motionui-addons-for-elementor' ),
-					'fade'     => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
-					'slide' => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
-				),
-				'default'            => '',
-				'prefix_class'       => 'has-muia-motion-effect muia-',
-			)
-		);
-		$element->add_control(
-			'muia_motion_direction',
-			[
-				'label' => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SELECT,
-				'default' => 'ltr',
-				'frontend_available' => true,  
-				'options' => [
-					'ltr' => esc_html__( 'Left -> Right', 'motionui-addons-for-elementor' ),
-					'rtl' => esc_html__( 'Right -> Left', 'motionui-addons-for-elementor' ),
-					'btt' => esc_html__( 'Bottom -> Top', 'motionui-addons-for-elementor' ),
-					'ttb' => esc_html__( 'Top -> Bottom', 'motionui-addons-for-elementor' ),
-				],
-				'condition' => [
-					'muia_motion_effects_name!' => '',
-				],
-			]
-		);
-		$slide_conditions = array(
-			'muia_motion_effects_name' => array(
-				'fade',
-				'slide',
-			),
-		);
-
-		$element->add_control(
-			'muia_form_start_motion',
-			array(
-				'label'              => esc_html__( 'From', 'motionui-addons-for-elementor' ),
-				'type'               => Controls_Manager::SLIDER,
-				'size_units'         => array( 'px', 'vw', 'vh', 'rem', '%', 'custom' ),
-				'range'              => array(
-					'px' => array(
-						'min'  => -500,
-						'max'  => 500,
-						'step' => 1,
-					),
-				),
-				'default'            => array(
-					'unit' => 'px',
-					'size' => 100,
-				),
-				'frontend_available' => true,
-				'condition'          => $slide_conditions,
-			)
-		);
-
-		$element->end_controls_section();
-	}
-
-	/**
 	 * Register motion animation controls for an Elementor element.
 	 *
 	 * @param \Elementor\Element_Base $element The Elementor element instance.
@@ -108,7 +26,7 @@ class Motion {
 	 *     Optional. Configuration arguments.
 	 *
 	 *     @type string $prefix      Control key prefix. Default ''.
-	 *     @type array  $condition   Elementor condition array. Default ['mui_scroll_ani_enable' => 'yes'].
+	 *     @type array  $condition   Elementor condition array. Default ['muia_scroll_ani_enable' => 'yes'].
 	 *     @type bool   $stagger     Whether to show the stagger control. Default false.
 	 *     @type bool   $ani_class   Whether to show trigger/child selector controls. Default false.
 	 *     @type bool   $with_scroll Whether to show the animate-with-scroll switcher. Default false.
@@ -119,11 +37,12 @@ class Motion {
 
 		$defaults = array(
 			'prefix'             => '',
-			'condition'          => array( 'mui_scroll_ani_enable' => 'yes' ),
+			'condition'          => array(),
 			'stagger'            => false,
 			'stagger_condition'  => array(), 
 			'ani_class'          => false,
 			'with_scroll'        => false,
+			'reverse_ani'        => true,
 			'separator'          => 'before',
 		);
 
@@ -134,7 +53,7 @@ class Motion {
 
 		// Duration.
 		$element->add_control(
-			$prefix . 'mui_motion_duration',
+			$prefix . 'muia_motion_duration',
 			array(
 				'label'              => esc_html__( 'Duration', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SLIDER,
@@ -154,7 +73,7 @@ class Motion {
 
 		// Delay.
 		$element->add_control(
-			$prefix . 'mui_motion_delay',
+			$prefix . 'muia_motion_delay',
 			array(
 				'label'              => esc_html__( 'Delay', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SLIDER,
@@ -170,23 +89,10 @@ class Motion {
 				'frontend_available' => true,
 			)
 		);
-
-		// Easing.
-		$element->add_control(
-			$prefix . 'mui_motion_ease',
-			array(
-				'label'              => esc_html__( 'Easing', 'motionui-addons-for-elementor' ),
-				'type'               => Controls_Manager::SELECT2,
-				'condition'          => $condition,
-				'default'            => 'expo.out',
-				'options'            => self::get_ease_options(),
-				'frontend_available' => true,
-			)
-		);
 		// Stagger (optional).
 		if ( $args['stagger'] ) {
 			$element->add_control(
-				$prefix . 'mui_motion_stagger',
+				$prefix . 'muia_motion_stagger',
 				array(
 					'label'              => esc_html__( 'Stagger', 'motionui-addons-for-elementor' ),
 					'type'               => Controls_Manager::SLIDER,
@@ -203,10 +109,22 @@ class Motion {
 				)
 			);
 		}
+		// Easing.
+		$element->add_control(
+			$prefix . 'muia_motion_ease',
+			array(
+				'label'              => esc_html__( 'Easing', 'motionui-addons-for-elementor' ),
+				'type'               => Controls_Manager::SELECT2,
+				'condition'          => $condition,
+				'default'            => 'expo.out',
+				'options'            => self::get_ease_options(),
+				'frontend_available' => true,
+			)
+		);
 		// Animate with scroll (optional).
 		if ( $args['with_scroll'] ) {
 			$element->add_control(
-				$prefix . 'mui_motion_with_scroll',
+				$prefix . 'muia_motion_with_scroll',
 				array(
 					'label'              => esc_html__( 'Animate With Scroll', 'motionui-addons-for-elementor' ),
 					'type'               => Controls_Manager::SWITCHER,
@@ -219,11 +137,26 @@ class Motion {
 				)
 			);
 		}
+		if ( $args['reverse_ani'] ) {
+			$element->add_control(
+				$prefix . 'muia_motion_reverse',
+				array(
+					'label'              => esc_html__( 'Reverse and Replay', 'motionui-addons-for-elementor' ),
+					'type'               => Controls_Manager::SWITCHER,
+					'label_on'           => esc_html__( 'Yes', 'motionui-addons-for-elementor' ),
+					'label_off'          => esc_html__( 'No', 'motionui-addons-for-elementor' ),
+					'return_value'       => 'yes',
+					'default'            => 'no',
+					'frontend_available' => true,
+					'condition'          => array_merge( $condition, array( $prefix . 'muia_motion_with_scroll!' => 'yes' ) ),
+				)
+			);
+		}
 
 		// Trigger class name and child selector (optional).
 		if ( $args['ani_class'] ) {
 			$element->add_control(
-				$prefix . 'mui_motion_trigger_class_name',
+				$prefix . 'muia_motion_trigger_class_name',
 				array(
 					'label'              => esc_html__( 'Trigger Class Name', 'motionui-addons-for-elementor' ),
 					'type'               => Controls_Manager::TEXT,
@@ -237,7 +170,7 @@ class Motion {
 			);
 
 			$element->add_control(
-				$prefix . 'mui_motion_child_element_selector',
+				$prefix . 'muia_motion_child_element_selector',
 				array(
 					'label'              => esc_html__( 'Animating Child Class Name', 'motionui-addons-for-elementor' ),
 					'type'               => Controls_Manager::TEXT,

@@ -17,11 +17,11 @@
             return isNaN( n ) ? fallback : n;
         };
         return {
-            duration:     toNum( settings[ prefix + 'mui_motion_duration' ], degaultDuration ),
-            delay:        toNum( settings[ prefix + 'mui_motion_delay' ], degaultDelay ),
-            stagger:      toNum( settings[ prefix + 'mui_motion_stagger' ], degaultStagger ),
-            ease:         settings[ prefix + 'mui_motion_ease' ]        || degaultEase,
-            isWithScroll: settings[ prefix + 'mui_motion_with_scroll' ] === 'yes',
+            duration:     toNum( settings[ prefix + 'muia_motion_duration' ], degaultDuration ),
+            delay:        toNum( settings[ prefix + 'muia_motion_delay' ], degaultDelay ),
+            stagger:      toNum( settings[ prefix + 'muia_motion_stagger' ], degaultStagger ),
+            ease:         settings[ prefix + 'muia_motion_ease' ]        || degaultEase,
+            isWithScroll: settings[ prefix + 'muia_motion_with_scroll' ] === 'yes',
         };
     }
 

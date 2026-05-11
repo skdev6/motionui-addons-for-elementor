@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Widgets_Manager{
 
-    const WIDGET_DB_KEY = 'muia_inactive_widgets';
+    const WIDGET_DB_KEY = 'muia_pro_inactive_widgets';
 
     public static function get_inactive_widgets(){
         return get_option(self::WIDGET_DB_KEY, []);
@@ -35,10 +35,20 @@ class Widgets_Manager{
             }
         );
     }
+
+    public static function get_pro_widgets() {
+        return array_filter(
+            self::get_widgets_map(),
+            function( $widget ) {
+                return isset( $widget['is_pro'] ) && $widget['is_pro'] === true;
+            }
+        );
+    }
+
     public static function local_widgets_map(){
         return [
             'animated-button'=>[
-                'title' => __('Button', 'motionui-addons-for-elementor'),
+                'title' => __('Button', 'motionui-addons-pro-for-elementor'),
                 'category'=> 'button',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -48,7 +58,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-slider'=>[  
-                'title' => __('Slider', 'motionui-addons-for-elementor'),
+                'title' => __('Slider', 'motionui-addons-pro-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -58,7 +68,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-image'=>[  
-                'title' => __('Image', 'motionui-addons-for-elementor'),
+                'title' => __('Image', 'motionui-addons-pro-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -68,7 +78,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-gallery'=>[  
-                'title' => __('Gallery', 'motionui-addons-for-elementor'),
+                'title' => __('Gallery', 'motionui-addons-pro-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -76,10 +86,20 @@ class Widgets_Manager{
                 'icon'=>'eicon-gallery-justified',
                 'demo'=> '',
                 'tutorial'=> '',
-            ]
+            ],
+            'motion-gallery'=>[  
+                'title' => __('Motion Gallery', 'motionui-addons-pro-for-elementor'),
+                'category'=> 'image',
+                'is_active'=> true,
+                'is_pro'       => true,
+                'is_upcoming'  => false,
+                'icon'=>'eicon-gallery-justified',
+                'demo'=> 'dd',
+                'tutorial'=> 'cd',
+            ],
         ];
     }
-    public static function register_widgets($widgets_manager = null){
+    public static function register_widgets($widgets_manager = null){ 
         
         foreach (self::get_active_widgets() as $widget_key => $widget_data) {
             $file = THEMEIC_MUIA_DIR_PATH . 'widgets/' . $widget_key . '.php';

@@ -53,7 +53,7 @@ class Base {
         add_action('elementor/frontend/after_register_scripts', [MotionUiClasses\Assets::class, 'enqueue_scripts']);   
         add_action('elementor/frontend/after_enqueue_styles', [MotionUiClasses\Assets::class, 'enqueue_styles']);    
 		add_action( 'elementor/editor/after_enqueue_styles', array( MotionUiClasses\Assets::class, 'enqueue_editor_css' ) );
-		add_action( 'elementor/editor/after_register_scripts', array( MotionUiClasses\Assets::class, 'enqueue_editor_js' ) );
+		add_action( 'elementor/editor/after_enqueue_scripts', array( MotionUiClasses\Assets::class, 'enqueue_editor_js' ) );
         add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
         add_action( 'elementor/init', [ MotionUiClasses\Extensions_Manager::class, 'init' ] );
         add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );

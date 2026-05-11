@@ -22,14 +22,14 @@ class Advance_Position{
      */
     public static function register_controls(Element_Base $element){
         $element->start_controls_section(
-            'mui_addons_advance_position',
+            'muia_addons_advance_position',
             array(
                 'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Advance Position', 'motionui-addons-for-elementor')),
                 'tab' => Controls_Manager::TAB_ADVANCED,
             )
         );
         $element->add_responsive_control( 
-            'mui_addons_position_type',
+            'muia_addons_position_type',
             array(
                 'label'       => __('Position Type', 'motionui-addons-for-elementor' ),
                 'label_block' => true,
@@ -50,7 +50,7 @@ class Advance_Position{
         );
 
         $element->add_responsive_control(
-            'mui_addons_position_top',
+            'muia_addons_position_top',
             array(
                 'label'      => __('Top', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
@@ -76,13 +76,13 @@ class Advance_Position{
                     '{{WRAPPER}}' => 'top:{{SIZE}}{{UNIT}};'
                 ),
                 'condition' => array(
-                    'mui_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
+                    'muia_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
                 )
             )
         );
 
         $element->add_responsive_control(
-            'mui_addons_position_right',
+            'muia_addons_position_right',
             array(
                 'label'      => __('Right', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
@@ -108,13 +108,13 @@ class Advance_Position{
                     '{{WRAPPER}}' => 'right:{{SIZE}}{{UNIT}};'
                 ),
                 'condition' => array(
-                    'mui_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
+                    'muia_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
                 ),
                 'return_value' => ''
             )
         );
         $element->add_responsive_control(
-            'mui_addons_position_bottom',
+            'muia_addons_position_bottom',
             array(
                 'label'      => __('Bottom', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
@@ -140,12 +140,12 @@ class Advance_Position{
                     '{{WRAPPER}}' => 'bottom:{{SIZE}}{{UNIT}};'
                 ),
                 'condition' => array(
-                    'mui_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
+                    'muia_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
                 )
             )
         );
         $element->add_responsive_control(
-            'mui_addons_position_left',
+            'muia_addons_position_left',
             array(
                 'label'      => __('Left', 'motionui-addons-for-elementor' ),
                 'type'       => Controls_Manager::SLIDER,
@@ -171,13 +171,13 @@ class Advance_Position{
                     '{{WRAPPER}}' => 'left:{{SIZE}}{{UNIT}};'
                 ),
                 'condition' => array(
-                    'mui_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
+                    'muia_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
                 )
             )
         );
 
         $element->add_responsive_control(
-            'mui_addons_position_from_center',
+            'muia_addons_position_from_center',
             array(
                 'label'      => __('From Center', 'motionui-addons-for-elementor' ),
                 'description' => __('Please avoid using "From Center" and "Left" options at the same time.', 'motionui-addons-for-elementor' ),
@@ -204,7 +204,7 @@ class Advance_Position{
                     '{{WRAPPER}}' => 'left:calc( 50% + {{SIZE}}{{UNIT}} );'
                 ),
                 'condition' => array(
-                    'mui_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
+                    'muia_addons_position_type' => array('relative', 'absolute', 'sticky', 'fixed')
                 )
             )
         );

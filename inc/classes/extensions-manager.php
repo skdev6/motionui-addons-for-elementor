@@ -31,7 +31,7 @@ class Extensions_Manager {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const WIDGET_DB_KEY = 'muia_inactive_extensions';
+	const WIDGET_DB_KEY = 'muia_pro_inactive_extensions';
 
 	/**
 	 * Initialize active extensions and register Elementor hooks.
@@ -43,10 +43,12 @@ class Extensions_Manager {
 		$extensions = self::get_active_extensions();
 
 		$is_text_active     = isset( $extensions['text-animation']['is_active'] )  && $extensions['text-animation']['is_active']  === true;
-		$is_scroll_active   = isset( $extensions['scroll-animation']['is_active'] ) && $extensions['scroll-animation']['is_active'] === true;
+		$is_motion_active   = isset( $extensions['motion-effects']['is_active'] ) && $extensions['motion-effects']['is_active'] === true;
 		$is_image_active    = isset( $extensions['image-animation']['is_active'] )  && $extensions['image-animation']['is_active']  === true;
 		$is_position_active = isset( $extensions['advance-position']['is_active'] ) && $extensions['advance-position']['is_active'] === true;
-		$is_motion_active   = isset( $extensions['motion']['is_active'] )           && $extensions['motion']['is_active']           === true;
+
+		// Enqueue editor CSS.
+		add_action( 'elementor/editor/after_enqueue_styles', array( __CLASS__, 'enqueue_editor_css' ) );
 
 		// Text Animation extension.
 		if ( $is_text_active ) {
@@ -79,21 +81,15 @@ class Extensions_Manager {
 		}
 
 		// Scroll Animation extension.
-		if ( $is_scroll_active ) {
-			add_action( 'elementor/element/common/_section_style/after_section_end',    array( Extensions\Scroll_Animation::class, 'register_controls' ), 1 );
-			add_action( 'elementor/element/container/section_layout/after_section_end', array( Extensions\Scroll_Animation::class, 'register_controls' ), 1 );
+		if ( $is_motion_active ) {
+			add_action( 'elementor/element/common/_section_style/after_section_end',    array( Extensions\Motion_Effects::class, 'register_controls' ), 1 );
+			add_action( 'elementor/element/container/section_layout/after_section_end', array( Extensions\Motion_Effects::class, 'register_controls' ), 1 );
 		}
 
 		// Advance Position extension.
 		if ( $is_position_active ) {
 			add_action( 'elementor/element/common/_section_style/after_section_end',    array( Extensions\Advance_Position::class, 'register_controls' ), 1 );
 			add_action( 'elementor/element/container/section_layout/after_section_end', array( Extensions\Advance_Position::class, 'register_controls' ), 1 );
-		}
-
-		// Motion Effects extension.
-		if ( $is_motion_active ) {
-			add_action( 'elementor/element/common/_section_style/after_section_end',    array( Extensions\Motion::class, 'register_controls' ), 1 );
-			add_action( 'elementor/element/container/section_layout/after_section_end', array( Extensions\Motion::class, 'register_controls' ), 1 );
 		}
 	}
 
@@ -132,6 +128,26 @@ class Extensions_Manager {
 				'name'    => 'muia-animated-image',
 				'section' => 'section_content',
 			),
+		);
+	}
+
+	/**
+	 * Enqueue editor-only CSS for the Elementor panel.
+	 *
+	 * @since  1.0.0
+	 * @return void
+	 */
+	public static function enqueue_editor_css() {
+		// Bail if required constants are not defined.
+		if ( ! defined( 'THEMEIC_MUIA_PRO_ASSETS' ) || ! defined( 'THEMEIC_MUIA_PRO_VERSION' ) ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'motionui-elementor-editor',
+			THEMEIC_MUIA_PRO_ASSETS . 'css/elementor-editor.css',
+			array(),
+			THEMEIC_MUIA_PRO_VERSION
 		);
 	}
 
@@ -189,8 +205,8 @@ class Extensions_Manager {
 	public static function local_extensions_map() {
 		return array(
 			'text-animation'   => array(
-				'title'       => __( 'Text Animation', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Add entrance animations to heading and text editor widgets.', 'motionui-addons-for-elementor' ),
+				'title'       => __( 'Text Animation', 'motionui-addons-pro-for-elementor' ),
+				'description' => __( 'Add entrance animations to heading and text editor widgets.', 'motionui-addons-pro-for-elementor' ),
 				'is_active'   => true,
 				'is_pro'      => false,
 				'is_upcoming' => false,
@@ -199,8 +215,8 @@ class Extensions_Manager {
 				'tutorial'    => '',
 			),
 			'image-animation'  => array(
-				'title'       => __( 'Image Animation', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Add entrance animations to image widgets.', 'motionui-addons-for-elementor' ),
+				'title'       => __( 'Image Animation', 'motionui-addons-pro-for-elementor' ),
+				'description' => __( 'Add entrance animations to image widgets.', 'motionui-addons-pro-for-elementor' ),
 				'is_active'   => true,
 				'is_pro'      => false,
 				'is_upcoming' => false,
@@ -209,10 +225,20 @@ class Extensions_Manager {
 				'tutorial'    => '',
 			),
 			'advance-position' => array(
-				'title'       => __( 'Advance Position', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Fine-tune widget positioning with advanced CSS controls.', 'motionui-addons-for-elementor' ),
+				'title'       => __( 'Advance Position', 'motionui-addons-pro-for-elementor' ),
+				'description' => __( 'Fine-tune widget positioning with advanced CSS controls.', 'motionui-addons-pro-for-elementor' ),
 				'is_active'   => true,
 				'is_pro'      => false,
+				'is_upcoming' => false,
+				'icon'        => 'eicon-page-transition',
+				'demo'        => '',
+				'tutorial'    => '',
+			),
+			'motion-effects' => array(
+				'title'       => __( 'MotionUI Effects', 'motionui-addons-pro-for-elementor' ),
+				'description' => __( 'Add scroll-based animations to widgets.', 'motionui-addons-pro-for-elementor' ),
+				'is_active'   => true,
+				'is_pro'      => true,
 				'is_upcoming' => false,
 				'icon'        => 'eicon-page-transition',
 				'demo'        => '',

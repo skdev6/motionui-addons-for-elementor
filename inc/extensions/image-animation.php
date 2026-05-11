@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Image_Animation{
     public static function register_controls($element){
         $element->start_controls_section(
-            'mui_addons_text_animation',
+            'muia_addons_text_animation',
             [
                 'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Image Animations', 'motionui-addons-for-elementor')),
             ]
@@ -26,7 +26,7 @@ class Image_Animation{
 					'' => esc_html__( 'None', 'motionui-addons-for-elementor' ),
 					'grid-reveal' => esc_html__( 'Grid Reveal', 'motionui-addons-for-elementor' ),
 					'column-reveal' => esc_html__( 'Column Reveal', 'motionui-addons-for-elementor' ),
-					'reveal' => esc_html__( 'reveal', 'motionui-addons-for-elementor' ),
+					'reveal' => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
 				],
 			]
 		);
@@ -50,8 +50,8 @@ class Image_Animation{
 		);
 		Motion::add_motion_settings_controls($element, array(  
 			'prefix'=>'img',
-			'with_scroll'=> false,
-			'stagger'=> false,
+			'with_scroll'=> true,
+			'stagger'=> true,
 			'stagger_condition'=>[
 				'muia_img_ani_type'=>['grid-reveal', 'column-reveal']
 			],
@@ -62,4 +62,4 @@ class Image_Animation{
 		
         $element->end_controls_section();
     }
-}  
+}

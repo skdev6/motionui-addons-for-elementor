@@ -64,13 +64,13 @@ abstract class Muia_Base extends Widget_Base {
         if ( isset( $widgets_map[ $widget_slug ]['title'] ) ) {
             return $widgets_map[ $widget_slug ]['title'];
         }
-        return $this->get_muia_default_title();
+        return $this->get_muia_pro_default_title();
     }
 
     /**
      * Fallback title generator (if not found in map)
      */
-    private function get_muia_default_title() {
+    private function get_muia_pro_default_title() {
         $class_name = str_replace( 'muia-', '', $this->get_name() );
         $title = str_replace( ['-', '_'], ' ', $class_name );
         return ucwords( $title );
@@ -103,5 +103,77 @@ abstract class Muia_Base extends Widget_Base {
 
         return trim( $html_class );
     }
+	/**
+	 * Get all public post types
+	 *
+	 * @return array
+	 */
+    public function __get_post_types() {
 
+        $post_types = get_post_types(
+            [
+                'public' => true,
+            ],
+            'objects'
+        );
+
+        $options = [];
+
+        if ( ! empty( $post_types ) ) {
+
+            foreach ( $post_types as $post_type ) {
+
+                $options[ $post_type->name ] = $post_type->labels->singular_name;
+            }
+        }
+
+        return $options;
+    }
+	/**
+	 * Get all navigation menus
+	 *
+	 * @return array
+	 */
+	public function __get_menus() {
+
+		$menus = wp_get_nav_menus();
+
+		$options = [];
+
+		if ( ! empty( $menus ) ) {
+
+			foreach ( $menus as $menu ) {
+
+				$options[ $menu->term_id ] = $menu->name;
+			}
+		}
+
+		return $options;
+	}
+	/**
+	 * Get all public taxonomies
+	 *
+	 * @return array
+	 */
+	public function __get_taxonomies() {
+
+		$taxonomies = get_taxonomies(
+			[
+				'public' => true,
+			],
+			'objects'
+		);
+
+		$options = [];
+
+		if ( ! empty( $taxonomies ) ) {
+
+			foreach ( $taxonomies as $taxonomy ) {
+
+				$options[ $taxonomy->name ] = $taxonomy->labels->singular_name;
+			}
+		}
+
+		return $options;
+	}
 }

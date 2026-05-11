@@ -457,22 +457,22 @@ trait Button_Controls {
 						! Motionui::is_active_pro() ? 'Reveal Random (Pro ✦)' : 'Reveal Random',
 						'motionui-addons-for-elementor'
 					),
-					'muia-btn-symbolab'      => esc_html__( 'Symbolab', 'motionui-addons-for-elementor' ),
+					'muia-btn-symbolab'      => esc_html__( ! Motionui::is_active_pro() ? 'Symbolab (Pro ✦)' : 'Symbolab', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
-
-		// $this->add_control(
-		// 	"{$id_prefix}_muia_magnetic_effect",
-		// 	array(
-		// 		'label'        => esc_html__( 'Magnetic Effect', 'motionui-addons-for-elementor' ),
-		// 		'type'         => Controls_Manager::SWITCHER,
-		// 		'label_block'  => false,
-		// 		'return_value' => 'yes',
-		// 		'separator'    => 'after',
-		// 	)
-		// );
-
+		if(Motionui::is_active_pro()){
+			$this->add_control(
+				"{$id_prefix}_muia_magnetic_effect",
+				array(
+					'label'        => esc_html__( 'Magnetic Effect', 'motionui-addons-for-elementor' ),
+					'type'         => Controls_Manager::SWITCHER,
+					'label_block'  => false,
+					'return_value' => 'yes',
+					'separator'    => 'after',
+				)
+			);
+		}
 		if($is_content_cntrols):
 		$this->add_control(
 			"{$id_prefix}_button_text",
