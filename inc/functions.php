@@ -13,12 +13,14 @@ function muia_sanitize_array_recursively($array) {
 
 	return $array;
 }
-function has_muia_pro(){
-	return defined('THEMEIC_MUIA_PRO_VERSION');
+if ( ! function_exists( 'muia_has_pro' ) ) {
+	function muia_has_pro(){
+		return defined('THEMEIC_MUIA_PRO_VERSION');
+	}
 }
 if ( ! function_exists( 'muia_get_pronotice_html' ) ) {
 	function muia_get_pronotice_html( $is_thumb = true ) {
-		$img_src     = esc_url( THEMEIC_MUIA_ASSETS . 'img/get-pro-sm.png' );
+		$img_src     = esc_url( THEMEIC_MUIA_ASSETS . 'img/get-pro.svg' );
 		$upgrade_url = esc_url( 'https://motionuiaddons.com/' );
 
 		$img_html = $is_thumb ? sprintf(

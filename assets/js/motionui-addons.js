@@ -44,8 +44,8 @@
 
     // Text Animations
     function textAnimation( $scope, settings ) {
-        var textElement = $scope.find( '.elementor-heading-title' );
-        var aniSettings = getAniSettings( settings );
+        var textElement = $scope.find( 'h1,h2,h3,h4,h5,h6,p' );
+        var aniSettings = getAniSettings( settings, 'text' );
         var aniType     = settings && settings.muia_text_ani    ? settings.muia_text_ani    : '';
         var aniBy       = settings && settings.muia_text_ani_by ? settings.muia_text_ani_by : 'words';
 
@@ -102,10 +102,10 @@
                 }, 1000 / fps );
             }, delay * 1000 );
         }
-
+        console.log(aniType);
         var animations = {
 
-            'fade-up': function ( els, s ) {
+            'fade': function ( els, s ) {
                 motionuiAni.set( els, { opacity: 0, translateY: '40px' } );
                 motionuiAni.to( els, {
                     opacity:    1,
@@ -133,45 +133,11 @@
                     ease:       getEase( s, 'expo.out' ),
                 } );
             },
-
-            'slide-in': function ( els, s ) {
-                motionuiAni.set( els.toArray(), { opacity: 0, translateX: '-30px', rotateZ: '-8deg' } );
-                motionuiAni.to( els.toArray(), {
-                    opacity:    1,
-                    translateX: '0px',
-                    rotateZ:    '0deg',
-                    duration:   getDuration( s ),
-                    delay:      getDelay( s ),
-                    stagger:    getStagger( s ),
-                    ease:       getEase( s, 'back.out' ),
-                } );
-            },
-
-            'scramble': function ( els, s ) {
-                var original = textElement.text();
-                textElement[0].innerText = original;
-                scrambleText(
-                    textElement[0],
-                    getDuration( s ) * 2,
-                    getDelay( s ),
-                    original
-                );
-            },
-
-            'wave': function ( els, s ) {
-                motionuiAni.set( els.toArray(), { opacity: 0, translateY: '24px' } );
-                motionuiAni.to( els.toArray(), {
-                    opacity:    1,
-                    translateY: '0px',
-                    duration:   getDuration( s ),
-                    delay:      getDelay( s ),
-                    stagger:    getStagger( s ),
-                    ease:       getEase( s, 'sine.out' ),
-                } );
-            },
         };
 
         if ( animations[ aniType ] ) {
+            console.log(aniType);
+            
             motionuiAni.addScrollTrigger( $scope[0], {
                 start: 'top 90%',
                 once:  true,
@@ -563,24 +529,28 @@
     */
     const widgets = {
         'muia-animated-button.default':button,
-        'muia-animated-slider.default':muiaSlide,
-        'muia-animated-gallery.default':gallery,
+        'muia-animated-slider.default':muiaSlide, 
+        'muia-animated-gallery.default':gallery, 
     }
     // init elementor frontend
     $(window).on('elementor/frontend/init', function(){
-
+        
         $.each(widgets, function(widget, fun){
            elementorFrontend.hooks.addAction('frontend/element_ready/' + widget, fun);
         });
           
         var widgetsAnimation = elementorModules.frontend.handlers.Base.extend({
             onInit: function() {
-                if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
-                if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
+                if(typeof themeicMotionUi === 'undefined'){ 
+                    if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
+                    if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
+                }
             },
             onElementChange: function onElementChange(e){
-                if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
-                if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
+                if(typeof themeicMotionUi === 'undefined'){   
+                    if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
+                    if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
+                }
             },
             getReadySettings:function (){
                 var settings = {

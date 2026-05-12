@@ -28,30 +28,32 @@ class Text_Animation{
 				'options'            => array(
 					''           => esc_html__( 'None', 'motionui-addons-for-elementor' ),
 					'fade'    => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
-					'wave'       => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
 					'reveal'     => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
-					'scramble'   => esc_html__( 'Scramble', 'motionui-addons-for-elementor' ),
+					'wave'       => muia_has_pro() ? esc_html__( 'Wave', 'motionui-addons-for-elementor' ) : esc_html__( 'Wave (Pro ✦)', 'motionui-addons-for-elementor' ),
+					'scramble'   => muia_has_pro() ? esc_html__( 'Scramble', 'motionui-addons-for-elementor' ) : esc_html__( 'Scramble (Pro ✦)', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
-		$element->add_control(
-			'muia_text_direction',
-			[
-				'label' => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SELECT,
-				'default' => 'btt',
-				'frontend_available' => true,  
-				'options' => [
-					'ltr' => esc_html__( 'Left -> Right', 'motionui-addons-for-elementor' ),
-					'rtl' => esc_html__( 'Right -> Left', 'motionui-addons-for-elementor' ),
-					'btt' => esc_html__( 'Bottom -> Top', 'motionui-addons-for-elementor' ),
-					'ttb' => esc_html__( 'Top -> Bottom', 'motionui-addons-for-elementor' ),
-				],
-				'condition' => [
-					'muia_text_ani!' => ['', 'scramble'],
-				],
-			]
-		);
+		if(muia_has_pro()){
+			$element->add_control(
+				'muia_text_direction',
+				[
+					'label' => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
+					'type' => \Elementor\Controls_Manager::SELECT,
+					'default' => 'btt',
+					'frontend_available' => true,  
+					'options' => [
+						'ltr' => esc_html__( 'Left -> Right', 'motionui-addons-for-elementor' ),
+						'rtl' => esc_html__( 'Right -> Left', 'motionui-addons-for-elementor' ),
+						'btt' => esc_html__( 'Bottom -> Top', 'motionui-addons-for-elementor' ),
+						'ttb' => esc_html__( 'Top -> Bottom', 'motionui-addons-for-elementor' ),
+					],
+					'condition' => [
+						'muia_text_ani!' => ['', 'scramble'],
+					],
+				]
+			);
+		}
 		$element->add_control(
 			'muia_text_ani_by',
 			[
@@ -77,6 +79,15 @@ class Text_Animation{
 				'muia_text_ani!' => ['', 'scramble'],
 			]
 		)); 
+		if(!muia_has_pro()){     
+			$element->add_control(
+				'muia_pro_text_effect_notice',
+				array(
+					'type' => Controls_Manager::RAW_HTML,
+					'raw'  => muia_get_pronotice_html(),
+				)
+			);
+		}
         $element->end_controls_section();
     }
 }

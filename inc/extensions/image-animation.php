@@ -59,7 +59,15 @@ class Image_Animation{
 				'muia_img_ani_type!' => '',
 			]
 		)); 
-		
+		if(!muia_has_pro()){     
+			$element->add_control(
+				'muia_pro_image_effect_notice',
+				array(
+					'type' => \Elementor\Controls_Manager::RAW_HTML,
+					'raw'  => muia_get_pronotice_html(),
+				)
+			);
+		}
         $element->end_controls_section();
     }
 }

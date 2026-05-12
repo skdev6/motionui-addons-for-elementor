@@ -40,7 +40,7 @@
     font-size: 16px;
     font-weight: 700;
     line-height: 1.4; 
-    margin-top: 20px;
+    margin-top: 12px;
 }
 .muia-pro-notice-content p {
     line-height: 1.8;
@@ -51,7 +51,7 @@
     background-color: #d30c5c;
     color: #fff;
     padding: 7px 25px;
-    margin-top: 20px;
+    margin-top: 15px;
     border: none;
     box-shadow: 0 0 1px rgba(0,0,0,.1),0 2px 2px rgba(0,0,0,.1);
     transition: .5s;
@@ -59,6 +59,9 @@
 .muia-pro-notice-content{
     text-align:center;
 }
-.muia-pro-notice.no-thumb h4{
-    margin-top: 10px;
-}
+.muia-pro-notice > img {
+    display: block;
+    margin-inline: auto;
+    width: 85px;
+    margin-top: 15px;
+} 

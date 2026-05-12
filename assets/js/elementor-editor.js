@@ -1,8 +1,9 @@
 const pro_select_fields = [
-    'muia_btn_btn_effect'
+    'muia_btn_btn_effect', 'muia_text_ani'
 ];
 (function ($) {
     "use strict";
+
     jQuery(window).on('elementor:init', function ($) {
         elementor.hooks.addAction('panel/open_editor/widget', function () {
 
