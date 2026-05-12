@@ -33,7 +33,7 @@
         let btn = $scope.find('.muia-btn');
         let buttonTextElement = $scope.find('.muia-btn-text');
         
-        if(btn.hasClass('muia-btn-reveal')){
+        if(btn.hasClass('muia-btn-reveal') || btn.hasClass('muia-btn-reveal-random')){
             var chars = new SplitType(buttonTextElement[0], {types:"chars"}).chars;    
             chars.forEach((el, index)=>{
                 motionuiAni.set(el, {'--index':index}); 

@@ -217,13 +217,7 @@ trait Button_Controls {
 			}
 
 			if ( $args['border'] ) {
-				// $this->add_group_control(
-				// 	Group_Control_Border::get_type(),
-				// 	array(
-				// 		'name'     => "{$id_prefix}_border",
-				// 		'selector' => $selector,
-				// 	)
-				// );
+				
 				$this->_add_muia_border_controls( $id_prefix, $selector, $is_var );
 
 				$this->add_responsive_control(
@@ -233,8 +227,8 @@ trait Button_Controls {
 						'type'       => Controls_Manager::DIMENSIONS,
 						'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
 						'selectors'  => array(
-							$selector => ( $is_var ? '--border-radius' : 'border-radius' ) . ': {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-						),
+							$selector => ( $is_var ? '--border-radius' : 'border-radius' ) . ': {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; --border-radius-top: {{TOP}}{{UNIT}};',
+						),  
 					)
 				);
 			}
@@ -248,8 +242,7 @@ trait Button_Controls {
 			);
 
 			if ( $args['color'] ) {
-				// When is_variable=true:  only set the CSS var on $selector.
-				// When is_variable=false: apply color directly on hover + store var for JS use.
+				
 				$color_hover_selectors = $is_var
 					? array(
 						$selector => '--hover-color: {{VALUE}};',
@@ -270,8 +263,7 @@ trait Button_Controls {
 			}
 
 			if ( $args['bg_color'] ) {
-				// Same pattern: variable mode stores only the CSS var;
-				// direct mode applies background-color on hover AND stores the var.
+				
 				$bg_hover_selectors = $is_var
 					? array(
 						$selector => '--hover-bg-color: {{VALUE}};',
@@ -457,7 +449,7 @@ trait Button_Controls {
 						! Motionui::is_active_pro() ? 'Reveal Random (Pro ✦)' : 'Reveal Random',
 						'motionui-addons-for-elementor'
 					),
-					'muia-btn-symbolab'      => esc_html__( ! Motionui::is_active_pro() ? 'Symbolab (Pro ✦)' : 'Symbolab', 'motionui-addons-for-elementor' ),
+					// 'muia-btn-symbolab'      => esc_html__( ! Motionui::is_active_pro() ? 'Symbolab (Pro ✦)' : 'Symbolab', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);

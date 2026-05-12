@@ -86,7 +86,7 @@
             position: absolute;
             top: 0;
             height:var(--btn-current-height);   
-            width: var(--btn-current-height);  
+            width: var(--btn-current-height);    
             display: flex;
             align-items: center;
             justify-content: center; 
@@ -129,7 +129,7 @@
         --text-sy:1em;
     }
     // Text Reavle Effect
-    &.muia-btn-wave, &.muia-btn-reveal{  
+    &.muia-btn-wave, &.muia-btn-reveal,&.muia-btn-reveal-random{  
         .muia-btn-text-wrap{
             overflow: hidden; 
         } 
@@ -145,7 +145,7 @@
             }
         }
     }
-    &.muia-btn-reveal{
+    &.muia-btn-reveal,&.muia-btn-reveal-random{
         background-color: transparent; 
         border: none;
         .muia-btn-icon-wrap{
@@ -168,7 +168,7 @@
             }  
         }
     }
-    &.muia-btn-reveal{   
+    &.muia-btn-reveal,&.muia-btn-reveal-random{   
         .muia-btn-text .char{
             text-shadow: 0 var(--text-sy) currentColor;
             transition: transform var(--transition-duration) cubic-bezier(0.625, 0.05, 0, 1);
@@ -180,8 +180,24 @@
             }
         }
     }
+    &.muia-btn-reveal-random{  
+        .muia-btn-text .char{
+            &:nth-child(2n+2){
+                transform: translateY(var(--text-sy));
+                text-shadow: 0 calc(-1*var(--text-sy)) currentColor;
+            }
+            &:nth-child(2n+1){
+                transform: translateY(calc(-1*var(--text-sy)));
+            }
+        }
+        &:hover{     
+            .muia-btn-text .char{  
+                transform: translateY(0);
+            }
+        }
+    }
     // Icon Reavle Effect
-    &.muia-btn-wave,&.muia-btn-reveal{  
+    &.muia-btn-wave,&.muia-btn-reveal,&.muia-btn-reveal-random{  
         .muia-btn-icon-inner{
             overflow: hidden; 
             svg,i{
@@ -205,7 +221,7 @@
     }
     &.muia-btn-wave{    
         .muia-btn-ani,.muia-icon-ani{ 
-            --shape-round:50%;
+            --shape-round:var(--border-radius-top, 50%);  
             --shape-y:101%;
             &::before{ 
                 content: '';

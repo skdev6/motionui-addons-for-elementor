@@ -99,7 +99,7 @@ class Motion_Effects{
 				'label'        => __( 'Custom Animation', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
-				'prefix_class' => 'mui-custom-ani-',
+				'prefix_class' => 'visibility__hidden mui-custom-ani-',
 				'frontend_available' => true,   
 			)
 		);
@@ -122,7 +122,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Translate', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
-'frontend_available' => true,  
+				'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -170,7 +170,8 @@ class Motion_Effects{
 			array(
 				'label'     => __( 'Rotation', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
-'frontend_available' => true,  ,
+				'frontend_available' => true,
+				'return_value' => 'yes',
 				'condition' => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
 		);
@@ -241,7 +242,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Scale', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
-'frontend_available' => true,  
+				'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -299,7 +300,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Skew', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
-'frontend_available' => true,  
+				'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -376,7 +377,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Translate', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
-'frontend_available' => true,  
+				'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -424,7 +425,8 @@ class Motion_Effects{
 			array(
 				'label'     => __( 'Rotation', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
-'frontend_available' => true,  ,
+				'return_value' => 'yes',
+				'frontend_available' => true,
 				'condition' => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
 		);
@@ -495,7 +497,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Scale', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
-'frontend_available' => true,  
+				'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -553,7 +555,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Skew', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
-'frontend_available' => true,  
+				'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -633,6 +635,7 @@ class Motion_Effects{
 					'fade'    => esc_html__( 'Fade',     'motionui-addons-for-elementor' ),
 					'slide'   => esc_html__( 'Slide',    'motionui-addons-for-elementor' ),
 					'zoom'    => esc_html__( 'Zoom',     'motionui-addons-for-elementor' ),
+					'zoom_center'    => esc_html__( 'Zoom Center', 'motionui-addons-for-elementor' ),
 					'flip'    => esc_html__( 'Flip',     'motionui-addons-for-elementor' ),
 					'rotate'  => esc_html__( 'Rotate',   'motionui-addons-for-elementor' ),
 					'skew'    => esc_html__( 'Skew',     'motionui-addons-for-elementor' ),
@@ -642,8 +645,28 @@ class Motion_Effects{
 					'clip'    => esc_html__( 'Clip',     'motionui-addons-for-elementor' ),
 				),
 				'default'            => '',
-				'prefix_class'       => 'has-muia-motion-effect muia-motion-effect-',
+				'prefix_class'       => 'has-muia-motion-effect visibility__hidden muia-motion-effect-',
 				'condition'          => $condition,
+			)
+		);
+		$element->add_responsive_control(
+			'muia_ani_from',
+			array(
+				'label'      => __( 'From', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', '%', 'vw', 'vh', 'em', 'rem' ),
+				'frontend_available' => true,
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 1000 ),
+				),
+				'default' => [
+					'unit' => 'px',
+					'size' => 100,
+				],
+				'condition'=>[
+					'muia_motion_effects_name'=>['fade', 'slide'],
+					'muia_custom_ani_enable!' => 'yes',
+				]
 			)
 		);
 		Motion::get_derection_control('muia_motion_direction',
@@ -651,31 +674,9 @@ class Motion_Effects{
 			array_merge(
 				$condition,
 				[
-					'muia_motion_effects_name!' => [''],
+					'muia_motion_effects_name!' => ['', 'zoom-center'],
 				]
 			)
 		);
-		// $element->add_control(
-		// 	'muia_motion_direction',
-		// 	[
-		// 		'label' => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
-		// 		'type' => \Elementor\Controls_Manager::SELECT,
-		// 		'default' => '',
-		// 		'frontend_available' => true,  
-		// 		'options' => [
-		// 			'' => esc_html__( 'Default', 'motionui-addons-for-elementor' ),
-		// 			'ltr' => esc_html__( 'Left -> Right', 'motionui-addons-for-elementor' ),
-		// 			'rtl' => esc_html__( 'Right -> Left', 'motionui-addons-for-elementor' ),
-		// 			'btt' => esc_html__( 'Bottom -> Top', 'motionui-addons-for-elementor' ),
-		// 			'ttb' => esc_html__( 'Top -> Bottom', 'motionui-addons-for-elementor' ),
-		// 		],
-		// 		'condition' => array_merge(
-		// 			$condition,
-		// 			[
-		// 				'muia_motion_effects_name!' => [''],
-		// 			]
-		// 		),
-		// 	]
-		// );
 	}
 }  

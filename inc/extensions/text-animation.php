@@ -54,6 +54,37 @@ class Text_Animation{
 				],
 			]
 		);
+		if(muia_has_pro()){
+			// $element->add_control(
+			// 	'muia_text_animate_for_child',
+			// 	array(
+			// 		'label'        => __( 'Animate for Child', 'motionui-addons-for-elementor' ),
+			// 		'type'         => \Elementor\Controls_Manager::SWITCHER,
+			// 		'return_value' => 'yes',
+			// 		'frontend_available' => true,
+			// 		'render_type'        => 'template', 
+			// 		'condition'         => array(   
+			// 			'muia_text_ani!' => ['', 'scramble'],
+			// 		),
+			// 	)
+			// );
+			// $element->add_control(
+			// 	'muia_text_animate_selector',
+			// 	array(
+			// 		'label'              => esc_html__( 'Child Class Name', 'motionui-addons-for-elementor' ),
+			// 		'type'               => \Elementor\Controls_Manager::TEXT,
+			// 		'description'        => esc_html__( 'Optional. Enter a CSS selector to target a child element for animation. If left empty, the current widget element will be used.', 'motionui-addons-for-elementor' ),
+			// 		'placeholder'        => esc_html__( 'class-name, class-2', 'motionui-addons-for-elementor' ),
+			// 		'sanitize_callback'  => 'sanitize_text_field',
+			// 		'frontend_available' => true,
+			// 		'render_type'        => 'template',
+			// 		'condition'          => [
+			// 			'muia_text_ani!' => ['', 'scramble'],
+			// 			'muia_text_animate_for_child' => 'yes',  
+			// 		],
+			// 	)
+			// );
+		}
 		Motion::add_motion_settings_controls($element, array(    
 			'prefix'=>'text',
 			'with_scroll'=> true,
