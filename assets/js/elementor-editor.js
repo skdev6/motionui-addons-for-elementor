@@ -1,34 +1,37 @@
 const pro_select_fields = [
     'muia_btn_btn_effect', 'muia_text_ani'
 ];
+
 (function ($) {
     "use strict";
 
-    jQuery(window).on('elementor:init', function ($) {
-        elementor.hooks.addAction('panel/open_editor/widget', function () {
+  jQuery(window).on('elementor:init', function () {
+      
+      elementor.hooks.addAction('panel/open_editor/widget', function () {
+          setTimeout(disableOptions, 300);
+      });
 
-            // small delay to ensure panel DOM is ready
-            setTimeout(function () {
-                var currentView = elementor.getPanelView().getCurrentPageView();
+      document.addEventListener('click', function (e) {
+          if ( e.target.closest('.elementor-panel-heading,.elementor-component-tab') ) {
+              setTimeout(disableOptions, 150);
+          }
+      }, true);
 
-                if ( ! currentView || ! currentView.$el ) return; // safety check
-
-                pro_select_fields.forEach(function (field) {
-                    var $field = currentView.$el.find('[data-setting="' + field + '"]');
-
-                    if ( $field.length ) {
-                        $field.find('option').each(function () {
-                            if ( jQuery(this).text().includes('Pro') ) {
-                                jQuery(this).prop('disabled', true);
-                            }
-                        });
-                    }
-                });
-            }, 300);
-
-        });
-    });
-
+  });
+  function disableOptions(){
+      var currentView = elementor.getPanelView().getCurrentPageView();
+      if ( ! currentView || ! currentView.$el ) return; // safety check
+      pro_select_fields.forEach(function (field) {
+          var $field = currentView.$el.find('[data-setting="' + field + '"]');
+          if ( $field.length ) {
+              $field.find('option').each(function () {
+                  if ( jQuery(this).text().includes('Pro') ) {
+                      jQuery(this).prop('disabled', true);
+                  }
+              });
+          }
+      });
+  }
   /**
    * Add pro widgets placeholder
    */

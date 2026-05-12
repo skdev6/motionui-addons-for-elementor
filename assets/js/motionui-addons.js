@@ -77,32 +77,6 @@
         var getStagger  = function ( s ) { return s.stagger  || 0.04; };
         var getEase     = function ( s, fallback ) { return s.ease || fallback; };
 
-        function scrambleText( el, duration, delay, original ) {
-            var chars    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            var fps      = 30;
-            var steps    = Math.round( duration * fps );
-            var step     = 0;
-
-            setTimeout( function () {
-                var interval = setInterval( function () {
-                    step++;
-                    var progress = step / steps;
-                    var output   = original.split( '' ).map( function ( ch, i ) {
-                        if ( ch === ' ' ) return ' ';
-                        if ( i / original.length < progress ) return ch;
-                        return chars[ Math.floor( Math.random() * chars.length ) ];
-                    } ).join( '' );
-
-                    el.innerText = output;
-
-                    if ( step >= steps ) {
-                        clearInterval( interval );
-                        el.innerText = original;
-                    }
-                }, 1000 / fps );
-            }, delay * 1000 );
-        }
-        console.log(aniType);
         var animations = {
 
             'fade': function ( els, s ) {
@@ -136,8 +110,6 @@
         };
 
         if ( animations[ aniType ] ) {
-            console.log(aniType);
-            
             motionuiAni.addScrollTrigger( $scope[0], {
                 start: 'top 90%',
                 once:  true,
@@ -541,13 +513,13 @@
           
         var widgetsAnimation = elementorModules.frontend.handlers.Base.extend({
             onInit: function() {
-                if(typeof themeicMotionUi === 'undefined'){ 
+                if(typeof themeicMotionUiPro === 'undefined'){ 
                     if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
                     if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
                 }
             },
             onElementChange: function onElementChange(e){
-                if(typeof themeicMotionUi === 'undefined'){   
+                if(typeof themeicMotionUiPro === 'undefined'){   
                     if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
                     if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
                 }
