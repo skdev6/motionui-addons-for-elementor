@@ -41,6 +41,9 @@ class Motion {
 			'condition'          => array(),
 			'stagger'            => false,
 			'stagger_condition'  => array(), 
+			'delay_condition'  => array(), 
+			'duration_condition'  => array(), 
+			'ease_condition'  => array(), 
 			'ani_class'          => false,
 			'with_scroll'        => false,
 			'reverse_ani'        => true,
@@ -51,14 +54,16 @@ class Motion {
 		$prefix    = sanitize_key( $args['prefix'] );
 		$condition = $args['condition'];
 		$stagger_condition = ! empty( $args['stagger_condition'] ) ? array_merge( $condition, $args['stagger_condition'] ) : $condition;
-
+		$duration_condition = ! empty( $args['duration_condition'] ) ? array_merge( $condition, $args['duration_condition'] ) : $condition;
+		$delay_condition = ! empty( $args['delay_condition'] ) ? array_merge( $condition, $args['delay_condition'] ) : $condition;
+		$ease_condition = ! empty( $args['ease_condition'] ) ? array_merge( $condition, $args['ease_condition'] ) : $condition;
 		// Duration.
 		$element->add_control(
 			$prefix . 'muia_motion_duration',
 			array(
 				'label'              => esc_html__( 'Duration', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SLIDER,
-				'condition'          => $condition,
+				'condition'          => $duration_condition,
 				'size_units'         => array( 'px' ),
 				'separator'          => $args['separator'],
 				'range'              => array( 
@@ -78,7 +83,7 @@ class Motion {
 			array(
 				'label'              => esc_html__( 'Delay', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SLIDER,
-				'condition'          => $condition,
+				'condition'          => $delay_condition,
 				'size_units'         => array( 'px' ),
 				'range'              => array(
 					'px' => array(
@@ -102,7 +107,7 @@ class Motion {
 					'range'              => array(
 						'px' => array(
 							'min'  => 0,
-							'max'  => 2,
+							'max'  => 0.3,
 							'step' => 0.001,
 						),
 					),
@@ -116,7 +121,7 @@ class Motion {
 			array(
 				'label'              => esc_html__( 'Easing', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SELECT2,
-				'condition'          => $condition,
+				'condition'          => $ease_condition,
 				'default'            => 'expo.out',
 				'options'            => self::get_ease_options(),
 				'frontend_available' => true,
@@ -233,6 +238,24 @@ class Motion {
 
 			// Linear.
 			'none' => esc_html__( 'Linear', 'motionui-addons-for-elementor' ),
+		);
+	}
+	public static function get_derection_control( $prefix_id = 'muia_motion_direction', $element, $condition = [] ) {
+		$element->add_control(
+			$prefix_id,
+			[
+				'label'              => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
+				'type'               => \Elementor\Controls_Manager::SELECT,
+				'default'            => 'rtl',
+				'frontend_available' => true,
+				'options'            => [
+					'ltr' => esc_html__( 'Left → Right', 'motionui-addons-for-elementor' ),
+					'rtl' => esc_html__( 'Right → Left', 'motionui-addons-for-elementor' ),
+					'btt' => esc_html__( 'Bottom → Top', 'motionui-addons-for-elementor' ),
+					'ttb' => esc_html__( 'Top → Bottom', 'motionui-addons-for-elementor' ),
+				],
+				'condition'          => $condition,
+			]
 		);
 	}
 }

@@ -49,6 +49,7 @@ class Motion_Effects{
 				'type'         => Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
 				'frontend_available' => true,
+				'render_type'        => 'template', 
 				'conditions'         => array(   
 					'relation' => 'or',   
 					'terms'    => array(
@@ -72,9 +73,10 @@ class Motion_Effects{
 				'label'              => esc_html__( 'Child Class Name', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::TEXT,
 				'description'        => esc_html__( 'Optional. Enter a CSS selector to target a child element for animation. If left empty, the current widget element will be used.', 'motionui-addons-for-elementor' ),
-				'placeholder'        => esc_html__( 'class-name', 'motionui-addons-for-elementor' ),
+				'placeholder'        => esc_html__( 'class-name, class-2', 'motionui-addons-for-elementor' ),
 				'sanitize_callback'  => 'sanitize_text_field',
 				'frontend_available' => true,
+				'render_type'        => 'template',
 				'condition'          => [
 					'muia_animate_for_child' => 'yes',
 				],
@@ -98,6 +100,7 @@ class Motion_Effects{
 				'type'         => Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
 				'prefix_class' => 'mui-custom-ani-',
+				'frontend_available' => true,   
 			)
 		);
 
@@ -137,7 +140,7 @@ class Motion_Effects{
 					'px' => array( 'min' => -1000, 'max' => 1000 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-x: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-x: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -153,7 +156,7 @@ class Motion_Effects{
 					'px' => array( 'min' => -1000, 'max' => 1000 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-y: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-y: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -191,7 +194,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-rotate-x: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-rotate-x: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -207,7 +210,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-rotate-y: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-rotate-y: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -223,7 +226,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-rotate-z: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-rotate-z: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -263,7 +266,7 @@ class Motion_Effects{
 					'px' => array( 'min' => 0, 'max' => 5, 'step' => 0.1 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-scale-x: {{SIZE}};',
+					'{{WRAPPER}}' => '--muia-scale-x: {{SIZE}};',
 				),
 			)
 		);
@@ -280,7 +283,7 @@ class Motion_Effects{
 					'px' => array( 'min' => 0, 'max' => 5, 'step' => 0.1 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-scale-y: {{SIZE}};',
+					'{{WRAPPER}}' => '--muia-scale-y: {{SIZE}};',
 				),
 			)
 		);
@@ -311,7 +314,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-skew-x: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-skew-x: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -327,7 +330,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-skew-y: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-skew-y: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -346,7 +349,7 @@ class Motion_Effects{
 				),
 				'condition'  => array( 'muia_custom_ani_enable' => 'yes' ),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-opacity: {{SIZE}};',
+					'{{WRAPPER}}' => '--muia-opacity: {{SIZE}};',
 				),
 			)
 		);
@@ -387,7 +390,7 @@ class Motion_Effects{
 					'px' => array( 'min' => -1000, 'max' => 1000 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-x-to: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-x-to: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -403,7 +406,7 @@ class Motion_Effects{
 					'px' => array( 'min' => -1000, 'max' => 1000 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-y-to: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-y-to: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -441,7 +444,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-rotate-x-to: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-rotate-x-to: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -457,7 +460,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-rotate-y-to: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-rotate-y-to: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -473,7 +476,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-rotate-z-to: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-rotate-z-to: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -513,7 +516,7 @@ class Motion_Effects{
 					'px' => array( 'min' => 0, 'max' => 5, 'step' => 0.1 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-scale-x-to: {{SIZE}};',
+					'{{WRAPPER}}' => '--muia-scale-x-to: {{SIZE}};',
 				),
 			)
 		);
@@ -530,7 +533,7 @@ class Motion_Effects{
 					'px' => array( 'min' => 0, 'max' => 5, 'step' => 0.1 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-scale-y-to: {{SIZE}};',
+					'{{WRAPPER}}' => '--muia-scale-y-to: {{SIZE}};',
 				),
 			)
 		);
@@ -561,7 +564,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-skew-x-to: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-skew-x-to: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -577,7 +580,7 @@ class Motion_Effects{
 					'deg' => array( 'min' => -180, 'max' => 180 ),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-skew-y-to: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--muia-skew-y-to: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -596,7 +599,7 @@ class Motion_Effects{
 				),
 				'condition'  => array( 'muia_custom_ani_enable' => 'yes' ),
 				'selectors'  => array(
-					'{{WRAPPER}}' => '--mui-opacity-to: {{SIZE}};',
+					'{{WRAPPER}}' => '--muia-opacity-to: {{SIZE}};',
 				),
 			)
 		);
@@ -616,36 +619,55 @@ class Motion_Effects{
 				'label'              => esc_html__( 'Animation', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SELECT2,
 				'frontend_available' => true,
-				'options'            => array(
-					''               => esc_html__( 'None', 'motionui-addons-for-elementor' ),
-					'fade'     => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
-					'slide' => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
+				'render_type'        => 'template',
+				'options' => array(
+					''        => esc_html__( 'None',     'motionui-addons-for-elementor' ),
+					'fade'    => esc_html__( 'Fade',     'motionui-addons-for-elementor' ),
+					'slide'   => esc_html__( 'Slide',    'motionui-addons-for-elementor' ),
+					'zoom'    => esc_html__( 'Zoom',     'motionui-addons-for-elementor' ),
+					'flip'    => esc_html__( 'Flip',     'motionui-addons-for-elementor' ),
+					'rotate'  => esc_html__( 'Rotate',   'motionui-addons-for-elementor' ),
+					'skew'    => esc_html__( 'Skew',     'motionui-addons-for-elementor' ),
+					'bounce'  => esc_html__( 'Bounce',   'motionui-addons-for-elementor' ),
+					'elastic' => esc_html__( 'Elastic',  'motionui-addons-for-elementor' ),
+					'blur'    => esc_html__( 'Blur',     'motionui-addons-for-elementor' ),
+					'clip'    => esc_html__( 'Clip',     'motionui-addons-for-elementor' ),
 				),
 				'default'            => '',
 				'prefix_class'       => 'has-muia-motion-effect muia-motion-effect-',
 				'condition'          => $condition,
 			)
 		);
-		$element->add_control(
-			'muia_motion_direction',
-			[
-				'label' => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SELECT,
-				'default' => 'ltr',
-				'frontend_available' => true,  
-				'options' => [
-					'ltr' => esc_html__( 'Left -> Right', 'motionui-addons-for-elementor' ),
-					'rtl' => esc_html__( 'Right -> Left', 'motionui-addons-for-elementor' ),
-					'btt' => esc_html__( 'Bottom -> Top', 'motionui-addons-for-elementor' ),
-					'ttb' => esc_html__( 'Top -> Bottom', 'motionui-addons-for-elementor' ),
-				],
-				'condition' => array_merge(
-					$condition,
-					[
-						'muia_motion_effects_name!' => [''],
-					]
-				),
-			]
+		Motion::get_derection_control('muia_motion_direction',
+			$element, 
+			array_merge(
+				$condition,
+				[
+					'muia_motion_effects_name!' => [''],
+				]
+			)
 		);
+		// $element->add_control(
+		// 	'muia_motion_direction',
+		// 	[
+		// 		'label' => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
+		// 		'type' => \Elementor\Controls_Manager::SELECT,
+		// 		'default' => '',
+		// 		'frontend_available' => true,  
+		// 		'options' => [
+		// 			'' => esc_html__( 'Default', 'motionui-addons-for-elementor' ),
+		// 			'ltr' => esc_html__( 'Left -> Right', 'motionui-addons-for-elementor' ),
+		// 			'rtl' => esc_html__( 'Right -> Left', 'motionui-addons-for-elementor' ),
+		// 			'btt' => esc_html__( 'Bottom -> Top', 'motionui-addons-for-elementor' ),
+		// 			'ttb' => esc_html__( 'Top -> Bottom', 'motionui-addons-for-elementor' ),
+		// 		],
+		// 		'condition' => array_merge(
+		// 			$condition,
+		// 			[
+		// 				'muia_motion_effects_name!' => [''],
+		// 			]
+		// 		),
+		// 	]
+		// );
 	}
 }  

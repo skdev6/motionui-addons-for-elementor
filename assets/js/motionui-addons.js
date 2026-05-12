@@ -514,6 +514,8 @@
         var widgetsAnimation = elementorModules.frontend.handlers.Base.extend({
             onInit: function() {
                 if(typeof themeicMotionUiPro === 'undefined'){ 
+                    console.log('Access');
+                    
                     if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
                     if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
                 }
