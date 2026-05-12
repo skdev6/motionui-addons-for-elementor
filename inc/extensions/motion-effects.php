@@ -122,6 +122,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Translate', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
+'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -168,7 +169,8 @@ class Motion_Effects{
 			'muia_scroll_ani_rotate_toggle',
 			array(
 				'label'     => __( 'Rotation', 'motionui-addons-for-elementor' ),
-				'type'      => Controls_Manager::POPOVER_TOGGLE,
+				'type'         => Controls_Manager::POPOVER_TOGGLE,
+'frontend_available' => true,  ,
 				'condition' => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
 		);
@@ -239,6 +241,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Scale', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
+'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -296,6 +299,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Skew', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
+'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -372,6 +376,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Translate', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
+'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -418,7 +423,8 @@ class Motion_Effects{
 			'muia_scroll_ani_rotate_toggle_to',
 			array(
 				'label'     => __( 'Rotation', 'motionui-addons-for-elementor' ),
-				'type'      => Controls_Manager::POPOVER_TOGGLE,
+				'type'         => Controls_Manager::POPOVER_TOGGLE,
+'frontend_available' => true,  ,
 				'condition' => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
 		);
@@ -489,6 +495,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Scale', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
+'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
@@ -546,6 +553,7 @@ class Motion_Effects{
 			array(
 				'label'        => __( 'Skew', 'motionui-addons-for-elementor' ),
 				'type'         => Controls_Manager::POPOVER_TOGGLE,
+'frontend_available' => true,  
 				'return_value' => 'yes',
 				'condition'    => array( 'muia_custom_ani_enable' => 'yes' ),
 			)
