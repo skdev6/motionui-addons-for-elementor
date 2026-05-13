@@ -82,7 +82,6 @@ trait Button_Controls {
 	 * @return void
 	 */
 	public function _register_muia_btn_style_controls( $id_prefix = 'muia_btn', $args = array() ) {
-
 		$args = wp_parse_args(
 			$args,
 			array(
@@ -96,9 +95,11 @@ trait Button_Controls {
 				'active'          => false,
 				'active_selector' => '',
 				'is_variable'     => true,
+				'active_tab'       => true
 			)
 		);
-
+		
+		$is_tab_style = $args['active_tab'];
 		// Caller should pass a pre-translated string; we escape it here for safe output.
 		$section_label = esc_html( $args['title'] );
 
@@ -182,14 +183,15 @@ trait Button_Controls {
 		// -------------------------------------------------------------------------
 		if ( $has_tabs ) {
 
-			$this->start_controls_tabs( "{$id_prefix}_tabs" );
+			if($is_tab_style){
+				$this->start_controls_tabs( "{$id_prefix}_tabs" );
 
-			// -- Normal Tab -------------------------------------------------------
-			$this->start_controls_tab(
-				"{$id_prefix}_tab_normal",
-				array( 'label' => esc_html__( 'Normal', 'motionui-addons-for-elementor' ) )
-			);
-
+				// -- Normal Tab -------------------------------------------------------
+				$this->start_controls_tab(
+					"{$id_prefix}_tab_normal",
+					array( 'label' => esc_html__( 'Normal', 'motionui-addons-for-elementor' ) )
+				);
+			}
 			if ( $args['color'] ) {
 				$this->add_control(
 					"{$id_prefix}_color",
@@ -232,130 +234,132 @@ trait Button_Controls {
 					)
 				);
 			}
+		
+			if($is_tab_style) $this->end_controls_tab();
 
-			$this->end_controls_tab();
-
-			// -- Hover Tab --------------------------------------------------------
-			$this->start_controls_tab(
-				"{$id_prefix}_tab_hover",
-				array( 'label' => esc_html__( 'Hover', 'motionui-addons-for-elementor' ) )
-			);
-
-			if ( $args['color'] ) {
-				
-				$color_hover_selectors = $is_var
-					? array(
-						$selector => '--hover-color: {{VALUE}};',
-					)
-					: array(
-						$hover_selector => 'color: {{VALUE}};',
-						$selector       => '--hover-color: {{VALUE}};',
-					);
-
-				$this->add_control(
-					"{$id_prefix}_color_hover",
-					array(
-						'label'     => esc_html__( 'Text Color', 'motionui-addons-for-elementor' ),
-						'type'      => Controls_Manager::COLOR,
-						'selectors' => $color_hover_selectors,
-					)
-				);
-			}
-
-			if ( $args['bg_color'] ) {
-				
-				$bg_hover_selectors = $is_var
-					? array(
-						$selector => '--hover-bg-color: {{VALUE}};',
-					)
-					: array(
-						$hover_selector => 'background-color: {{VALUE}};',
-						$selector       => '--hover-bg-color: {{VALUE}};',
-					);
-
-				$this->add_control(
-					"{$id_prefix}_bg_color_hover",
-					array(
-						'label'     => esc_html__( 'Background Color', 'motionui-addons-for-elementor' ),
-						'type'      => Controls_Manager::COLOR,
-						'selectors' => $bg_hover_selectors,
-					)
-				);
-			}
-
-			if ( $args['border'] ) {
-				$border_hover_selectors = $is_var
-					? array(
-						$selector => '--hover-border-color: {{VALUE}};',
-					)
-					: array(
-						$hover_selector => 'border-color: {{VALUE}};',
-						$selector       => '--hover-border-color: {{VALUE}};',
-					);
-
-				$this->add_control(
-					"{$id_prefix}_border_color_hover",
-					array(
-						'label'     => esc_html__( 'Border Color', 'motionui-addons-for-elementor' ),
-						'type'      => Controls_Manager::COLOR,
-						'selectors' => $border_hover_selectors,
-					)
-				);
-			}
-
-			$this->end_controls_tab();
-
-			// -- Active Tab -------------------------------------------------------
-			if ( $args['active'] ) {
-
+			if($is_tab_style){
+				// -- Hover Tab --------------------------------------------------------
 				$this->start_controls_tab(
-					"{$id_prefix}_tab_active",
-					array( 'label' => esc_html__( 'Active', 'motionui-addons-for-elementor' ) )
+					"{$id_prefix}_tab_hover",
+					array( 'label' => esc_html__( 'Hover', 'motionui-addons-for-elementor' ) )
 				);
 
 				if ( $args['color'] ) {
+					
+					$color_hover_selectors = $is_var
+						? array(
+							$selector => '--hover-color: {{VALUE}};',
+						)
+						: array(
+							$hover_selector => 'color: {{VALUE}};',
+							$selector       => '--hover-color: {{VALUE}};',
+						);
+
 					$this->add_control(
-						"{$id_prefix}_color_active",
+						"{$id_prefix}_color_hover",
 						array(
 							'label'     => esc_html__( 'Text Color', 'motionui-addons-for-elementor' ),
 							'type'      => Controls_Manager::COLOR,
-							'selectors' => array(
-								$active_selector => ( $is_var ? '--active-color' : 'color' ) . ': {{VALUE}};',
-							),
+							'selectors' => $color_hover_selectors,
 						)
 					);
 				}
 
 				if ( $args['bg_color'] ) {
+					
+					$bg_hover_selectors = $is_var
+						? array(
+							$selector => '--hover-bg-color: {{VALUE}};',
+						)
+						: array(
+							$hover_selector => 'background-color: {{VALUE}};',
+							$selector       => '--hover-bg-color: {{VALUE}};',
+						);
+
 					$this->add_control(
-						"{$id_prefix}_bg_color_active",
+						"{$id_prefix}_bg_color_hover",
 						array(
 							'label'     => esc_html__( 'Background Color', 'motionui-addons-for-elementor' ),
 							'type'      => Controls_Manager::COLOR,
-							'selectors' => array(
-								$active_selector => ( $is_var ? '--active-bg-color' : 'background-color' ) . ': {{VALUE}};',
-							),
+							'selectors' => $bg_hover_selectors,
 						)
 					);
 				}
 
 				if ( $args['border'] ) {
+					$border_hover_selectors = $is_var
+						? array(
+							$selector => '--hover-border-color: {{VALUE}};',
+						)
+						: array(
+							$hover_selector => 'border-color: {{VALUE}};',
+							$selector       => '--hover-border-color: {{VALUE}};',
+						);
+
 					$this->add_control(
-						"{$id_prefix}_border_color_active",
+						"{$id_prefix}_border_color_hover",
 						array(
 							'label'     => esc_html__( 'Border Color', 'motionui-addons-for-elementor' ),
 							'type'      => Controls_Manager::COLOR,
-							'selectors' => array(
-								$active_selector => ( $is_var ? '--active-border-color' : 'border-color' ) . ': {{VALUE}};',
-							),
+							'selectors' => $border_hover_selectors,
 						)
 					);
 				}
 
 				$this->end_controls_tab();
-			}
 
-			$this->end_controls_tabs();
+				// -- Active Tab -------------------------------------------------------
+				if ( $args['active'] ) {
+
+					$this->start_controls_tab(
+						"{$id_prefix}_tab_active",
+						array( 'label' => esc_html__( 'Active', 'motionui-addons-for-elementor' ) )
+					);
+
+					if ( $args['color'] ) {
+						$this->add_control(
+							"{$id_prefix}_color_active",
+							array(
+								'label'     => esc_html__( 'Text Color', 'motionui-addons-for-elementor' ),
+								'type'      => Controls_Manager::COLOR,
+								'selectors' => array(
+									$active_selector => ( $is_var ? '--active-color' : 'color' ) . ': {{VALUE}};',
+								),
+							)
+						);
+					}
+
+					if ( $args['bg_color'] ) {
+						$this->add_control(
+							"{$id_prefix}_bg_color_active",
+							array(
+								'label'     => esc_html__( 'Background Color', 'motionui-addons-for-elementor' ),
+								'type'      => Controls_Manager::COLOR,
+								'selectors' => array(
+									$active_selector => ( $is_var ? '--active-bg-color' : 'background-color' ) . ': {{VALUE}};',
+								),
+							)
+						);
+					}
+
+					if ( $args['border'] ) {
+						$this->add_control(
+							"{$id_prefix}_border_color_active",
+							array(
+								'label'     => esc_html__( 'Border Color', 'motionui-addons-for-elementor' ),
+								'type'      => Controls_Manager::COLOR,
+								'selectors' => array(
+									$active_selector => ( $is_var ? '--active-border-color' : 'border-color' ) . ': {{VALUE}};',
+								),
+							)
+						);
+					}
+
+					$this->end_controls_tab();
+				}
+
+				$this->end_controls_tabs();
+			}
 		}
 
 		$this->end_controls_section();
