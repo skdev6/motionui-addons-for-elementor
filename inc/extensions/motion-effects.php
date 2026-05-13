@@ -669,8 +669,7 @@ class Motion_Effects{
 				]
 			)
 		);
-		Motion::get_derection_control('muia_motion_direction',
-			$element, 
+		Motion::get_derection_control($element, 'muia_motion_direction',
 			array_merge(
 				$condition,
 				[

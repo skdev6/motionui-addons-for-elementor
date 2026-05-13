@@ -240,9 +240,9 @@ class Motion {
 			'none' => esc_html__( 'Linear', 'motionui-addons-for-elementor' ),
 		);
 	}
-	public static function get_derection_control( $prefix_id = 'muia_motion_direction', $element, $condition = [] ) {
+	public static function get_derection_control( $element, $prefix = '', $condition = [] ) {
 		$element->add_control(
-			$prefix_id,
+			$prefix,
 			[
 				'label'              => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
 				'type'               => \Elementor\Controls_Manager::SELECT,

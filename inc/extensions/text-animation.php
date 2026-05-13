@@ -35,7 +35,7 @@ class Text_Animation{
 			)
 		);
 		if(muia_has_pro()){
-			Motion::get_derection_control('muia_text_direction', $element, ['muia_text_ani!' => ['', 'scramble']]);
+			Motion::get_derection_control($element, 'muia_text_direction', ['muia_text_ani!' => ['', 'scramble']]);  
 		}
 		$element->add_control(
 			'muia_text_ani_by',
