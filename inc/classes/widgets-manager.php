@@ -60,7 +60,7 @@ class Widgets_Manager{
     public static function local_widgets_map(){
         return [
             'animated-button'=>[
-                'title' => __('Button', 'motionui-addons-pro-for-elementor'),
+                'title' => __('Button', 'motionui-addons-for-elementor'),
                 'category'=> 'button',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -70,7 +70,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-slider'=>[  
-                'title' => __('Slider', 'motionui-addons-pro-for-elementor'),
+                'title' => __('Slider', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -80,7 +80,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-image'=>[  
-                'title' => __('Image', 'motionui-addons-pro-for-elementor'),
+                'title' => __('Image', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -90,7 +90,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'animated-gallery'=>[  
-                'title' => __('Gallery', 'motionui-addons-pro-for-elementor'),
+                'title' => __('Gallery', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => false,
@@ -100,7 +100,7 @@ class Widgets_Manager{
                 'tutorial'=> '',
             ],
             'motion-gallery'=>[  
-                'title' => __('Motion Gallery', 'motionui-addons-pro-for-elementor'),
+                'title' => __('Motion Gallery', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => true,

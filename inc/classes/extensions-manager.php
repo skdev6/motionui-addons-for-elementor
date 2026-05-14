@@ -205,8 +205,8 @@ class Extensions_Manager {
 	public static function local_extensions_map() {
 		return array(
 			'text-animation'   => array(
-				'title'       => __( 'Text Animation', 'motionui-addons-pro-for-elementor' ),
-				'description' => __( 'Add entrance animations to heading and text editor widgets.', 'motionui-addons-pro-for-elementor' ),
+				'title'       => __( 'Text Animation', 'motionui-addons-for-elementor' ),
+				'description' => __( 'Add entrance animations to heading and text editor widgets.', 'motionui-addons-for-elementor' ),
 				'is_active'   => true,
 				'is_pro'      => false,
 				'is_upcoming' => false,
@@ -215,8 +215,8 @@ class Extensions_Manager {
 				'tutorial'    => '',
 			),
 			'image-animation'  => array(
-				'title'       => __( 'Image Animation', 'motionui-addons-pro-for-elementor' ),
-				'description' => __( 'Add entrance animations to image widgets.', 'motionui-addons-pro-for-elementor' ),
+				'title'       => __( 'Image Animation', 'motionui-addons-for-elementor' ),
+				'description' => __( 'Add entrance animations to image widgets.', 'motionui-addons-for-elementor' ),
 				'is_active'   => true,
 				'is_pro'      => false,
 				'is_upcoming' => false,
@@ -225,8 +225,8 @@ class Extensions_Manager {
 				'tutorial'    => '',
 			),
 			'advance-position' => array(
-				'title'       => __( 'Advance Position', 'motionui-addons-pro-for-elementor' ),
-				'description' => __( 'Fine-tune widget positioning with advanced CSS controls.', 'motionui-addons-pro-for-elementor' ),
+				'title'       => __( 'Advance Position', 'motionui-addons-for-elementor' ),
+				'description' => __( 'Fine-tune widget positioning with advanced CSS controls.', 'motionui-addons-for-elementor' ),
 				'is_active'   => true,
 				'is_pro'      => false,
 				'is_upcoming' => false,
@@ -235,8 +235,8 @@ class Extensions_Manager {
 				'tutorial'    => '',
 			),
 			'motion-effects' => array(
-				'title'       => __( 'MotionUI Effects', 'motionui-addons-pro-for-elementor' ),
-				'description' => __( 'Add scroll-based animations to widgets.', 'motionui-addons-pro-for-elementor' ),
+				'title'       => __( 'MotionUI Effects', 'motionui-addons-for-elementor' ),
+				'description' => __( 'Add scroll-based animations to widgets.', 'motionui-addons-for-elementor' ),
 				'is_active'   => true,
 				'is_pro'      => true,
 				'is_upcoming' => false,
