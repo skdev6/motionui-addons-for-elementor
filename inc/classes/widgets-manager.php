@@ -127,6 +127,13 @@ class Widgets_Manager{
             }
 
         }
+        if ( ! muia_has_pro() && ! empty( self::get_pro_widgets() ) ) {
+            // foreach ( self::get_pro_widgets() as $name => $widget ) {
+            //     $widgets_manager->register(
+            //         new \Themeic\MotionUI_Addons\Widgets\Motionui_Placeholder( $name, $widget )
+            //     );
+            // }
+        }
     }
     public static function save_widgets($widgets = []){
         update_option( self::WIDGET_DB_KEY, $widgets);

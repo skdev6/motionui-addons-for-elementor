@@ -65,3 +65,16 @@
     width: 85px;
     margin-top: 15px;
 } 
+
+.muia-dilog-content .elementor-promotion-dialog__image, .muia-dilog-content .dialog-message.dialog-buttons-message,.muia-dilog-content .dialog-buttons-wrapper.dialog-buttons-buttons-wrapper {
+    text-align: center;
+}
+.muia-dilog-content .elementor-promotion-dialog__image {
+    margin-top: 16px;
+}
+.muia-dilog-content .dialog-message.dialog-buttons-message {
+    padding-top: 7px !important;
+}
+.muia-dilog-content .dialog-buttons-wrapper.dialog-buttons-buttons-wrapper {
+    padding-bottom: 34px !important;
+}  

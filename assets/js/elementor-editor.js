@@ -15,6 +15,13 @@ const pro_select_fields = [
           if ( e.target.closest('.elementor-panel-heading,.elementor-component-tab') ) {
               setTimeout(disableOptions, 150);
           }
+
+        if ( e.target.closest('.elementor-element--promotion') ) {
+            let el = e.target.closest('.elementor-element--promotion');
+            let isMuia = el.querySelector('.themeic-muia-logo');
+            if ( isMuia ) setTimeout( customizeDialog, 50 );
+        }
+
       }, true);
 
   });
@@ -32,97 +39,54 @@ const pro_select_fields = [
           }
       });
   }
-  /**
-   * Add pro widgets placeholder
-   */
-  if (typeof elementor !== 'undefined' && elementor.hooks) {
-    elementor.hooks.addFilter("panel/elements/regionViews", function (regionViews) {
-      if (typeof MotionUIEditor === 'undefined' || MotionUIEditor.hasPro || _.isEmpty(MotionUIEditor.placeholder_widgets)) {
-        return regionViews;
-      }
-      var CATEGORY_NAME = "motionui_addons_pro",
-        elementsView = regionViews.elements.view,
-        categoriesView = regionViews.categories.view,
-        elementsCollection = regionViews.elements.options.collection,
-        categoriesCollection = regionViews.categories.options.collection,
-        proWidgets = [],
-        ElementView,
-        freeCategoryIndex;
-      _.each(MotionUIEditor.placeholder_widgets, function (widget, name) {
-        elementsCollection.add({
-          name: "muia-" + name,
-          title: widget.title,
-          icon: widget.icon + ' themeic-muia-logo',
-          categories: [CATEGORY_NAME],
-          editable: false
-        });
-      });
-      elementsCollection.each(function (element) {
-        if (element.get("categories")[0] === CATEGORY_NAME) {
-          proWidgets.push(element);
-        }
-      });
-      freeCategoryIndex = categoriesCollection.findIndex({
-        name: "motionui_addons"
-      });
-      if (freeCategoryIndex !== -1) {
-        categoriesCollection.add({
-          name: "motionui_addons_pro_category",
-          title: "MotionUI Addons Pro",
-          icon: "themeic-muia-logo",
-          defaultActive: false,
-          sort: true,
-          hideIfEmpty: true,
-          items: proWidgets,
-          promotion: false
-        }, {
-          at: freeCategoryIndex + 1
-        });
-      }
-      ElementView = {
-        className: function className() {
-          var className = this.constructor.__super__.className.call(this);
-          if (!this.isEditable() && this.isHappyWidget()) {
-            className += " muia-element--promotion";
-          }
-          return className;
-        },
-        isHappyWidget: function isHappyWidget() {
-          var widgetName = this.model.get("name");
-          return widgetName != undefined && widgetName.indexOf("muia-") === 0;
-        },
-        onMouseDown: function onMouseDown() {
-          var title = this.model.get("title");
 
-          if (!this.isHappyWidget()) {
-            this.constructor.__super__.onMouseDown.call(this);
-            return;
-          }
-          elementor.promotion.showDialog({
-            title: MotionUIEditor.i18n.promotionDialogHeader.replace('%s', title),
-            content: MotionUIEditor.i18n.promotionDialogMessage.replace('%s', title),
-            targetElement: this.el,
-            position: {
-              blockStart: '-7'
-            },
-            actionButton: {
-              url: "https://motionuiaddons.com/",
-              text: MotionUIEditor.i18n.promotionDialogBtnTxt,
-              classes: ['elementor-button', 'muia-btn--promotion', 'go-pro']
-            }
-          });
-        }
-      };
-      regionViews.elements.view = elementsView.extend({
-        childView: elementsView.prototype.childView.extend(ElementView)
-      });
-      regionViews.categories.view = categoriesView.extend({
-        childView: categoriesView.prototype.childView.extend({
-          childView: categoriesView.prototype.childView.prototype.childView.extend(ElementView)
-        })
-      });
-      return regionViews;
-    });
+
+function customizeDialog() {
+    let dialog = document.querySelector('#elementor-element--promotion__dialog');
+    if ( ! dialog ) return;
+    dialog.classList.add('muia-dilog-content');
+    let oldBtn = dialog.querySelector('.elementor-promotion-dialog__button, .dialog-buttons-action, button.go-pro');
+    if ( oldBtn ) {
+        let newBtn = document.createElement('a');
+        newBtn.href        = MotionUIEditor.upgradeUrl;
+        newBtn.target      = '_blank';
+        newBtn.textContent = MotionUIEditor.btnText;
+        newBtn.className   = oldBtn.className;
+        newBtn.classList.remove('go-pro')
+        newBtn.classList.add('muia-btn--upgrade');
+
+        oldBtn.parentNode.replaceChild( newBtn, oldBtn );
+    }
+    // Title
+    let title = dialog.querySelector('.elementor-promotion-dialog__title, .dialog-header .dialog-title');
+    if ( title && ! title.textContent.includes('MotionUI') ) {
+        title.textContent = title.textContent.replace('Upgrade', 'Get MotionUI Pro');
+    }
+    // Description
+    let desc = dialog.querySelector('.elementor-promotion-dialog__description, .dialog-message');
+    if ( desc ) {
+        desc.textContent = MotionUIEditor.desc;
+    }
+    // Image
+  let img = dialog.querySelector('.elementor-promotion-dialog__image img, .dialog-widget-content img');
+
+  if ( img ) {
+      if ( MotionUIEditor.proImage ) {
+          img.src = MotionUIEditor.proImage;
+          img.alt = 'MotionUI Addons Pro';
+      }
+  } else if ( MotionUIEditor.proImage ) {
+      let newImg = document.createElement('img');
+      newImg.src = MotionUIEditor.proImage;
+      newImg.alt = 'MotionUI Addons Pro';
+
+      let wrap = document.createElement('div');
+      wrap.className = 'elementor-promotion-dialog__image';
+      wrap.appendChild( newImg );
+
+      if ( desc ) desc.parentNode.insertBefore( wrap, desc );
   }
+    dialog.querySelector('button.go-pro')?.remove(); 
+}
 
 })(jQuery);

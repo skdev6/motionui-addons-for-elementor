@@ -71,6 +71,10 @@ class Assets {
 			'placeholder_widgets' => Widgets_Manager::get_pro_widgets(),
 			'hasPro'                  => Motionui::is_active_pro(),
 			'editor_nonce'            => wp_create_nonce('muid_editor_nonce'),
+			'upgradeUrl'=>'https://motionuiaddons.com/',
+			'btnText'=>'Get Pro Feature',
+			'desc'=>'Take your designs further. Upgrade to MotionUI Addons Pro and unlock',
+			'proImage'=>THEMEIC_MUIA_ASSETS . 'img/get-pro.svg',
 			'i18n' => [
 				'promotionDialogHeader'     => esc_html__('%s Widget', 'motionui-addons-for-elementor'),
 				'promotionDialogMessage'    => esc_html__('Use %s widget with other exclusive pro widgets and 100% unique features to extend your toolbox and build sites faster and better.', 'motionui-addons-for-elementor'),

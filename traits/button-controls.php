@@ -95,7 +95,8 @@ trait Button_Controls {
 				'active'          => false,
 				'active_selector' => '',
 				'is_variable'     => true,
-				'active_tab'       => true
+				'active_tab'       => true,
+				'condition'       => array()
 			)
 		);
 		
@@ -125,11 +126,12 @@ trait Button_Controls {
 		// -------------------------------------------------------------------------
 		// Section
 		// -------------------------------------------------------------------------
-		$this->start_controls_section(
+		$this->start_controls_section(  
 			"{$id_prefix}_style",
 			array(
 				'label' => $section_label,
 				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => $args['condition']
 			)
 		);
 
