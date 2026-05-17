@@ -96,7 +96,9 @@ trait Button_Controls {
 				'active_selector' => '',
 				'is_variable'     => true,
 				'active_tab'       => true,
-				'condition'       => array()
+				'condition'       => array(),
+				'is_tab'          => true,
+				'selectors_with_prefix' => true,
 			)
 		);
 		
@@ -108,9 +110,10 @@ trait Button_Controls {
 		$is_var = (bool) $args['is_variable'];
 
 		// Prepare selectors.
-		$selectors       = $this->muia_prepare_selectors( $args['selectors'] );
+		$selectors       = $this->muia_prepare_selectors( $args['selectors_with_prefix'] ? ".themeic-$id_prefix" : ''. $args['selectors'] );   
 		$selector        = implode( ', ', $selectors );
 		$hover_selector  = $this->muia_build_state_selector( $selectors, ':not(.hvr-none):hover' );
+		$is_tab = $args['is_tab'];
 
 		if ( ! empty( $args['active_selector'] ) ) {
 			$active_selector = implode(
@@ -126,15 +129,16 @@ trait Button_Controls {
 		// -------------------------------------------------------------------------
 		// Section
 		// -------------------------------------------------------------------------
-		$this->start_controls_section(  
-			"{$id_prefix}_style",
-			array(
-				'label' => $section_label,
-				'tab'   => Controls_Manager::TAB_STYLE,
-				'condition' => $args['condition']
-			)
-		);
-
+		if($is_tab){
+			$this->start_controls_section(  
+				"{$id_prefix}_style",
+				array(
+					'label' => $section_label,
+					'tab'   => Controls_Manager::TAB_STYLE,
+					'condition' => $args['condition']
+				)
+			);
+		}
 		// -------------------------------------------------------------------------
 		// Typography
 		// -------------------------------------------------------------------------
@@ -363,8 +367,7 @@ trait Button_Controls {
 				$this->end_controls_tabs();
 			}
 		}
-
-		$this->end_controls_section();
+		if($is_tab) $this->end_controls_section();
 	}
 
 	/**
@@ -382,20 +385,26 @@ trait Button_Controls {
 			array(
 				'default_btn_type'  => 'muia-btn-normal',
 				'default_btn_effect'=> 'muia-btn-wave',
-				'show_content'      => true
+				'show_content'      => true,
+				'is_in_tab'           => true,
+				'title'=>esc_html__( 'Button Content', 'motionui-addons-for-elementor' ),
+				'condition'=>array()
 			)
 		);
 
 		$is_content_cntrols = $args['show_content'];
+		$is_in_tab = $args['is_in_tab'];
 
-		$this->start_controls_section(
-			"{$id_prefix}_muia_button_content",
-			array(
-				'label' => esc_html__( 'Button Content', 'motionui-addons-for-elementor' ),
-				'tab'   => Controls_Manager::TAB_CONTENT,
-			)
-		);
-
+		if($is_in_tab){
+			$this->start_controls_section(
+				"{$id_prefix}_muia_button_content",
+				array(
+					'label' => $args['title'],
+					'tab'   => Controls_Manager::TAB_CONTENT,
+					'condition'=>$args['condition']
+				)
+			);
+		}
 		$this->add_control(
 			"{$id_prefix}_btn_type",
 			array(
@@ -410,7 +419,7 @@ trait Button_Controls {
 			)
 		);
 		$this->add_responsive_control(      
-			'circle_btn_size',
+			$id_prefix . 'circle_btn_size',
 			[
 				'label' => esc_html__( 'Circle Size', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
@@ -435,7 +444,7 @@ trait Button_Controls {
 					'unit' => 'em',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .muia-btn' => '--circle-btn-size: {{SIZE}}{{UNIT}};',
+					"{{WRAPPER}} .themeic-$id_prefix.muia-btn" => '--circle-btn-size: {{SIZE}}{{UNIT}};',
 				],
                 'condition' => array(
                     "{$id_prefix}_btn_type" => 'muia-btn-circle',
@@ -549,7 +558,7 @@ trait Button_Controls {
 			)
 		);
 		$this->add_responsive_control(   
-			'space_between_text_icon',
+			$id_prefix . 'space_between_text_icon',
 			[
 				'label' => esc_html__( 'Icon Spacing', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
@@ -566,7 +575,7 @@ trait Button_Controls {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .muia-btn' => '--icon-gap: {{SIZE}}{{UNIT}};',
+					"{{WRAPPER}} .themeic-$id_prefix.muia-btn" => '--icon-gap: {{SIZE}}{{UNIT}};',
 				],
                 'condition' => array(
                     "{$id_prefix}_icon[value]!" => '',
@@ -574,7 +583,7 @@ trait Button_Controls {
 			]
 		);
 		$this->add_responsive_control(      
-			'btn_icon_rotation',
+			$id_prefix . 'btn_icon_rotation',
 			[
 				'label' => esc_html__( 'Icon rotation', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
@@ -587,7 +596,7 @@ trait Button_Controls {
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .muia-btn' => '--icon-rotation: {{SIZE}}deg;',
+					"{{WRAPPER}} .themeic-$id_prefix.muia-btn" => '--icon-rotation: {{SIZE}}deg;',
 				],
                 'condition' => array(
                     "{$id_prefix}_icon[value]!" => '',
@@ -595,7 +604,7 @@ trait Button_Controls {
 			]
 		);
 		$this->add_responsive_control(        
-			'btn_icon_size',
+			$id_prefix . 'btn_icon_size',
 			[
 				'label' => esc_html__( 'Icon Size', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
@@ -620,7 +629,7 @@ trait Button_Controls {
 					'unit' => 'em',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .muia-btn-icon-inner' => 'font-size: {{SIZE}}{{UNIT}};',
+					"{{WRAPPER}} .themeic-$id_prefix.muia-btn .muia-btn-icon-inner" => 'font-size: {{SIZE}}{{UNIT}};',
 				],
                 'condition' => array(
                     "{$id_prefix}_icon[value]!" => '',  
@@ -657,7 +666,7 @@ trait Button_Controls {
 		);
 		if(!Motionui::is_active_pro()){
 			$this->add_control(
-				'muia_pro_btn_notice',
+				"{$id_prefix}_muia_pro_btn_notice",
 				array(
 				'separator'    => 'before', 
 					'type' => Controls_Manager::RAW_HTML,
@@ -665,7 +674,7 @@ trait Button_Controls {
 				)
 			);
 		}
-		$this->end_controls_section();
+		if($is_in_tab) $this->end_controls_section();
 	}
 
 	/**
@@ -724,6 +733,7 @@ trait Button_Controls {
 			: 'left';
 
         $btn_classes = implode(' ', array_filter([
+			"themeic-$id_prefix",
             'muia-btn',
             $btn_type,
             $btn_effect,
@@ -731,7 +741,7 @@ trait Button_Controls {
             $is_stroke_icon,
             $icon_position == 'left' ? 'muia-icon-pos-left' : '',
             $icon_position == 'right' ? 'muia-icon-pos-right' : '',
-        ]));
+        ]));   
 
 		$args = wp_parse_args(
 			$args,

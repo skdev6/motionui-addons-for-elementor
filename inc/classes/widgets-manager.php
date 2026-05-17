@@ -109,6 +109,16 @@ class Widgets_Manager{
                 'demo'=> 'dd',
                 'tutorial'=> 'cd',
             ],
+            'post-filter'=>[  
+                'title' => __('Portfolio and Post Filter', 'motionui-addons-for-elementor'),
+                'category'=> ['filter', 'portfolio'],
+                'is_active'=> true,
+                'is_pro'       => true,
+                'is_upcoming'  => false,
+                'icon'=>'eicon-posts-grid',
+                'demo'=> 'dd',
+                'tutorial'=> 'cd',
+            ],
         ];
     }
     public static function register_widgets($widgets_manager = null){ 

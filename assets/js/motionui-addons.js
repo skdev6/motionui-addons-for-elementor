@@ -29,9 +29,9 @@
         fun(); 
     }
     // Init Button
-    function button($scope){  
-        let btn = $scope.find('.muia-btn');
-        let buttonTextElement = $scope.find('.muia-btn-text');
+    function button(btn){  
+        let buttonTextElement = btn.find('.muia-btn-text');
+        console.log('Button', btn);
         
         if(btn.hasClass('muia-btn-reveal') || btn.hasClass('muia-btn-reveal-random')){
             var chars = new SplitType(buttonTextElement[0], {types:"chars"}).chars;    
@@ -500,7 +500,6 @@
      * Initialized all widgets
     */
     const widgets = {
-        'muia-animated-button.default':button,
         'muia-animated-slider.default':muiaSlide, 
         'muia-animated-gallery.default':gallery, 
     }
@@ -535,6 +534,9 @@
         });
         
         elementorFrontend.hooks.addAction('frontend/element_ready/global', function ($scope) {
+
+            if($scope.find('.muia-btn').length) $scope.find('.muia-btn').each(function(){button($(this))});  
+            
             elementorFrontend.elementsHandler.addHandler(widgetsAnimation, {
                 $element: $scope
             });

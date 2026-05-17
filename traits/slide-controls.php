@@ -33,7 +33,7 @@ trait Slide_Controls {
             'scroll_direction_default'       => 'yes',
             'speed_default'          => 300,
             'autoplay_default'       => 'yes',
-            'autoplay_speed_default' => 3000,
+            'autoplay_speed_default' => 2,
             'loop_default'           => 'yes',
             'navigation_default'     => 'arrow',
             'transition_default'     => 'slide',

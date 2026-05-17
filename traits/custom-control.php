@@ -79,4 +79,125 @@ trait Custom_Control{
             ]
         );
     }
+	public function _add_text_controls( $prefix = 'muia_text', $args = array() ) {
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'title'      => '',
+				'selectors'  => '{{WRAPPER}} .title',
+				'typo'       => true,
+				'color'      => true,
+				'text_shadow'=> false,
+				'margin'     => true,
+				'alignment'  => false,
+				'condition'  => array(),
+			)
+		);
+
+		$selector = $args['selectors'];
+
+		// Heading.
+		if ( '' !== $args['title'] ) {
+
+			$this->add_control(
+				$prefix . '_heading',
+				array(
+					'label'     => $args['title'],
+					'type'      => Controls_Manager::HEADING,
+					'separator' => 'before',
+					'condition' => $args['condition'],
+				)
+			);
+		}
+
+		// Typography.
+		if ( $args['typo'] ) {
+
+			$this->add_group_control(
+				Group_Control_Typography::get_type(),
+				array(
+					'name'      => $prefix . '_typography',
+					'selector'  => $selector,
+					'condition' => $args['condition'],
+				)
+			);
+		}
+
+		// Text color.
+		if ( $args['color'] ) {
+
+			$this->add_control(
+				$prefix . '_color',
+				array(
+					'label'     => esc_html__( 'Color', 'motionui-addons-for-elementor' ),
+					'type'      => Controls_Manager::COLOR,
+					'selectors' => array(
+						$selector => 'color: {{VALUE}};',
+					),
+					'condition' => $args['condition'],
+				)
+			);
+		}
+
+		// Text alignment.
+		if ( $args['alignment'] ) {
+
+			$this->add_responsive_control(
+				$prefix . '_alignment',
+				array(
+					'label'     => esc_html__( 'Alignment', 'motionui-addons-for-elementor' ),
+					'type'      => Controls_Manager::CHOOSE,
+					'options'   => array(
+						'left' => array(
+							'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+							'icon'  => 'eicon-text-align-left',
+						),
+						'center' => array(
+							'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
+							'icon'  => 'eicon-text-align-center',
+						),
+						'right' => array(
+							'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
+							'icon'  => 'eicon-text-align-right',
+						),
+					),
+					'selectors' => array(
+						$selector => 'text-align: {{VALUE}};',
+					),
+					'condition' => $args['condition'],
+				)
+			);
+		}
+
+		// Text shadow.
+		if ( $args['text_shadow'] ) {
+
+			$this->add_group_control(
+				Group_Control_Text_Shadow::get_type(),
+				array(
+					'name'      => $prefix . '_text_shadow',
+					'selector'  => $selector,
+					'condition' => $args['condition'],
+				)
+			);
+		}
+
+		// Margin.
+		if ( $args['margin'] ) {
+
+			$this->add_responsive_control(
+				$prefix . '_margin',
+				array(
+					'label'      => esc_html__( 'Margin', 'motionui-addons-for-elementor' ),
+					'type'       => Controls_Manager::DIMENSIONS,
+					'size_units' => array( 'px', '%', 'em', 'rem' ),
+					'selectors'  => array(
+						$selector => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					),
+					'condition'  => $args['condition'],
+				)
+			);
+		}
+	}
 }

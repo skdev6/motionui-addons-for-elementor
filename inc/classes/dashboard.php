@@ -143,7 +143,7 @@ class Dashboard{
 
 			// Safely extract and sanitize individual widget fields.
 			$muia_title      = isset( $muia_widget['title'] )     && is_string( $muia_widget['title'] )    ? $muia_widget['title']              : '';
-			$muia_category   = isset( $muia_widget['category'] )  && is_string( $muia_widget['category'] ) ? sanitize_key( $muia_widget['category'] ) : '';
+			$muia_category   = '';
 			$muia_icon       = isset( $muia_widget['icon'] )      && is_string( $muia_widget['icon'] )     ? $muia_widget['icon']               : '';
 			$muia_demo_url   = isset( $muia_widget['demo'] )      && is_string( $muia_widget['demo'] )     ? $muia_widget['demo']               : '';
 			$muia_tutorial   = isset( $muia_widget['tutorial'] )  && is_string( $muia_widget['tutorial'] ) ? $muia_widget['tutorial']           : '';
@@ -153,6 +153,28 @@ class Dashboard{
             $is_active_pro = Motionui::is_active_pro();
             $is_lock = $muia_is_pro && ! $is_active_pro;
             
+            if ( isset( $muia_widget['category'] ) ) {
+
+                // If category is array.
+                if ( is_array( $muia_widget['category'] ) ) {
+
+                    $muia_category = implode(
+                        ' ',
+                        array_map(
+                            function( $category ) {
+                                return 'muia-cat-' . sanitize_key( $category );
+                            },
+                            $muia_widget['category']
+                        )
+                    );
+
+                // If category is string.
+                } elseif ( is_string( $muia_widget['category'] ) ) {
+
+                    $muia_category = 'muia-cat-' . sanitize_key( $muia_widget['category'] );
+                }
+            }
+
             if(!$is_active_pro && $muia_is_pro){
                 $muia_is_active = false;
             }
@@ -163,7 +185,7 @@ class Dashboard{
 			// Build CSS classes for the card (used by JS isotope/filter).
 			$muia_card_classes = array( 'th-widget-card', $muia_widget_slug );
 			if ( ! empty( $muia_category ) ) {
-				$muia_card_classes[] = 'muia-cat-'.$muia_category;
+				$muia_card_classes[] = $muia_category;
 			}
 			if ( $muia_is_pro ) {
 				$muia_card_classes[] = 'is-pro';
@@ -172,7 +194,7 @@ class Dashboard{
 				$muia_card_classes[] = 'is-upcoming';
 			}
 			if ( $is_lock ) {
-				$muia_card_classes[] = 'is-active-pro';
+				$muia_card_classes[] = 'not-active-pro';
 			}
 		?>
 
@@ -307,17 +329,42 @@ class Dashboard{
         );
         return $muia_all_active;
     }
-    public static function get_unique_categories( $muia_widgets_map ) {
+    public static function get_unique_categories( $muia_widgets_map ) { 
+
         $muia_categories = array();
+
         foreach ( $muia_widgets_map as $muia_widget ) {
-            if ( ! empty( $muia_widget['category'] ) && is_string( $muia_widget['category'] ) ) {
-                $category_key = sanitize_key( $muia_widget['category'] );
+
+            if ( empty( $muia_widget['category'] ) ) {
+                continue;
+            }
+
+            $categories = $muia_widget['category'];
+
+            // Convert single string to array.
+            if ( is_string( $categories ) ) {
+                $categories = array( $categories );
+            }
+
+            // Skip invalid values.
+            if ( ! is_array( $categories ) ) {
+                continue;
+            }
+
+            foreach ( $categories as $category ) {
+
+                if ( empty( $category ) || ! is_string( $category ) ) {
+                    continue;
+                }
+
+                $category_key = sanitize_key( $category );
+
                 if ( ! isset( $muia_categories[ $category_key ] ) ) {
-                    // Capitalize for display.
                     $muia_categories[ $category_key ] = ucfirst( $category_key );
                 }
             }
         }
-        return $muia_categories;   
-    }    
+
+        return $muia_categories;
+    } 
 }
