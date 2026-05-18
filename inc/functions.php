@@ -47,3 +47,41 @@ if ( ! function_exists( 'muia_get_pronotice_html' ) ) {
 		);
 	}
 }
+if ( ! function_exists( 'muia_get_acf_url' ) ) {
+    function muia_get_acf_url( string $field_name, ?int $post_id = null ): string {
+        if ( ! function_exists( 'get_field' ) ) {
+            return '';
+        }
+
+        // Resolve post ID at runtime — default parameter values cannot be
+        // function calls in PHP, so we handle the fallback here instead.
+        $post_id     = $post_id ?? get_the_ID();
+        $field_value = get_field( $field_name, $post_id );
+
+        if ( empty( $field_value ) ) {
+            return '';
+        }
+
+        // ACF link field returns an array with a 'url' key.
+        if ( is_array( $field_value ) && ! empty( $field_value['url'] ) ) {
+            return esc_url( $field_value['url'] );
+        }
+
+        // Plain text / URL field returns a string.
+        if ( is_string( $field_value ) ) {
+            return esc_url( $field_value );
+        }
+
+        return '';
+    }
+}
+if ( ! function_exists( 'muia_get_acf_data' ) ) {
+    function muia_get_acf_data( string $field_name, ?int $post_id = null ): mixed {
+        if ( ! function_exists( 'get_field' ) ) {
+            return null;
+        }
+
+        $post_id = $post_id ?? get_the_ID();
+        return get_field( $field_name, $post_id );
+    }
+}

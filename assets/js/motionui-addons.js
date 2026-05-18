@@ -29,10 +29,8 @@
         fun(); 
     }
     // Init Button
-    function button(btn){  
+    function button(btn){
         let buttonTextElement = btn.find('.muia-btn-text');
-        console.log('Button', btn);
-        
         if(btn.hasClass('muia-btn-reveal') || btn.hasClass('muia-btn-reveal-random')){
             var chars = new SplitType(buttonTextElement[0], {types:"chars"}).chars;    
             chars.forEach((el, index)=>{

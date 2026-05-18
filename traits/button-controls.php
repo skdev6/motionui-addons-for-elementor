@@ -386,6 +386,7 @@ trait Button_Controls {
 				'default_btn_type'  => 'muia-btn-normal',
 				'default_btn_effect'=> 'muia-btn-wave',
 				'show_content'      => true,
+				'align'      => true,
 				'is_in_tab'           => true,
 				'title'=>esc_html__( 'Button Content', 'motionui-addons-for-elementor' ),
 				'condition'=>array()
@@ -393,6 +394,7 @@ trait Button_Controls {
 		);
 
 		$is_content_cntrols = $args['show_content'];
+		$is_align = $args['align'];
 		$is_in_tab = $args['is_in_tab'];
 
 		if($is_in_tab){
@@ -458,6 +460,7 @@ trait Button_Controls {
 				'type'    => Controls_Manager::SELECT,
 				'default' => $args['default_btn_effect'],
 				'options' => array(
+					'muia-btn-default' => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
 					'muia-btn-wave'          => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
 					'muia-btn-reveal'        => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
 					'muia-btn-reveal-random' => esc_html__(
@@ -636,34 +639,36 @@ trait Button_Controls {
                 ),  
 			]
 		);
-		$this->add_responsive_control(
-			"{$id_prefix}_align_x",
-			array(
-				'label'       => esc_html__( 'Alignment', 'motionui-addons-for-elementor' ),
-				'type'        => Controls_Manager::CHOOSE,
-				'label_block' => false,
-                'separator'    => 'before', 
-				'options'     => array(
-					'left'   => array(
-						'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
-						'icon'  => 'eicon-h-align-left',
+		if($is_align){
+			$this->add_responsive_control(
+				"{$id_prefix}_align_x",
+				array(
+					'label'       => esc_html__( 'Alignment', 'motionui-addons-for-elementor' ),
+					'type'        => Controls_Manager::CHOOSE,
+					'label_block' => false,
+					'separator'    => 'before', 
+					'options'     => array(
+						'left'   => array(
+							'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+							'icon'  => 'eicon-h-align-left',
+						),
+						'center' => array(
+							'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
+							'icon'  => 'eicon-h-align-center',
+						),
+						'right'  => array(
+							'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
+							'icon'  => 'eicon-h-align-right',
+						),
 					),
-					'center' => array(
-						'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
-						'icon'  => 'eicon-h-align-center',
+					'toggle'    => true,
+					'selectors' => array(
+						'{{WRAPPER}} .elementor-widget-container'            => 'text-align: {{VALUE}};',
+						'{{WRAPPER}}:not(:has(.elementor-widget-container))' => 'text-align: {{VALUE}};',
 					),
-					'right'  => array(
-						'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
-						'icon'  => 'eicon-h-align-right',
-					),
-				),
-				'toggle'    => true,
-				'selectors' => array(
-					'{{WRAPPER}} .elementor-widget-container'            => 'text-align: {{VALUE}};',
-					'{{WRAPPER}}:not(:has(.elementor-widget-container))' => 'text-align: {{VALUE}};',
-				),
-			)
-		);
+				)
+			);
+		}
 		if(!Motionui::is_active_pro()){
 			$this->add_control(
 				"{$id_prefix}_muia_pro_btn_notice",
@@ -732,7 +737,18 @@ trait Button_Controls {
 			? $settings[ "{$id_prefix}_icon_position_style" ]
 			: 'left';
 
-        $btn_classes = implode(' ', array_filter([
+		$args = wp_parse_args(
+			$args,
+			array(
+				'title'      => $button_text,
+				'url'        => $button_url,
+				'url_target' => $button_target,
+				'url_rel'    => $button_rel,
+				'class'      => '',
+			)
+		);
+
+        $btn_classes = implode(' ', array_filter([   
 			"themeic-$id_prefix",
             'muia-btn',
             $btn_type,
@@ -741,18 +757,13 @@ trait Button_Controls {
             $is_stroke_icon,
             $icon_position == 'left' ? 'muia-icon-pos-left' : '',
             $icon_position == 'right' ? 'muia-icon-pos-right' : '',
+			$args['class']
         ]));   
 
-		$args = wp_parse_args(
-			$args,
-			array(
-				'title'      => $button_text,
-				'url'        => $button_url,
-				'url_target' => $button_target,
-				'url_rel'    => $button_rel,
-			)
-		);
+		$is_nothing = empty( $icon['value'] ) && empty( $args['title'] ) && empty( $args['url'] );
 
+		if($is_nothing) return;
+		
 		echo $magnetic_effect !=='' ? '<div class="muia-btn-wrap">' : '';
 		?>
 		<a

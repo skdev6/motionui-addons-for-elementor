@@ -90,6 +90,7 @@ trait Custom_Control{
 				'color'      => true,
 				'text_shadow'=> false,
 				'margin'     => true,
+				'padding'     => false,
 				'alignment'  => false,
 				'condition'  => array(),
 			)
@@ -190,6 +191,21 @@ trait Custom_Control{
 				$prefix . '_margin',
 				array(
 					'label'      => esc_html__( 'Margin', 'motionui-addons-for-elementor' ),
+					'type'       => Controls_Manager::DIMENSIONS,
+					'size_units' => array( 'px', '%', 'em', 'rem' ),
+					'selectors'  => array(
+						$selector => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					),
+					'condition'  => $args['condition'],
+				)
+			);
+		}
+		if ( $args['padding'] ) {
+
+			$this->add_responsive_control(
+				$prefix . '_padding',
+				array(
+					'label'      => esc_html__( 'Padding', 'motionui-addons-for-elementor' ),
 					'type'       => Controls_Manager::DIMENSIONS,
 					'size_units' => array( 'px', '%', 'em', 'rem' ),
 					'selectors'  => array(
