@@ -51,6 +51,9 @@
         --hover-color:var(--active-color, var(--color)) !important;
         --hover-border-color:var(--active-border-color, var(--border-color)) !important;
     }
+    .muia-btn-text{
+        white-space: nowrap; 
+    }
     span{
         display: inline-block; 
     }

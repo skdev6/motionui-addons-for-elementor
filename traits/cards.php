@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 trait Cards {
-	use Custom_Control;
+	use Custom_Control, Button_Controls;
 	/**
 	 * Render card markup.
 	 *
@@ -38,14 +38,15 @@ trait Cards {
 				'show_arrow'=> false,
 			)
 		);
-
+		
 		$card_classes = array(
 			'muia-card',
 			sanitize_html_class( $args['card_type'] ),
 		);
 
 		$thumbnail_alt = ! empty( $args['thumbnail_alt'] ) ? $args['thumbnail_alt'] : $args['title'];
-		$show_import_demo_btn = $args['card_type'] === 'card-style-grid-template';
+		$repeter_btn_key = !empty($args['repeter_buttons']) ? $args['repeter_buttons'] : null;
+
 		?>
 
 		<div class="<?php echo esc_attr( implode( ' ', $card_classes ) ); ?>"> 
@@ -79,9 +80,8 @@ trait Cards {
 					<?php else : ?>
 						<span><?php echo esc_html( $args['title'] ); ?></span>
 					<?php endif; 
-						if($show_import_demo_btn){ 
-							$this->muia_get_import_demo_btn();  
-						 } ?>
+						$this->muia_get_card_buttons($repeter_btn_key, $args, $repeter_btn_key);  
+					?>
 				</h3>
 
 			<?php endif; ?>
@@ -169,27 +169,13 @@ trait Cards {
 
 		<?php
 	}
-	public function muia_get_import_demo_btn($args = array()){
-		$args = wp_parse_args(
-			$args,
-			array(
-				'import_title'     => esc_html__('Import', 'motionui-addons-for-elementor'),
-				'import_url'     => muia_get_acf_url('import_url'),
-				'demo_title'     => esc_html__('Live demo', 'motionui-addons-for-elementor'),
-				'demo_url'     => get_the_permalink(),
-			)
-		);
+	public function muia_get_card_buttons($prefix = '', $args = array(), $repeter_key){   
+		unset($args['title']);
+		unset($args['url']);
+
 		echo '<div class="btns_list_wrap">';
 		
-		$this->_render_muia_btn('btns_list', array(
-			'title' => $args['import_title'],
-			'url' => $args['import_url'],
-		));
-
-		$this->_render_muia_btn('btns_list', array(
-			'title' => $args['demo_title'],
-			'url' => $args['demo_url'],
-		));
+		$this->_render_muia_btn($repeter_key, $args, $repeter_key);  
 
 		echo '</div>';
 	}

@@ -85,3 +85,46 @@ if ( ! function_exists( 'muia_get_acf_data' ) ) {
         return get_field( $field_name, $post_id );
     }
 }
+if ( ! function_exists( 'muia_get_dynamic_meta' ) ) {   
+	function muia_get_dynamic_meta( string $field_name, ?int $post_id = null ): string {
+
+		$post_id = $post_id ?? get_the_ID();
+
+		if ( empty( $field_name ) || empty( $post_id ) ) {
+			return '';
+		}
+		$field_value = '';
+
+		if ( function_exists( 'get_field' ) ) {
+			$field_value = get_field( $field_name, $post_id );
+		}
+		if ( empty( $field_value ) ) {
+			$field_value = get_post_meta( $post_id, $field_name, true );
+		}
+		if ( empty( $field_value ) ) {
+			return '';
+		}
+		if ( is_array( $field_value ) ) {
+
+			if ( ! empty( $field_value['url'] ) ) {
+				return esc_url( $field_value['url'] );
+			}
+
+			// Optional fallback keys.
+			if ( ! empty( $field_value['link'] ) ) {
+				return esc_url( $field_value['link'] );
+			}
+
+			if ( ! empty( $field_value['value'] ) ) {
+				return esc_url( $field_value['value'] );
+			}
+
+			return $field_value;
+		}
+		if ( is_string( $field_value ) ) {
+			return wp_kses_post( $field_value );
+		}
+
+		return '';
+	}
+}

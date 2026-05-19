@@ -16,6 +16,7 @@ use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use Elementor\Icons_Manager;
+use Elementor\Repeater;
 use Themeic\MotionUI_Addons\Inc\Classes\Motionui;
 
 if ( ! defined( 'ABSPATH' ) ) exit;  
@@ -378,101 +379,101 @@ trait Button_Controls {
 	 * @param  string $title     Section title. Default 'Animated Button'.
 	 * @return void
 	 */
-	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn', $args = array() ) {
+	public function _register_muia_btn_content_controls( $id_prefix = 'muia_btn', $args = array(), ?Repeater $repeater = null ) {
 
 		$args = wp_parse_args(
 			$args,
 			array(
-				'default_btn_type'  => 'muia-btn-normal',
-				'default_btn_effect'=> 'muia-btn-wave',
-				'show_content'      => true,
-				'align'      => true,
-				'is_in_tab'           => true,
-				'title'=>esc_html__( 'Button Content', 'motionui-addons-for-elementor' ),
-				'condition'=>array()
+				'default_btn_type'   => 'muia-btn-normal',
+				'default_btn_effect' => 'muia-btn-wave',
+				'show_content'       => true,
+				'align'              => true,
+				'is_in_tab'          => true,
+				'title'              => esc_html__( 'Button Content', 'motionui-addons-for-elementor' ),
+				'condition'          => array(),
 			)
 		);
 
-		$is_content_cntrols = $args['show_content'];
-		$is_align = $args['align'];
-		$is_in_tab = $args['is_in_tab'];
+		// Use repeater if passed, otherwise use $this (widget).
+		// This allows the same method to register controls in both contexts.
+		$control_manager = $repeater instanceof Repeater ? $repeater : $this;
 
-		if($is_in_tab){
+		$is_content_controls = $args['show_content'];
+		$is_align            = $args['align'];
+		$is_in_tab           = $args['is_in_tab'];
+
+		// Section wrapping only makes sense on the widget, not inside a repeater.
+		$is_in_tab = $is_in_tab && ! ( $repeater instanceof Repeater );
+
+		if ( $is_in_tab ) {
 			$this->start_controls_section(
 				"{$id_prefix}_muia_button_content",
 				array(
-					'label' => $args['title'],
-					'tab'   => Controls_Manager::TAB_CONTENT,
-					'condition'=>$args['condition']
+					'label'     => $args['title'],
+					'tab'       => Controls_Manager::TAB_CONTENT,
+					'condition' => $args['condition'],
 				)
 			);
 		}
-		$this->add_control(
+
+		$control_manager->add_control(
 			"{$id_prefix}_btn_type",
 			array(
 				'label'   => esc_html__( 'Type', 'motionui-addons-for-elementor' ),
 				'type'    => Controls_Manager::SELECT,
 				'default' => $args['default_btn_type'],
 				'options' => array(
-					'muia-btn-normal'          => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
-					'muia-btn-circle'        => esc_html__( 'Circle', 'motionui-addons-for-elementor' ),
-					'muia-btn-separate-circle-icon'   => esc_html__( 'Separate Circle Icon', 'motionui-addons-for-elementor' ),
+					'muia-btn-normal'               => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
+					'muia-btn-circle'               => esc_html__( 'Circle', 'motionui-addons-for-elementor' ),
+					'muia-btn-separate-circle-icon' => esc_html__( 'Separate Circle Icon', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
-		$this->add_responsive_control(      
+
+		$control_manager->add_responsive_control(
 			$id_prefix . 'circle_btn_size',
-			[
-				'label' => esc_html__( 'Circle Size', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'em', 'px', '%', 'rem', 'custom' ],
-				'range' => [
-					'em' => [
-						'min' => 0,
-						'max' => 100,
-						'step' => 0.01,   
-					],  
-					'px' => [
-						'min' => 0,
-						'max' => 1000,
-						'step' => 5,
-					],
-					'%' => [
-						'min' => 0,
-						'max' => 100,
-					],
-				],
-				'default' => [   
-					'unit' => 'em',
-				],
-				'selectors' => [
-					"{{WRAPPER}} .themeic-$id_prefix.muia-btn" => '--circle-btn-size: {{SIZE}}{{UNIT}};',
-				],
-                'condition' => array(
-                    "{$id_prefix}_btn_type" => 'muia-btn-circle',
-                ),  
-			]
+			array(
+				'label'      => esc_html__( 'Circle Size', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'em', 'px', '%', 'rem', 'custom' ),
+				'range'      => array(
+					'em' => array( 'min' => 0, 'max' => 100, 'step' => 0.01 ),
+					'px' => array( 'min' => 0, 'max' => 1000, 'step' => 5 ),
+					'%'  => array( 'min' => 0, 'max' => 100 ),
+				),
+				'default'    => array( 'unit' => 'em' ),
+				'selectors'  => array(
+					// Repeater items use a different selector context.
+					$repeater instanceof Repeater
+						? "{{WRAPPER}} {{CURRENT_ITEM}} .themeic-{$id_prefix}.muia-btn"
+						: "{{WRAPPER}} .themeic-{$id_prefix}.muia-btn" => '--circle-btn-size: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array(
+					"{$id_prefix}_btn_type" => 'muia-btn-circle',
+				),
+			)
 		);
-		$this->add_control(     
+
+		$control_manager->add_control(
 			"{$id_prefix}_btn_effect",
 			array(
 				'label'   => esc_html__( 'Effect', 'motionui-addons-for-elementor' ),
 				'type'    => Controls_Manager::SELECT,
 				'default' => $args['default_btn_effect'],
 				'options' => array(
-					'muia-btn-default' => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
+					'muia-btn-default'       => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
 					'muia-btn-wave'          => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
 					'muia-btn-reveal'        => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
 					'muia-btn-reveal-random' => esc_html__(
 						! Motionui::is_active_pro() ? 'Reveal Random (Pro ✦)' : 'Reveal Random',
 						'motionui-addons-for-elementor'
 					),
-					// 'muia-btn-symbolab'      => esc_html__( ! Motionui::is_active_pro() ? 'Symbolab (Pro ✦)' : 'Symbolab', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
-		if(Motionui::is_active_pro()){
-			$this->add_control(
+
+		if ( Motionui::is_active_pro() ) {
+			$control_manager->add_control(
 				"{$id_prefix}_muia_magnetic_effect",
 				array(
 					'label'        => esc_html__( 'Magnetic Effect', 'motionui-addons-for-elementor' ),
@@ -483,39 +484,60 @@ trait Button_Controls {
 				)
 			);
 		}
-		if($is_content_cntrols):
-		$this->add_control(
-			"{$id_prefix}_button_text",
-			array(
-				'label'       => esc_html__( 'Text', 'motionui-addons-for-elementor' ),
-				'label_block' => true,
-				'type'        => Controls_Manager::TEXT,
-				'default'     => esc_html__( 'Button Text', 'motionui-addons-for-elementor' ),
-				'dynamic'     => array(
-					'active' => true,
-				),
-			)
-		);
 
-		$this->add_control(
-			"{$id_prefix}_button_link",
-			array(
-				'label'         => esc_html__( 'Link', 'motionui-addons-for-elementor' ),
-				'type'          => Controls_Manager::URL,
-				'placeholder'   => esc_html__( 'https://your-link.com', 'motionui-addons-for-elementor' ),
-				'show_external' => true,
-				'default'       => array(
-					'url'         => '#',
-					'is_external' => false,
-					'nofollow'    => true,
-				),
-				'dynamic'       => array(
-					'active' => true,
-				),
-			)
-		);
-		endif;
-		$this->add_control(
+		if ( $is_content_controls ) {
+			$control_manager->add_control(
+				"{$id_prefix}_button_text",
+				array(
+					'label'       => esc_html__( 'Text', 'motionui-addons-for-elementor' ),
+					'label_block' => true,
+					'type'        => Controls_Manager::TEXT,
+					'default'     => esc_html__( 'Button Text', 'motionui-addons-for-elementor' ),
+					'dynamic'     => array( 'active' => true ),
+				)
+			);
+			$control_manager->add_control( 
+				"{$id_prefix}_button_link",
+				array(
+					'label'         => esc_html__( 'Link', 'motionui-addons-for-elementor' ),
+					'type'          => Controls_Manager::URL,
+					'placeholder'   => esc_html__( 'https://your-link.com', 'motionui-addons-for-elementor' ),
+					'show_external' => true,
+					'default'       => array(
+						'url'         => '#',
+						'is_external' => false,
+						'nofollow'    => true,
+					),
+					'dynamic'       => array( 'active' => true )
+				)
+			);
+			if ( ! defined( 'ELEMENTOR_PRO_VERSION' ) ) {  
+				$control_manager->add_control(
+					"{$id_prefix}_muia_dynamic_post_url",
+					[
+						'label'       => esc_html__( 'Dynamic Post Url', 'motionui-addons-for-elementor' ),
+						'type'        => Controls_Manager::SWITCHER,
+						'label_on' => esc_html__( 'Yes', 'textdomain' ),
+						'label_off' => esc_html__( 'No', 'textdomain' ),
+						'return_value' => 'yes',
+						'default' => 'no',
+					]
+				);
+				$control_manager->add_control(
+					"{$id_prefix}_muia_dynamic_url_form_meta_key",
+					[
+						'label'       => esc_html__( 'Dynamic Url', 'motionui-addons-for-elementor' ),
+						'type'        => Controls_Manager::TEXT,
+						'placeholder' => esc_html__( 'Meta Key', 'motionui-addons-for-elementor' ),
+						'condition'   =>[
+							"{$id_prefix}_muia_dynamic_post_url!" => ['yes']
+						]
+					]
+				);
+			}
+		}
+
+		$control_manager->add_control(
 			"{$id_prefix}_icon",
 			array(
 				'label'       => esc_html__( 'Icon', 'motionui-addons-for-elementor' ),
@@ -524,20 +546,20 @@ trait Button_Controls {
 				'skin'        => 'inline',
 			)
 		);
-		$this->add_control(
+
+		$control_manager->add_control(
 			"{$id_prefix}_is_stroke_icon",
 			array(
-				'label'       => esc_html__( 'Is it a Stroke icon ? ', 'motionui-addons-for-elementor' ),
-				'label_block' => false,
-				'type'        => Controls_Manager::SWITCHER,
+				'label'        => esc_html__( 'Is it a Stroke icon?', 'motionui-addons-for-elementor' ),
+				'label_block'  => false,
+				'type'         => Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
-				'default' => 'no',
-                'condition' => array(
-                    "{$id_prefix}_icon[value]!" => '',
-                ),  
+				'default'      => 'no',
+				'condition'    => array( "{$id_prefix}_icon[value]!" => '' ),
 			)
 		);
-		$this->add_control(  
+
+		$control_manager->add_control(
 			"{$id_prefix}_icon_position_style",
 			array(
 				'label'       => esc_html__( 'Icon Position', 'motionui-addons-for-elementor' ),
@@ -553,133 +575,119 @@ trait Button_Controls {
 						'icon'  => 'eicon-h-align-right',
 					),
 				),
-				'default' => 'left',
-				'toggle'  => false,
-                'condition' => array(
-                    "{$id_prefix}_icon[value]!" => '',
-                ),
+				'default'   => 'left',
+				'toggle'    => false,
+				'condition' => array( "{$id_prefix}_icon[value]!" => '' ),
 			)
 		);
-		$this->add_responsive_control(   
+
+		$control_manager->add_responsive_control(
 			$id_prefix . 'space_between_text_icon',
-			[
-				'label' => esc_html__( 'Icon Spacing', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 1000,
-						'step' => 5,
-					],
-					'%' => [
-						'min' => 0,
-						'max' => 100,
-					],
-				],
-				'selectors' => [
-					"{{WRAPPER}} .themeic-$id_prefix.muia-btn" => '--icon-gap: {{SIZE}}{{UNIT}};',
-				],
-                'condition' => array(
-                    "{$id_prefix}_icon[value]!" => '',
-                ),  
-			]
+			array(
+				'label'      => esc_html__( 'Icon Spacing', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 1000, 'step' => 5 ),
+					'%'  => array( 'min' => 0, 'max' => 100 ),
+				),
+				'selectors'  => array(
+					$repeater instanceof Repeater
+					? "{{WRAPPER}} {{CURRENT_ITEM}} .themeic-{$id_prefix}.muia-btn"
+					: "{{WRAPPER}} .themeic-{$id_prefix}.muia-btn" => '--icon-gap: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array( "{$id_prefix}_icon[value]!" => '' ),
+			)
 		);
-		$this->add_responsive_control(      
+
+		$control_manager->add_responsive_control(
 			$id_prefix . 'btn_icon_rotation',
-			[
-				'label' => esc_html__( 'Icon rotation', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
-				'range' => [ 
-					'px' => [
-						'min' => -360,
-						'max' => 360,
-						'step' => 1,
-					],
-				],
-				'selectors' => [
-					"{{WRAPPER}} .themeic-$id_prefix.muia-btn" => '--icon-rotation: {{SIZE}}deg;',
-				],
-                'condition' => array(
-                    "{$id_prefix}_icon[value]!" => '',
-                ),  
-			]
+			array(
+				'label'      => esc_html__( 'Icon Rotation', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array(
+					'px' => array( 'min' => -360, 'max' => 360, 'step' => 1 ),
+				),
+				'selectors'  => array(
+					$repeater instanceof Repeater
+					? "{{WRAPPER}} {{CURRENT_ITEM}} .themeic-{$id_prefix}.muia-btn"
+					: "{{WRAPPER}} .themeic-{$id_prefix}.muia-btn" => '--icon-rotation: {{SIZE}}deg;',
+				),
+				'condition'  => array( "{$id_prefix}_icon[value]!" => '' ),
+			)
 		);
-		$this->add_responsive_control(        
+
+		$control_manager->add_responsive_control(
 			$id_prefix . 'btn_icon_size',
-			[
-				'label' => esc_html__( 'Icon Size', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'em', 'px', '%', 'rem', 'custom' ],
-				'range' => [
-					'em' => [  
-						'min' => 0,
-						'max' => 15,
-						'step' => 0.01,   
-					],  
-					'px' => [
-						'min' => 0,
-						'max' => 1000,
-						'step' => 1,
-					],
-					'%' => [
-						'min' => 0,
-						'max' => 100,
-					],
-				],
-				'default' => [   
-					'unit' => 'em',
-				],
-				'selectors' => [
-					"{{WRAPPER}} .themeic-$id_prefix.muia-btn .muia-btn-icon-inner" => 'font-size: {{SIZE}}{{UNIT}};',
-				],
-                'condition' => array(
-                    "{$id_prefix}_icon[value]!" => '',  
-                ),  
-			]
+			array(
+				'label'      => esc_html__( 'Icon Size', 'motionui-addons-for-elementor' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'em', 'px', '%', 'rem', 'custom' ),
+				'range'      => array(
+					'em' => array( 'min' => 0, 'max' => 15, 'step' => 0.01 ),
+					'px' => array( 'min' => 0, 'max' => 1000, 'step' => 1 ),
+					'%'  => array( 'min' => 0, 'max' => 100 ),
+				),
+				'default'    => array( 'unit' => 'em' ),
+				'selectors'  => array(
+					$repeater instanceof Repeater
+					? "{{WRAPPER}} {{CURRENT_ITEM}} .themeic-{$id_prefix}.muia-btn .muia-btn-icon-inner"
+					: "{{WRAPPER}} .themeic-{$id_prefix}.muia-btn .muia-btn-icon-inner" => 'font-size: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array( "{$id_prefix}_icon[value]!" => '' ),
+			)
 		);
-		if($is_align){
-			$this->add_responsive_control(
-				"{$id_prefix}_align_x",
-				array(
-					'label'       => esc_html__( 'Alignment', 'motionui-addons-for-elementor' ),
-					'type'        => Controls_Manager::CHOOSE,
-					'label_block' => false,
-					'separator'    => 'before', 
-					'options'     => array(
-						'left'   => array(
-							'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
-							'icon'  => 'eicon-h-align-left',
+
+		// Align and Pro notice only make sense on the widget, not in a repeater.
+		if ( ! ( $repeater instanceof Repeater ) ) {
+
+			if ( $is_align ) {
+				$this->add_responsive_control(
+					"{$id_prefix}_align_x",
+					array(
+						'label'       => esc_html__( 'Alignment', 'motionui-addons-for-elementor' ),
+						'type'        => Controls_Manager::CHOOSE,
+						'label_block' => false,
+						'separator'   => 'before',
+						'options'     => array(
+							'left'   => array(
+								'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+								'icon'  => 'eicon-h-align-left',
+							),
+							'center' => array(
+								'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
+								'icon'  => 'eicon-h-align-center',
+							),
+							'right'  => array(
+								'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
+								'icon'  => 'eicon-h-align-right',
+							),
 						),
-						'center' => array(
-							'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
-							'icon'  => 'eicon-h-align-center',
+						'toggle'    => true,
+						'selectors' => array(
+							'{{WRAPPER}} .elementor-widget-container'            => 'text-align: {{VALUE}};',
+							'{{WRAPPER}}:not(:has(.elementor-widget-container))' => 'text-align: {{VALUE}};',
 						),
-						'right'  => array(
-							'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
-							'icon'  => 'eicon-h-align-right',
-						),
-					),
-					'toggle'    => true,
-					'selectors' => array(
-						'{{WRAPPER}} .elementor-widget-container'            => 'text-align: {{VALUE}};',
-						'{{WRAPPER}}:not(:has(.elementor-widget-container))' => 'text-align: {{VALUE}};',
-					),
-				)
-			);
+					)
+				);
+			}
+
+			if ( ! Motionui::is_active_pro() ) {
+				$this->add_control(
+					"{$id_prefix}_muia_pro_btn_notice",
+					array(
+						'separator' => 'before',
+						'type'      => Controls_Manager::RAW_HTML,
+						'raw'       => muia_get_pronotice_html( false ),
+					)
+				);
+			}
 		}
-		if(!Motionui::is_active_pro()){
-			$this->add_control(
-				"{$id_prefix}_muia_pro_btn_notice",
-				array(
-				'separator'    => 'before', 
-					'type' => Controls_Manager::RAW_HTML,
-					'raw'  => muia_get_pronotice_html(false),
-				)
-			);
+
+		if ( $is_in_tab ) {
+			$this->end_controls_section();
 		}
-		if($is_in_tab) $this->end_controls_section();
 	}
 
 	/**
@@ -691,9 +699,34 @@ trait Button_Controls {
 	 * @param  string $id_prefix Unique prefix matching the registered controls. Default 'muia_btn'.
 	 * @return void
 	 */
-	public function _render_muia_btn( $id_prefix = 'muia_btn', $args = array() ) {
+	public function _render_muia_btn( $id_prefix = 'muia_btn', $args = array(), $repeater_key = null) {
 
-		$settings = $this->get_settings_for_display();
+		if ( ! empty( $args['widget_id'] ) && ! empty( $args['page_id'] ) && isset( $args['muia_is_ajax_widget'] ) && $args['muia_is_ajax_widget'] ) {
+			$remote_settings = $this->muia_get_widget_settings(
+				(int) $args['page_id'],
+				(string) $args['widget_id']
+			);
+			// Only override if we actually got settings back.
+			if ( null !== $remote_settings ) {
+				$settings = $remote_settings;
+			}else{
+				return;
+			}
+		}else{
+			$settings = $this->get_settings_for_display();
+		}
+
+		if($repeater_key !== null && !empty($settings[$repeater_key])){  
+			foreach ($settings[$repeater_key] as $key => $btn) {
+				echo '<div class="elementor-repeater-item-'.esc_attr( $btn['_id'] ).'">';
+				$this->muia_get_btn_output($id_prefix, $btn, $args);
+				echo '</div>';
+			}
+		}else{
+			$this->muia_get_btn_output($id_prefix, $settings, $args);
+		}
+	}
+	public function muia_get_btn_output($id_prefix, $settings, $args = array()){
 
 		$btn_type = ! empty( $settings[ "{$id_prefix}_btn_type" ] )
 			? $settings[ "{$id_prefix}_btn_type" ]
@@ -711,6 +744,14 @@ trait Button_Controls {
 		$button_text = ! empty( $settings[ "{$id_prefix}_button_text" ] )
 			? $settings[ "{$id_prefix}_button_text" ]
 			: '';
+			
+		$dynamic_url = ! empty( $settings[ "{$id_prefix}_muia_dynamic_url_form_meta_key" ] )
+			? $settings[ "{$id_prefix}_muia_dynamic_url_form_meta_key" ]
+			: '';
+		
+		$post_url = ! empty( $settings[ "{$id_prefix}_muia_dynamic_post_url" ] ) && $settings[ "{$id_prefix}_muia_dynamic_post_url" ] === 'yes'
+			? get_the_permalink()
+			: '';   
 		
         $is_stroke_icon = ! empty( $settings[ "{$id_prefix}_is_stroke_icon" ] ) && $settings[ "{$id_prefix}_is_stroke_icon" ] === 'yes'
 			? 'muia-btn-stroke-icon'
@@ -724,7 +765,9 @@ trait Button_Controls {
 		$button_target = ! empty( $link_data['is_external'] ) ? '_blank' : '_self';
 		$button_rel    = ! empty( $link_data['nofollow'] ) ? 'nofollow' : '';
 
-		// Append noreferrer when opening in a new tab — security best practice.
+		$button_url = !empty($dynamic_url) ? muia_get_dynamic_meta($dynamic_url) : $button_url;   
+		$button_url = !empty($post_url) ? $post_url : $button_url;   
+
 		if ( '_blank' === $button_target ) {
 			$button_rel = trim( $button_rel . ' noreferrer' );
 		}
@@ -806,6 +849,38 @@ trait Button_Controls {
 			
 		</a>
 		<?php
-		echo $magnetic_effect !=='' ? '</div>' : '';     
+		echo $magnetic_effect !=='' ? '</div>' : '';  
+	}
+	protected function muia_get_widget_settings( int $page_id, string $widget_id ): ?array {
+		if ( ! $page_id || ! $widget_id ) {
+			return null;
+		}
+
+		$document = \Elementor\Plugin::$instance->documents->get( $page_id );
+
+		if ( ! $document ) {
+			return null;
+		}
+
+		$found = $this->muia_find_widget_in_elements(
+			$document->get_elements_data(),
+			$widget_id
+		);
+
+		return $found ? ( $found['settings'] ?? null ) : null;
+	}
+	protected function muia_find_widget_in_elements( array $elements, string $widget_id ): ?array {
+		foreach ( $elements as $element ) {
+			if ( isset( $element['id'] ) && $element['id'] === $widget_id ) {
+				return $element;
+			}
+			if ( ! empty( $element['elements'] ) ) {
+				$found = $this->muia_find_widget_in_elements( $element['elements'], $widget_id );
+				if ( $found ) {
+					return $found;
+				}
+			}
+		}
+		return null;
 	}
 }
