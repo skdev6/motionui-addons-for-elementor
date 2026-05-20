@@ -501,6 +501,10 @@
         'muia-animated-slider.default':muiaSlide, 
         'muia-animated-gallery.default':gallery, 
     }
+    const extensions = {
+        'has-muia-img-ani':imageAnimation,
+        'has-muia-text-animation':textAnimation
+    }
     // init elementor frontend
     $(window).on('elementor/frontend/init', function(){
         
@@ -508,19 +512,50 @@
            elementorFrontend.hooks.addAction('frontend/element_ready/' + widget, fun);
         });
           
+
+        const debouncedExtensions = new Map();
+
+        function debounce(func, wait = 80) {
+            let timeoutId;
+            return function executedFunction(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, wait);
+            };
+        }
+
+        function initExtension(element, getSettings) {  
+            const elementId = element.data('id') || element.attr('data-id') || 'unknown';
+            $.each(extensions, function(extension, fun) {
+                if (!element.hasClass(extension)) return;
+
+                const key = `${elementId}_${extension}`;
+
+                if (!debouncedExtensions.has(key)) {
+                    const debouncedFn = debounce((latestSettings) => {
+
+                        afterLoad(() =>fun(element, latestSettings));
+
+                    }, 50);
+
+                    debouncedExtensions.set(key, debouncedFn);
+                }
+
+                // Pass fresh settings every time
+                debouncedExtensions.get(key)(getSettings);
+            });
+        }
+
         var widgetsAnimation = elementorModules.frontend.handlers.Base.extend({
             onInit: function() {
                 if(typeof themeicMotionUiPro === 'undefined'){ 
-                    console.log('Access');
-                    
-                    if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
-                    if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
+                    initExtension(this.$element, this.getElementSettings());
                 }
             },
             onElementChange: function onElementChange(e){
                 if(typeof themeicMotionUiPro === 'undefined'){   
-                    if(this.$element.hasClass('has-muia-text-animation')) textAnimation(this.$element, this.getElementSettings());
-                    if(this.$element.hasClass('has-muia-img-ani')) imageAnimation(this.$element, this.getElementSettings());
+                    initExtension(this.$element, this.getElementSettings());
                 }
             },
             getReadySettings:function (){

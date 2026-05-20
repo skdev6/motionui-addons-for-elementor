@@ -4,7 +4,7 @@ Tags:              elementor, animation, elementor addons, gsap, motion
 Requires at least: 6.4
 Tested up to:      6.9
 Requires PHP:      7.4
-Stable tag:        1.0.1
+Stable tag:        1.0.2
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,7 +98,7 @@ Please use the [MotionUi Addons forum](https://motionuiaddons.com/contact) for b
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.2 =
 * Initial release
 * Text Animations: fade-up, reveal, slide-in, scramble, wave — animate by chars, words, or lines
 * Image Animations: reveal, grid-reveal, column-reveal with directional support
@@ -109,5 +109,5 @@ Please use the [MotionUi Addons forum](https://motionuiaddons.com/contact) for b
 
 == Upgrade Notice ==
 
-= 1.0.0 =
+= 1.0.2 =
 Initial release of MotionUI Addons for Elementor.

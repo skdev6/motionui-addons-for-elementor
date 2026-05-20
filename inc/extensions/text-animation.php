@@ -30,13 +30,15 @@ class Text_Animation{
 					'fade'    => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
 					'reveal'     => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
 					'wave'       => muia_has_pro() ? esc_html__( 'Wave', 'motionui-addons-for-elementor' ) : esc_html__( 'Wave (Pro ✦)', 'motionui-addons-for-elementor' ),
-					// 'scramble'   => muia_has_pro() ? esc_html__( 'Scramble', 'motionui-addons-for-elementor' ) : esc_html__( 'Scramble (Pro ✦)', 'motionui-addons-for-elementor' ),
+					'scramble'   => muia_has_pro() ? esc_html__( 'Scramble', 'motionui-addons-for-elementor' ) : esc_html__( 'Scramble (Pro ✦)', 'motionui-addons-for-elementor' ),
+					'text-auto-scroll'   => muia_has_pro() ? esc_html__( 'Auto Scroll', 'motionui-addons-for-elementor' ) : esc_html__( 'Auto Scroll (Pro ✦)', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
 		if(muia_has_pro()){
-			Motion::get_derection_control($element, 'muia_text_direction', ['muia_text_ani!' => ['', 'scramble']]);  
+			Motion::get_derection_control($element, 'muia_text_scroll_direction', ['muia_text_ani' => ['text-auto-scroll']], ['btt', 'ttb']);  
 			
+			Motion::get_derection_control($element, 'muia_text_direction', ['muia_text_ani!' => ['', 'scramble', 'text-auto-scroll']]);  
 		}
 		$element->add_control(
 			'muia_text_ani_by',
@@ -51,7 +53,7 @@ class Text_Animation{
 					'chars' => esc_html__( 'Characters', 'motionui-addons-for-elementor' ),
 				],
 				'condition' => [
-					'muia_text_ani!' => ['', 'scramble'],
+					'muia_text_ani!' => ['', 'scramble', 'text-auto-scroll'],
 				],
 			]
 		);

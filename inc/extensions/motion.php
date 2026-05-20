@@ -240,7 +240,16 @@ class Motion {
 			'none' => esc_html__( 'Linear', 'motionui-addons-for-elementor' ),
 		);
 	}
-	public static function get_derection_control( $element, $prefix = '', $condition = [] ) {
+	public static function get_derection_control( $element, $prefix = '', $condition = [], $remove = array() ) {
+		$options = [
+			'ltr' => esc_html__( 'Left → Right', 'motionui-addons-for-elementor' ),
+			'rtl' => esc_html__( 'Right → Left', 'motionui-addons-for-elementor' ),
+			'btt' => esc_html__( 'Bottom → Top', 'motionui-addons-for-elementor' ),
+			'ttb' => esc_html__( 'Top → Bottom', 'motionui-addons-for-elementor' ),
+		];
+
+		$filtered_options = array_diff_key( $options, array_flip( $remove ) );
+
 		$element->add_control(
 			$prefix,
 			[
@@ -248,12 +257,7 @@ class Motion {
 				'type'               => \Elementor\Controls_Manager::SELECT,
 				'default'            => 'rtl',
 				'frontend_available' => true,
-				'options'            => [
-					'ltr' => esc_html__( 'Left → Right', 'motionui-addons-for-elementor' ),
-					'rtl' => esc_html__( 'Right → Left', 'motionui-addons-for-elementor' ),
-					'btt' => esc_html__( 'Bottom → Top', 'motionui-addons-for-elementor' ),
-					'ttb' => esc_html__( 'Top → Bottom', 'motionui-addons-for-elementor' ),
-				],
+				'options'            => $filtered_options,
 				'condition'          => $condition,
 			]
 		);
