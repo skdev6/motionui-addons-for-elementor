@@ -18,7 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                  alt="<?php esc_attr_e( 'MotionUI Addons Logo', 'motionui-addons-for-elementor' ); ?>" 
                  class="logo-img">
             
-            <?php esc_html_e( 'MotionUI Addons', 'motionui-addons-for-elementor' ); ?>
+            <span>
+                <?php esc_html_e( 'MotionUI Addons', 'motionui-addons-for-elementor' ); ?>
+                <a href="https://themeic.com/" class="d-block small"><?php esc_html_e( 'Themeic', 'motionui-addons-for-elementor' ); ?></a>
+            </span>
         </span>
         
         <a href="https://motionuiaddons.com/" target="_blank" class="th-das-btn btn-sm btn-secondary">

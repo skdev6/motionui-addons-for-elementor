@@ -4,22 +4,40 @@
     var $navItems = $('.th-left-nav .th-das-navbar li');
     var $tabs     = $('.th-das-content .tab-content');
 
+    // Restore the active tab from the URL hash (e.g. after the upload redirect)
+    if (window.location.hash && $(window.location.hash).hasClass('tab-content')) {
+        var $hashSec = $(window.location.hash);
+
+        $tabs.removeClass('active');
+        $hashSec.addClass('active');
+
+        $navItems.removeClass('current-menu-item');
+        $navItems.find('a[href="' + window.location.hash + '"]').closest('li').addClass('current-menu-item');
+    }
+
     $navItems.find('a').on('click', function (e) {
         var href = $(this).attr('href');
 
-        // Only handle hash links
         if (!href || href.charAt(0) !== '#') return;
 
         var $sec = $(href);
         if (!$sec.length) return;
 
         e.preventDefault();
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', href);
+        }
 
         $tabs.removeClass('active');
         $sec.addClass('active');
 
         $navItems.removeClass('current-menu-item');
         $(this).closest('li').addClass('current-menu-item');
+    });
+
+    $('.import-widget-btn').click(function(){
+        $(this).toggleClass('active');
+        $('.upload-wrapper').toggleClass('active');
     });
 
     $('.muia-dashboard-form').on('submit', function(e){

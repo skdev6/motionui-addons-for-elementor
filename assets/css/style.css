@@ -55,6 +55,7 @@
     align-items: center;
     gap: 11px;
     font-size: 18px;
+    position: relative;
 } 
 .th-switch-control input[type=checkbox] {
     height: 100%;
@@ -299,3 +300,47 @@ button[disabled] {
 .th-switch-control input[disabled] {
     visibility: hidden;
 } 
+.text-dark{
+    color:var(--themeic-color-content-primary);
+}
+.underline-none{
+    text-decoration: none;
+}
+.muia-custom-widget-upload-form.th-das-navbar {
+    border: 1px solid rgb(97 85 245 / 30%);
+    padding-left: 1rem;
+    width: 100%;
+    justify-content: space-between;
+} 
+.muia-custom-widget-upload-form input[type="file"] {
+    width: 300px;
+}   
+.muia-upload-notice {
+    color: red;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-top: 7px;
+}  
+.upload-wrapper{
+    width: 100%;
+    max-width: 500px;
+    margin-inline: auto;
+    padding-block: 50px;
+    display: none;
+}
+.upload-wrapper.active{
+    display: block;
+}
+.themeic-das-header .logo-wrap .small {
+    line-height: 1;
+    font-size: 11px;
+    position: absolute;
+    bottom: 90%;
+    right: 0;
+    color: var(--themeic-color-brand);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.th-widget-card .icon-wrap img.icon-themeic {
+    max-width: 3.5rem;
+}  

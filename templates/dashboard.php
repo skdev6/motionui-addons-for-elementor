@@ -30,6 +30,9 @@ use Themeic\MotionUI_Addons\Inc\Classes\Dashboard;
                 <div id="muia-extensions" class="tab-content">
                     <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/extensions.php'; ?>
                 </div>
+                <div id="muia-custom-widgets" class="tab-content">
+                    <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/custom-widgets.php'; ?>
+                </div>
                 <?php do_action('add_muia_dashboard_page'); ?>
             </div>
             

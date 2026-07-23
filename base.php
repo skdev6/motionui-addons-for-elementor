@@ -55,8 +55,10 @@ class Base {
 		add_action( 'elementor/editor/after_enqueue_styles', array( MotionUiClasses\Assets::class, 'enqueue_editor_css' ) );
 		add_action( 'elementor/editor/after_enqueue_scripts', array( MotionUiClasses\Assets::class, 'enqueue_editor_js' ) );
         add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
+        add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Custom_Widgets_Manager::class, 'register_widgets'] );
         add_action( 'elementor/init', [ MotionUiClasses\Extensions_Manager::class, 'init' ] );
         add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );
+        add_action( 'admin_post_' . MotionUiClasses\Custom_Widgets_Manager::MUIA_UPLOAD_ACTION, [ MotionUiClasses\Custom_Widgets_Manager::class, 'handle_upload' ] );
     }
 
     /**
@@ -101,7 +103,17 @@ class Base {
      * * Maps namespaced class names to physical file paths and includes them.
      * * @param string $class_name
      */
-    public function include_class_files($class_name){
+    public function include_class_files($class_name){ 
+        // Custom Widgets (Themeic\CustomWidget)
+        if(strpos($class_name, 'Themeic\CustomWidget\\') === 0){
+            $widget_slug = strtolower(str_replace('_', '-', substr($class_name, strlen('Themeic\CustomWidget\\'))));
+            $file_dir = MotionUiClasses\Custom_Widgets_Manager::get_upload_dir() . '/' . $widget_slug . '/themeic-widget.php';
+            if(!class_exists($class_name, false) && is_readable($file_dir)){
+                include_once $file_dir;
+            }
+            return;
+        }
+
         // Ensure we only process classes belonging to this plugin
         if(strpos($class_name, __NAMESPACE__) !== 0){
             return;

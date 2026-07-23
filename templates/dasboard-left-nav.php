@@ -27,6 +27,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php esc_html_e('Extensions', 'motionui-addons-for-elementor'); ?>
             </a>
         </li>
+        <li>
+            <a href="#muia-custom-widgets">
+                <i class="eicon-upload"></i>
+                <?php esc_html_e('Custom Widgets', 'motionui-addons-for-elementor'); ?>
+            </a>
+        </li>
         <?php do_action('add_muia_dashboard_menu'); ?>
     </ul>
     <div class="nav-left-footer">
