@@ -1,0 +1,13 @@
+.themeic-minimal-button {
+    display: inline-block;
+    padding: 12px 28px;
+    background-color: #4b3df5;
+    color: #ffffff;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.themeic-minimal-button:hover {
+    opacity: 0.85;
+}
