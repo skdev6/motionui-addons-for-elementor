@@ -1,5 +1,5 @@
 @use '../abstracts/mixins' as *; 
-body:not(.elementor-editor-active) .visibility__hidden{
+.visibility__hidden{
     visibility: hidden;
 }  
 .muia-btn-wrap{
