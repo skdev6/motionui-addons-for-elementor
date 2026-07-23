@@ -33,7 +33,7 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 
 <div class="muia-custom-widgets-wrap">
 
-	<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
+	<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-1 justify-content-between">
 		<h4 class="title-md">
 			<?php
 			printf(
@@ -43,6 +43,10 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 			);
 			?>
 		</h4>
+		<a class="th-das-btn btn-sm btn-secondary ml-auto" href="https://themeic.com/">
+			<i class="eicon-cart-medium" aria-hidden="true"></i>
+			<?php esc_html_e( 'Get Widgets from Themeic', 'motionui-addons-for-elementor' ); ?>
+		</a>
 		<button class="th-das-btn btn-sm import-widget-btn <?php echo $muia_has_notice ? 'active' : ''; ?>">
 			<?php esc_html_e( 'Install Widget', 'motionui-addons-for-elementor' ); ?>
 		</button>
