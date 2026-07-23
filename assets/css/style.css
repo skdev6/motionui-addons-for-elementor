@@ -64,7 +64,8 @@
 .th-widget-card .icon-wrap {
     color: #000;
     font-size: 30px;
-}   
+    position: relative;
+} 
 .th-das-navbar li a i {
     font-size: 1.2em;
 }  
@@ -342,5 +343,37 @@ button[disabled] {
     letter-spacing: 1px;
 }
 .th-widget-card .icon-wrap img.icon-themeic {
-    max-width: 3.5rem;
+    max-width: 1.5rem;
+    position: absolute;
+    top: 9px;
+    left: 9px;
+}  
+.btn-transparent {
+    background-color: transparent;
+    border-color: transparent;
+    padding: 3px 6px;
+    font-size: 28px;
+    border-radius: 7px;
+}
+.btn-transparent:hover{
+    background-color: #f0eefe;
+}
+.muia-confirm-delete {
+    background-color: #d3392c;
+}
+.muia-confirm-delete:hover{
+    background-color:red;  
+}
+.muia-no-custom-widgets {
+    max-width: 500px;
+    margin-inline: auto;
+    padding: 90px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}  
+.text-link-btn {display: inline-block;margin-right: 6px;}
+.text-link-btn i {
+    transform: rotate(-45deg);
+    font-size: .9em;
 }  

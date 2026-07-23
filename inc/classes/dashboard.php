@@ -288,7 +288,7 @@ class Dashboard{
     }
     public static function pro_html( $upgrade_url = 'https://motionuiaddons.com/' ) {
         ?>
-        <div class="muia-popup-wrap">
+        <div class="muia-popup-wrap muia-pro-popup-wrap">
         <div class="backdrop"></div>
         <div class="muia-pro-card">
             <div class="muia-close-btn eicon-close"></div>
@@ -316,6 +316,34 @@ class Dashboard{
                 <i class="eicon-upgrade-crown" aria-hidden="true"></i>
                 <?php esc_html_e( 'Upgrade to PRO', 'motionui-addons-for-elementor' ); ?>
             </a>
+        </div>
+        </div>
+        <?php
+    }
+    public static function delete_html() {
+        ?>
+        <div class="muia-popup-wrap muia-delete-popup-wrap">
+        <div class="backdrop"></div>
+        <div class="muia-pro-card">
+            <div class="muia-close-btn eicon-close"></div>
+            <div class="muia-pro-crown-wrap muia-delete-icon-wrap">
+                <i class="eicon-library-delete" aria-hidden="true"></i>
+            </div>
+            <h2><?php esc_html_e( 'Delete this widget?', 'motionui-addons-for-elementor' ); ?></h2>
+            <p>
+                <?php esc_html_e( 'You are about to delete', 'motionui-addons-for-elementor' ); ?>
+                <strong class="muia-delete-widget-name"></strong>.
+                <?php esc_html_e( 'Its files will be removed from your site and any page using this widget will stop rendering it. This cannot be undone.', 'motionui-addons-for-elementor' ); ?>
+            </p>
+            <div class="muia-pro-divider"></div>
+            <div class="d-flex gap-2 align-items-center justify-content-center">
+                <button type="button" class="th-das-btn btn-sm muia-cancel-delete">
+                    <?php esc_html_e( 'Cancel', 'motionui-addons-for-elementor' ); ?>
+                </button>
+                <button type="button" class="th-das-btn btn-sm muia-confirm-delete">
+                    <?php esc_html_e( 'Delete Widget', 'motionui-addons-for-elementor' ); ?>
+                </button>
+            </div>
         </div>
         </div>
         <?php

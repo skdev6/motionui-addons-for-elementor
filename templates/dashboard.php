@@ -39,4 +39,5 @@ use Themeic\MotionUI_Addons\Inc\Classes\Dashboard;
         </div>
     </div>
 </div>
-<?php Dashboard::pro_html(); ?> 
+<?php Dashboard::pro_html(); ?>
+<?php Dashboard::delete_html(); ?> 

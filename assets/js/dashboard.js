@@ -126,17 +126,66 @@
 
     $('.is-pro.not-active-pro').on('click', function(e){   
         if(!$(e.target).hasClass('th-doc-link')){
-            $('.muia-popup-wrap').addClass('open');
+            $('.muia-pro-popup-wrap').addClass('open');
         }else{
             setTimeout(() => {
-                 $('.muia-popup-wrap').addClass('open');
+                 $('.muia-pro-popup-wrap').addClass('open');
             }, 1000);
         }
     });
 
     $('.muia-close-btn,.muia-popup-wrap .backdrop').on('click', function(){
-        $('.muia-popup-wrap').removeClass('open');
+        $('.muia-pro-popup-wrap').removeClass('open');
     });
 
-    
+    // Delete custom widget: confirm via popup, then remove over AJAX.
+    var $deletePopup = $('.muia-delete-popup-wrap');
+    var deleteWidgetSlug = '';
+    var $deleteWidgetCard = null;
+
+    $('.delete-custom-widget').on('click', function(){
+        deleteWidgetSlug  = $(this).data('widget');
+        $deleteWidgetCard = $(this).closest('.th-widget-card');
+
+        $deletePopup.find('.muia-delete-widget-name').text(
+            $deleteWidgetCard.find('.title').text().trim()
+        );
+        $deletePopup.addClass('open');
+    });
+
+    $deletePopup.find('.muia-cancel-delete, .muia-close-btn, .backdrop').on('click', function(){
+        $deletePopup.removeClass('open');
+    });
+
+    $deletePopup.find('.muia-confirm-delete').on('click', function(){
+        var submitBtn = $(this);
+
+        if (!deleteWidgetSlug || submitBtn.hasClass('loading')) return;
+
+        submitBtn.addClass('loading');
+        submitBtn.append('<span class="spinner-border"></span>');
+
+        $.post(muiaDashboard.ajaxUrl, {
+            action: 'muia_delete_custom_widget',
+            nonce: muiaDashboard.nonce,
+            widget: deleteWidgetSlug
+        }).done(function(response){
+            if (response && response.success && $deleteWidgetCard) {
+                $deleteWidgetCard.remove();
+
+                // Last widget deleted: show the empty state.
+                if (!$('.muia-installed-custom-widgets .th-widget-card').length) {
+                    $('.muia-installed-custom-widgets').remove();
+                    $('.muia-no-custom-widgets').show();
+                }
+            }
+        }).always(function(){
+            submitBtn.removeClass('loading');
+            submitBtn.find('.spinner-border').remove();
+            $deletePopup.removeClass('open');
+            deleteWidgetSlug  = '';
+            $deleteWidgetCard = null;
+        });
+    });
+
 })(jQuery);

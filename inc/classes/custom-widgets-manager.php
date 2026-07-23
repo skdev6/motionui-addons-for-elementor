@@ -49,11 +49,15 @@ class Custom_Widgets_Manager {
     }
 
     /**
+     * Widget folder slug => fully qualified class name,
+     * e.g. themeic-minimal-button-widget => \Themeic\CustomWidget\Themeic_Minimal_Button_Widget.
+     */
+    public static function get_widget_class( $widget_slug ) {
+        return '\Themeic\CustomWidget\\' . str_replace( '-', '_', ucwords( $widget_slug, '-' ) );
+    }
+
+    /**
      * Register uploaded Themeic widgets with Elementor.
-     *
-     * Folder name maps to the class name inside the Themeic\CustomWidget
-     * namespace, e.g. themeic-minimal-button-widget =>
-     * \Themeic\CustomWidget\Themeic_Minimal_Button_Widget.
      *
      * @param \Elementor\Widgets_Manager $widgets_manager
      */
@@ -65,11 +69,74 @@ class Custom_Widgets_Manager {
 
         foreach ( self::get_custom_widgets() as $widget_slug => $widget_dir ) {
 
-            $class_name = '\Themeic\CustomWidget\\' . str_replace( '-', '_', ucwords( $widget_slug, '-' ) );
+            $class_name = self::get_widget_class( $widget_slug );
 
             // class_exists() triggers the plugin autoloader (see Base::include_class_files).
             if ( class_exists( $class_name ) ) {
                 $widgets_manager->register( new $class_name() );
+            }
+        }
+    }
+
+    /**
+     * Register each uploaded widget's css/js so Elementor can enqueue them.
+     *
+     * Handles come from the widget's own get_style_depends() / get_script_depends()
+     * and map to files of the same name inside the widget folder:
+     * handle "themeic-minimal-button" => themeic-minimal-button.css / .js.
+     */
+    public static function register_assets() {
+
+        $upload   = wp_upload_dir();
+        $base_url = trailingslashit( $upload['baseurl'] ) . self::MUIA_UPLOAD_FOLDER;
+
+        foreach ( self::get_custom_widgets() as $widget_slug => $widget_dir ) {
+
+            $class_name = self::get_widget_class( $widget_slug );
+
+            if ( ! class_exists( $class_name ) ) {
+                continue;
+            }
+
+            $widget     = new $class_name();
+            $widget_url = $base_url . '/' . $widget_slug . '/';
+
+            if ( method_exists( $widget, 'get_style_depends' ) ) {
+                foreach ( (array) $widget->get_style_depends() as $handle ) {
+
+                    if ( wp_style_is( $handle, 'registered' ) ) {
+                        continue;
+                    }
+
+                    // Prefer the minified file when both exist.
+                    foreach ( [ $handle . '.min.css', $handle . '.css' ] as $file_name ) {
+                        $file = $widget_dir . '/' . $file_name;
+
+                        if ( file_exists( $file ) ) {
+                            wp_register_style( $handle, $widget_url . $file_name, [], (string) filemtime( $file ) );
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if ( method_exists( $widget, 'get_script_depends' ) ) {
+                foreach ( (array) $widget->get_script_depends() as $handle ) {
+
+                    if ( wp_script_is( $handle, 'registered' ) ) {
+                        continue;
+                    }
+
+                    // Prefer the minified file when both exist.
+                    foreach ( [ $handle . '.min.js', $handle . '.js' ] as $file_name ) {
+                        $file = $widget_dir . '/' . $file_name;
+
+                        if ( file_exists( $file ) ) {
+                            wp_register_script( $handle, $widget_url . $file_name, [ 'jquery' ], (string) filemtime( $file ), true );
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
@@ -99,19 +166,25 @@ class Custom_Widgets_Manager {
             return;
         }
 
+        // Block direct execution of PHP only — css/js/image assets must stay
+        // reachable because Elementor enqueues them by URL from this folder.
         $htaccess = $root_dir . '/.htaccess';
-        if ( ! file_exists( $htaccess ) ) {
-            $rules  = "# Deny direct web access to Themeic widget files.\n";
-            $rules .= "<IfModule mod_authz_core.c>\n\tRequire all denied\n</IfModule>\n";
-            $rules .= "<IfModule !mod_authz_core.c>\n\tOrder deny,allow\n\tDeny from all\n</IfModule>\n";
+        $rules    = "# Deny direct web access to Themeic widget PHP files.\n";
+        $rules   .= "<FilesMatch \"\\.php$\">\n";
+        $rules   .= "\t<IfModule mod_authz_core.c>\n\t\tRequire all denied\n\t</IfModule>\n";
+        $rules   .= "\t<IfModule !mod_authz_core.c>\n\t\tOrder deny,allow\n\t\tDeny from all\n\t</IfModule>\n";
+        $rules   .= "</FilesMatch>\n";
+        if ( ! file_exists( $htaccess ) || file_get_contents( $htaccess ) !== $rules ) {
             @file_put_contents( $htaccess, $rules );
         }
 
         $web_config = $root_dir . '/web.config';
-        if ( ! file_exists( $web_config ) ) {
-            $rules  = "<?xml version=\"1.0\"?>\n<configuration>\n\t<system.webServer>\n";
-            $rules .= "\t\t<authorization>\n\t\t\t<deny users=\"*\" />\n\t\t</authorization>\n";
-            $rules .= "\t</system.webServer>\n</configuration>\n";
+        $rules      = "<?xml version=\"1.0\"?>\n<configuration>\n\t<system.webServer>\n";
+        $rules     .= "\t\t<security>\n\t\t\t<requestFiltering>\n\t\t\t\t<fileExtensions>\n";
+        $rules     .= "\t\t\t\t\t<add fileExtension=\".php\" allowed=\"false\" />\n";
+        $rules     .= "\t\t\t\t</fileExtensions>\n\t\t\t</requestFiltering>\n\t\t</security>\n";
+        $rules     .= "\t</system.webServer>\n</configuration>\n";
+        if ( ! file_exists( $web_config ) || file_get_contents( $web_config ) !== $rules ) {
             @file_put_contents( $web_config, $rules );
         }
 
@@ -255,6 +328,38 @@ class Custom_Widgets_Manager {
         }
 
         self::redirect_back( 'success' );
+    }
+
+    /**
+     * Delete an uploaded custom widget folder (AJAX).
+     */
+    public static function delete_widget() {
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( __( 'Unauthorized', 'motionui-addons-for-elementor' ) );
+        }
+
+        if ( ! check_ajax_referer( Dashboard::MUIA_NONCE, 'nonce', false ) ) {
+            wp_send_json_error( __( 'Invalid Nonce', 'motionui-addons-for-elementor' ) );
+        }
+
+        $widget_slug = isset( $_POST['widget'] ) ? sanitize_key( wp_unslash( $_POST['widget'] ) ) : '';
+        $widgets     = self::get_custom_widgets();
+
+        // Only folders known as installed widgets can be deleted.
+        if ( empty( $widget_slug ) || ! isset( $widgets[ $widget_slug ] ) ) {
+            wp_send_json_error( __( 'Widget not found.', 'motionui-addons-for-elementor' ) );
+        }
+
+        global $wp_filesystem;
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+
+        if ( ! $wp_filesystem->delete( $widgets[ $widget_slug ], true ) ) {
+            wp_send_json_error( __( 'The widget could not be deleted. Please try again.', 'motionui-addons-for-elementor' ) );
+        }
+
+        wp_send_json_success( [ 'widget' => $widget_slug ] );
     }
 
     /**

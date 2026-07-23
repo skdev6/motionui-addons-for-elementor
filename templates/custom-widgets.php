@@ -39,12 +39,12 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 			printf(
 				/* translators: %s: linked "Themeic" brand name */
 				esc_html__( '%s Widget Library', 'motionui-addons-for-elementor' ),
-				'<a href="https://themeic.com/" class="text-dark underline-none" target="_blank" rel="noopener noreferrer">Themeic</a>'
+				'<a href="https://themeic.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Themeic <i class="eicon-arrow-right"></i></a>'
 			);
 			?>
 		</h4>
 		<button class="th-das-btn btn-sm import-widget-btn <?php echo $muia_has_notice ? 'active' : ''; ?>">
-			<?php esc_html_e( 'Import Widget', 'motionui-addons-for-elementor' ); ?>
+			<?php esc_html_e( 'Install Widget', 'motionui-addons-for-elementor' ); ?>
 		</button>
 	</div>
 			<div class="upload-wrapper <?php echo $muia_has_notice ? 'active' : ''; ?>">
@@ -88,28 +88,116 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 
 	<?php if ( ! empty( $muia_custom_widgets ) ) : ?>
 		<div class="muia-installed-custom-widgets widget-card-wrap">
-			<?php foreach ( $muia_custom_widgets as $muia_widget_slug => $muia_widget_path ) : ?>
+			<?php foreach ( $muia_custom_widgets as $muia_widget_slug => $muia_widget_path ) :
+
+				// Readable title from the folder name, e.g.
+				// themeic-minimal-button-widget => Minimal Button.
+				$muia_widget_title = preg_replace(
+					[ '/^themeic[-_]/', '/[-_]elementor[-_]widget$/', '/[-_]widget$/' ],
+					'',
+					$muia_widget_slug
+				);
+				$muia_widget_title = ucwords( str_replace( [ '-', '_' ], ' ', $muia_widget_title ) );
+
+				// Demo/tutorial URLs and icon from the widget class, when it provides them.
+				$muia_demo_url     = '';
+				$muia_tutorial_url = '';
+				$muia_widget_icon  = '';
+				$muia_widget_class = Custom_Widgets_Manager::get_widget_class( $muia_widget_slug );
+
+				if ( class_exists( '\Elementor\Widget_Base' ) && class_exists( $muia_widget_class ) ) {
+					$muia_widget_instance = new $muia_widget_class();
+
+					if ( method_exists( $muia_widget_instance, 'get_themeic_demo_url' ) ) {
+						$muia_demo_url = (string) $muia_widget_instance->get_themeic_demo_url();
+					}
+					if ( method_exists( $muia_widget_instance, 'get_themeic_tutorial_url' ) ) {
+						$muia_tutorial_url = (string) $muia_widget_instance->get_themeic_tutorial_url();
+					}
+					if ( method_exists( $muia_widget_instance, 'get_icon' ) ) {
+						$muia_widget_icon = (string) $muia_widget_instance->get_icon();
+					}
+				}
+			?>
 				<!-- Widget Card -->
 				<div class="th-widget-card <?php echo esc_attr( $muia_widget_slug ); ?>">
 					<div class="icon-wrap" aria-hidden="true">
 						<img class="icon-themeic" src="<?php echo esc_url( THEMEIC_MUIA_ASSETS . '/img/themeic-logo.svg' ); ?>">
+						<?php if ( $muia_widget_icon ) : ?>
+							<i class="<?php echo esc_attr( $muia_widget_icon ); ?>"></i>
+						<?php endif; ?>
 					</div>
 					<div class="card-con">
 						<h4 class="title">
-							<?php   
-							$muia_widget_title = preg_replace(
-								[ '/^themeic[-_]/', '/[-_]elementor[-_]widget$/', '/[-_]widget$/' ],
-								'',
-								$muia_widget_slug
-							);
-							echo esc_html( ucwords( str_replace( [ '-', '_' ], ' ', $muia_widget_title ) ) );
-							?>
+							<?php echo esc_html( $muia_widget_title ); ?>
 						</h4>
+						<?php if ( $muia_demo_url || $muia_tutorial_url ) : ?>
+						<div class="gap-2 d-flex align-items-center">
+
+							<?php if ( $muia_demo_url ) : ?>
+								<a
+									href="<?php echo esc_url( $muia_demo_url ); ?>"
+									class="th-doc-link"
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="<?php
+										/* translators: %s: widget title */
+										printf( esc_attr__( 'View demo for %s', 'motionui-addons-for-elementor' ), esc_attr( $muia_widget_title ) );
+									?>"
+								>
+									<i class="th-icon-link" aria-hidden="true"></i>
+									<?php esc_html_e( 'Demo', 'motionui-addons-for-elementor' ); ?>
+								</a>
+							<?php endif; ?>
+
+							<?php if ( $muia_tutorial_url ) : ?>
+								<a
+									href="<?php echo esc_url( $muia_tutorial_url ); ?>"
+									class="th-doc-link"
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="<?php
+										/* translators: %s: widget title */
+										printf( esc_attr__( 'Watch tutorial for %s', 'motionui-addons-for-elementor' ), esc_attr( $muia_widget_title ) );
+									?>"
+								>
+									<i class="th-icon-video" aria-hidden="true"></i>
+									<?php esc_html_e( 'Tutorial', 'motionui-addons-for-elementor' ); ?>
+								</a>
+							<?php endif; ?>
+
+						</div>
+						<?php endif; ?>
 					</div>
+					<button
+						type="button"
+						class="ml-auto btn-transparent delete-custom-widget"
+						data-widget="<?php echo esc_attr( $muia_widget_slug ); ?>"
+						aria-label="<?php esc_attr_e( 'Delete widget', 'motionui-addons-for-elementor' ); ?>"
+					><i class="eicon-library-delete"></i></button>
 				</div>
 			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>
+
+	<!-- Empty state: shown when no widgets are installed, or via JS after the last one is deleted. -->
+	<div class="muia-no-custom-widgets text-center" <?php echo ! empty( $muia_custom_widgets ) ? 'style="display:none"' : ''; ?>>
+		<h2 class="title-md">
+			<?php esc_html_e( 'No Widgets Installed Yet', 'motionui-addons-for-elementor' ); ?>
+		</h2>
+		<p class="muia-no-widgets-desc">
+			<?php esc_html_e( 'Supercharge your site with premium widgets crafted by Themeic. Browse the collection, pick the widgets you need, and import them here with one click.', 'motionui-addons-for-elementor' ); ?>
+		</p>
+		<a
+			href="https://themeic.com/"
+			class="th-das-btn"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			<i class="eicon-cart-medium" aria-hidden="true"></i>
+			<?php esc_html_e( 'Get Widgets from Themeic', 'motionui-addons-for-elementor' ); ?>
+		</a>
+	</div>
 
 	<?php do_action( 'muia_custom_widgets_content' ); ?>
 </div>

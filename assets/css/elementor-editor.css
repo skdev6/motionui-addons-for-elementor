@@ -1,4 +1,4 @@
-.themeic-muia-logo::after{
+.themeic-muia-logo::after,.themeic-icon::after{
     display: inline-block;
     font-size: 10px;
     font-style: normal;
@@ -9,16 +9,25 @@
     width: 14px;  
     background-position: center;
     background-repeat: no-repeat;
+    background-size: contain; 
     display: block;   
     content: ""; 
 }
-.elementor-element .icon .themeic-muia-logo::after, .elementor-navigator__element__element-type .themeic-muia-logo::after {
+.themeic-icon::after{
+    background-image: url('../img/themeic-logo.svg');
+    height: 21px;
+    width: 21px;  
+}
+.elementor-element .icon .themeic-muia-logo::after, .elementor-navigator__element__element-type .themeic-muia-logo::after,
+.elementor-element .icon .themeic-icon::after, .elementor-navigator__element__element-type .themeic-icon::after {
     position: absolute;
     right: 6px;
     top: 6px;
     opacity: 0.7;
 }
-.elementor-navigator__element__element-type .themeic-muia-logo::after {
+.elementor-navigator__element__element-type .themeic-muia-logo::after,
+.elementor-navigator__element__element-type .themeic-icon::after
+ {
     top: 8px;
     right: 10px;
     opacity: 0.3;
@@ -31,6 +40,9 @@
 @media (prefers-color-scheme: dark) {
     .themeic-muia-logo::after{
         background-image: url('../img/motionui-logo-white.svg');
+    }
+    .themeic-icon::after{
+        background-image: url('../img/themeic-logo-white.svg');  
     }
 }   
 .muia-element--promotion .eicon-lock {
