@@ -138,7 +138,7 @@ button[disabled] {
     flex-direction: column;
     gap: 10px;
 } 
-.hidden{
+.d-none{
     display: none !important;
 } 
 .th-switch-control > .pro-icon {

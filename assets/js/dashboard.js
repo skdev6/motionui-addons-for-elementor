@@ -118,8 +118,8 @@
             let all = selector.find('> *');
             let filteredItems = visableItems === '*' ? all : $(visableItems);
             if(filteredItems.length){
-                all.addClass('hidden');
-                filteredItems.removeClass('hidden');
+                all.addClass('d-none');
+                filteredItems.removeClass('d-none');
             }
         }
     });
