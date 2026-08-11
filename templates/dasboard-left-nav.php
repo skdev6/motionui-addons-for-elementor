@@ -20,17 +20,15 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <i class="eicon-shape"></i>
                 <?php esc_html_e('Widgets', 'motionui-addons-for-elementor'); ?>
             </a>
+            <ul class="submenu">    
+                <li><a  href="#muia-custom-widgets"><?php esc_html_e('Add Widget', 'motionui-addons-for-elementor'); ?></a></li>
+            </ul>
         </li>
-        <li>
-            <a href="#muia-custom-widgets">
-                <i class="eicon-upload"></i>
-                <?php esc_html_e('Custom Widgets', 'motionui-addons-for-elementor'); ?>
-            </a>
-        </li> 
+        
         <li>
             <a href="#muia-extensions">
                 <i class="th-icon-mouse-click"></i>
-                <?php esc_html_e('Extensions', 'motionui-addons-for-elementor'); ?>
+                <?php esc_html_e('Tools', 'motionui-addons-for-elementor'); ?>
             </a>
         </li>
         <?php do_action('add_muia_dashboard_menu'); ?>

@@ -152,6 +152,7 @@ class Dashboard{
 			$muia_upcoming   = isset( $muia_widget['is_upcoming'] ) ? (bool) $muia_widget['is_upcoming']   : false;
             $is_active_pro = Motionui::is_active_pro();
             $is_lock = $muia_is_pro && ! $is_active_pro;
+            $is_lock_widget_lbary = false;
             
             if ( isset( $muia_widget['category'] ) ) {
 
@@ -214,12 +215,6 @@ class Dashboard{
 
 				<h4 class="title">
 					<?php echo esc_html( $muia_title ); ?>
-
-					<?php if ( $muia_upcoming ) : ?>
-						<span class="muia-badge muia-badge-upcoming">
-							<?php esc_html_e( 'Upcoming', 'motionui-addons-for-elementor' ); ?>
-						</span>
-					<?php endif; ?>
 				</h4>
 				<?php if(! empty( $muia_demo_url ) || ! empty( $muia_tutorial )): ?>
 				<div class="gap-2 d-flex align-items-center">
@@ -259,28 +254,34 @@ class Dashboard{
 				</div>
 				<?php endif; ?>
 			</div><!-- .card-con -->
+            <?php if ( $muia_upcoming ) : ?>
+                <span class="muia-badge muia-badge-upcoming">
+                    <?php esc_html_e( 'Upcoming', 'motionui-addons-for-elementor' ); ?>
+                </span>
+            <?php else: ?> 
+                <div class="th-switch-control d-flex align-items-center ml-auto">
+                    <input
+                        type="checkbox"
+                        id="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"
+                        name="widgets[]"
+                        value="<?php echo esc_attr( $muia_widget_slug ); ?>"
+                        <?php checked( $muia_is_active, true ); ?>
+                        <?php disabled( $muia_upcoming || $is_lock, true ); ?>
+                        aria-label="<?php
+                            /* translators: %s: widget title */
+                            printf( esc_attr__( 'Toggle %s widget', 'motionui-addons-for-elementor' ), esc_attr( $muia_title ) );
+                        ?>"
+                    />
+                    <?php echo $is_lock ? '<i class="pro-icon eicon-upgrade-crown"></i>' : ''; ?>
+                    <label
+                        class="switch-label"
+                        for="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"
+                        aria-hidden="true"
+                    >
+                </label>
+                </div><!-- .th-switch-control -->
+            <?php endif; ?>
 
-			<div class="th-switch-control d-flex align-items-center ml-auto">
-				<input
-					type="checkbox"
-					id="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"
-					name="widgets[]"
-					value="<?php echo esc_attr( $muia_widget_slug ); ?>"
-					<?php checked( $muia_is_active, true ); ?>
-					<?php disabled( $muia_upcoming || $is_lock, true ); ?>
-					aria-label="<?php
-						/* translators: %s: widget title */
-						printf( esc_attr__( 'Toggle %s widget', 'motionui-addons-for-elementor' ), esc_attr( $muia_title ) );
-					?>"
-				/>
-                <?php echo $is_lock ? '<i class="pro-icon eicon-upgrade-crown"></i>' : ''; ?>
-				<label
-					class="switch-label"
-					for="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"
-					aria-hidden="true"
-				>
-            </label>
-			</div><!-- .th-switch-control -->
 
 		</div><!-- .th-widget-card -->
 

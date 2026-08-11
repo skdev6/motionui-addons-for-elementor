@@ -59,6 +59,7 @@ class Widgets_Manager{
 
     public static function local_widgets_map(){
         return [
+            // Buttons
             'animated-button'=>[
                 'title' => __('Button', 'motionui-addons-for-elementor'),
                 'category'=> 'button',
@@ -69,6 +70,7 @@ class Widgets_Manager{
                 'demo'=> '',
                 'tutorial'=> '',
             ],
+            // Slider
             'animated-slider'=>[  
                 'title' => __('Slider', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
@@ -79,6 +81,7 @@ class Widgets_Manager{
                 'demo'=> '',
                 'tutorial'=> '',
             ],
+            // Images and Gallery
             'animated-image'=>[  
                 'title' => __('Image', 'motionui-addons-for-elementor'),
                 'category'=> 'image',
@@ -104,11 +107,12 @@ class Widgets_Manager{
                 'category'=> 'image',
                 'is_active'=> true,
                 'is_pro'       => true,
-                'is_upcoming'  => false,
+                'is_upcoming'  => true,
                 'icon'=>'eicon-gallery-justified',
                 'demo'=> 'dd',
                 'tutorial'=> 'cd',
             ],
+            // Portfolio and Filter
             'post-filter'=>[  
                 'title' => __('Portfolio and Post Filter', 'motionui-addons-for-elementor'),
                 'category'=> ['filter', 'portfolio'],
@@ -119,6 +123,19 @@ class Widgets_Manager{
                 'demo'=> 'dd',
                 'tutorial'=> 'cd',
             ],
+            'glow-button'=>[  
+                'title' => __('Portfolio and Post Filter', 'motionui-addons-for-elementor'),
+                'category'=> ['filter', 'portfolio'],
+                'is_active'=> true,
+                'is_pro'       => true,
+                'is_upcoming'  => false,
+                'is_libary'    => true,
+                'icon'=>'eicon-posts-grid',
+                'demo'=> 'dd',
+                'tutorial'=> 'cd',
+            ],
+            // Testimonial
+
         ];
     }
     public static function register_widgets($widgets_manager = null){ 

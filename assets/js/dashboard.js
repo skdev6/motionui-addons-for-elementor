@@ -13,8 +13,13 @@
 
         $navItems.removeClass('current-menu-item');
         $navItems.find('a[href="' + window.location.hash + '"]').closest('li').addClass('current-menu-item');
-    }
 
+        checkHasParentMenuItem();
+    }
+    function checkHasParentMenuItem(){   
+        $(".th-das-navbar li").removeClass('current-menu-parent');
+        $(".th-das-navbar li.current-menu-item").closest('.submenu').parent('li').addClass('current-menu-parent');   
+    }
     $navItems.find('a').on('click', function (e) {
         var href = $(this).attr('href');
 
@@ -33,6 +38,8 @@
 
         $navItems.removeClass('current-menu-item');
         $(this).closest('li').addClass('current-menu-item');
+
+        checkHasParentMenuItem();
     });
 
     $('.import-widget-btn').click(function(){

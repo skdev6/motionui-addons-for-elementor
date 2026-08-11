@@ -239,7 +239,7 @@ class Extensions_Manager {
 				'description' => __( 'Add scroll-based animations to widgets.', 'motionui-addons-for-elementor' ),
 				'is_active'   => true,
 				'is_pro'      => true,
-				'is_upcoming' => false,
+				'is_upcoming' => true,
 				'icon'        => 'eicon-page-transition',
 				'demo'        => '',
 				'tutorial'    => '',

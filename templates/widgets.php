@@ -41,7 +41,6 @@ $muia_all_active = Dashboard::is_all_active_switch( $muia_widgets_map );
 >
 
 	<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
-
 		<ul class="th-das-navbar inline-nav filter-navbar" role="tablist" data-area="#widgets-area" aria-label="<?php esc_attr_e( 'Filter widgets by category', 'motionui-addons-for-elementor' ); ?>">
 
 			<li class="current-menu-item" role="presentation">

@@ -37,20 +37,23 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 		<h4 class="title-md">
 			<?php
 			printf(
-				/* translators: %s: linked "Themeic" brand name */
-				esc_html__( '%s Widget Library', 'motionui-addons-for-elementor' ),
-				'<a href="https://themeic.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Themeic <i class="eicon-arrow-right"></i></a>'
+				/* translators: %s: linked "Themeic" brand name */  
+				esc_html__( '%s', 'motionui-addons-for-elementor' ),
+				'<a href="https://themeic.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Themeic Widget Library <i class="eicon-arrow-right"></i></a>'
 			);
 			?>
 		</h4>
 		<a class="th-das-btn btn-sm btn-secondary ml-auto" href="https://themeic.com/">
 			<i class="eicon-cart-medium" aria-hidden="true"></i>
-			<?php esc_html_e( 'Get Widgets from Themeic', 'motionui-addons-for-elementor' ); ?>
+			<?php esc_html_e( 'Get Widgets', 'motionui-addons-for-elementor' ); ?>
 		</a>
-		<button class="th-das-btn btn-sm import-widget-btn <?php echo $muia_has_notice ? 'active' : ''; ?>">
-			<?php esc_html_e( 'Install Widget', 'motionui-addons-for-elementor' ); ?>
-		</button>
 	</div>
+			<div class="header-second d-flex align-items-center gap-2">
+				<h4 class="title-md mb-0"><?php esc_html_e( 'Add Widget', 'motionui-addons-for-elementor' ); ?></h4>
+				<button class="th-das-btn btn-sm import-widget-btn <?php echo $muia_has_notice ? 'active' : ''; ?>">
+					<?php esc_html_e( 'Upload Widget', 'motionui-addons-for-elementor' ); ?>
+				</button>
+			</div>
 			<div class="upload-wrapper <?php echo $muia_has_notice ? 'active' : ''; ?>">
 				<form
 					class="muia-custom-widget-upload-form th-das-navbar inline-nav ml-auto mr-auto"
@@ -69,7 +72,7 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 					/>
 					<button type="submit" class="th-das-btn btn-sm">
 						<i class="eicon-upload" aria-hidden="true"></i>
-						<?php esc_html_e( 'Upload Widget', 'motionui-addons-for-elementor' ); ?>
+						<?php esc_html_e( 'Install Widget', 'motionui-addons-for-elementor' ); ?>
 					</button>
 				</form>
 				<?php if ( $muia_has_notice ) : ?>
@@ -91,6 +94,7 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 			</div>
 
 	<?php if ( ! empty( $muia_custom_widgets ) ) : ?>
+		<h4 class="title-md installed-w-title"><?php esc_html_e( 'Installed widgets', 'motionui-addons-for-elementor' ); ?></h4>
 		<div class="muia-installed-custom-widgets widget-card-wrap">
 			<?php foreach ( $muia_custom_widgets as $muia_widget_slug => $muia_widget_path ) :
 

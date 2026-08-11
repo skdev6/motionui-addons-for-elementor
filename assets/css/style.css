@@ -34,6 +34,34 @@
     margin-top: 20px;
     margin-right: 20px;
 }   
+.th-das-navbar .submenu a {
+    font-size: 14px;
+    padding: 7px 17px;
+    position: relative;
+}
+.th-das-navbar .submenu {
+    padding: 10px 10px 10px 30px;
+    border-bottom:1px solid var(--themeic-color-surface);
+    display: none;  
+}
+.th-das-navbar .submenu a::before {
+    content: "";
+    width: 9px;
+    height: 1.5px;
+    background-color: currentColor;
+    position: absolute;
+    left: 2px;
+    top: 16.5px;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    opacity: .5;
+}  
+.th-das-navbar li.current-menu-item .submenu,.th-das-navbar li.current-menu-parent .submenu{
+    display: block;
+}
+.th-das-navbar .submenu li.current-menu-item > a{
+background-color: #f0eefe5c;  
+}
 .th-das-navbar li{
     margin: 0;
 }
@@ -377,3 +405,25 @@ button[disabled] {
     transform: rotate(-45deg);
     font-size: .9em;
 }  
+.th-das-btn.btn-sm2 {
+    padding: 6px 14px;
+    border-radius: 7px;
+}  
+.header-second {
+    padding-top: 25px;
+}      
+.installed-w-title{
+    margin-top: 50px;
+} 
+.muia-badge-upcoming {
+    background-color: #d6ccee;
+    color: #5f2ad9;
+    display: inline-block;
+    font-size: 13px;
+    padding: 2px 8px;
+    border-radius: 5px;
+}   
+
+.th-widget-card .card-con {
+    margin-right: auto;
+} 

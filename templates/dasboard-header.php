@@ -23,8 +23,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <a href="https://themeic.com/" class="d-block small"><?php esc_html_e( 'Themeic', 'motionui-addons-for-elementor' ); ?></a>
             </span>
         </span>
-        
-        <a href="https://motionuiaddons.com/" target="_blank" class="th-das-btn btn-sm btn-secondary">
+        <?php
+        printf(
+            /* translators: %s: linked "Themeic" brand name */  
+            esc_html__( '%s', 'motionui-addons-for-elementor' ),
+            '<a href="https://themeic.com/" class="title-md text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Widget Library <i class="eicon-arrow-right"></i></a>'
+        );
+        ?>
+        <a href="https://motionuiaddons.com/" target="_blank" class="d-none th-das-btn btn-sm btn-secondary">
             <?php esc_html_e( 'View All Demo', 'motionui-addons-for-elementor' ); ?>
         </a>
     </div>
