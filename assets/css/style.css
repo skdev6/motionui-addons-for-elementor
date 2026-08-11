@@ -176,7 +176,7 @@ button[disabled] {
     top: 7px;
     font-size: 11px;
 }  
-.th-widget-card .muia-badge-pro {
+.th-widget-card .muia-badge-pro,.th-widget-card .muia-badge-library{
     position: absolute;
     left: -23px;
     top: -7px;
@@ -408,7 +408,8 @@ button[disabled] {
 .th-das-btn.btn-sm2 {
     padding: 6px 14px;
     border-radius: 7px;
-}  
+    font-size: 13px;
+}   
 .header-second {
     padding-top: 25px;
 }      
@@ -427,3 +428,12 @@ button[disabled] {
 .th-widget-card .card-con {
     margin-right: auto;
 } 
+.th-widget-card .muia-badge-pro.actived-pro-badge{
+    background-color: rgb(240 238 254);
+    color: var(--themeic-color-brand);
+}    
+.th-widget-card .muia-badge.muia-badge-pro.is-library-badge {
+    left: -33px;
+    top: -3px;
+    padding: 18px 22px 5px 22px;
+}  

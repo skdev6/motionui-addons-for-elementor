@@ -15,13 +15,63 @@ class Widgets_Manager{
     public static function update_inactive_widgets($widgets = []){
         update_option(self::WIDGET_DB_KEY, $widgets);
     }
-    public static function get_widgets_map(){     
+    /**
+     * Map key => class name suffix, e.g. glow-button => Glow_Button.
+     */
+    public static function get_class_suffix($widget_key){
+        return str_replace('-', '_', ucwords($widget_key, '-'));
+    }
+
+    /**
+     * Resolve the class that should render a widget.
+     *
+     * A bundled/pro class always wins. An uploaded custom widget is only used
+     * as a fallback, and only for entries flagged with is_in_custom_widget.
+     *
+     * @return string|false Class name, or false when nothing is installed.
+     */
+    public static function resolve_widget_class($widget_key, $widget_data = []){
+
+        $suffix = self::get_class_suffix($widget_key);
+
+        // 1st priority: bundled or pro widget.
+        $class_name = '\Themeic\MotionUI_Addons\Widgets\\' . $suffix;
+
+        if(class_exists($class_name)){
+            return $class_name;
+        }
+
+        // 2nd priority: uploaded custom widget.
+        if(!empty($widget_data['is_in_custom_widget'])){
+            $custom_class = '\Themeic\CustomWidget\\' . $suffix;
+
+            if(class_exists($custom_class)){
+                return $custom_class;
+            }
+        }
+
+        return false;
+    }
+
+    public static function get_widgets_map(){
         $get_inactive_widgets = get_option(self::WIDGET_DB_KEY, []);
         $local_widgets = self::local_widgets_map();
 
         foreach ($get_inactive_widgets as $key) {
             if (isset($local_widgets[$key])) {
                 $local_widgets[$key]['is_active'] = false;
+            }
+        }
+
+        // Flag custom widgets the user has not installed (or has deleted).
+        foreach ($local_widgets as $key => $widget) {
+
+            if(empty($widget['is_in_custom_widget'])){
+                continue;
+            }
+
+            if(!self::resolve_widget_class($key, $widget)){
+                $local_widgets[$key]['widget_not_installed'] = true;
             }
         }
 
@@ -129,7 +179,7 @@ class Widgets_Manager{
                 'is_active'=> true,
                 'is_pro'       => true,
                 'is_upcoming'  => false,
-                'is_libary'    => true,
+                'is_in_custom_widget'    => true,
                 'icon'=>'eicon-posts-grid',
                 'demo'=> 'dd',
                 'tutorial'=> 'cd',
@@ -138,21 +188,41 @@ class Widgets_Manager{
 
         ];
     }
-    public static function register_widgets($widgets_manager = null){ 
-        
+    public static function register_widgets($widgets_manager = null){
+
+        if(!$widgets_manager){
+            return;
+        }
+
         foreach (self::get_active_widgets() as $widget_key => $widget_data) {
-            $file = THEMEIC_MUIA_DIR_PATH . 'widgets/' . $widget_key . '.php';
 
-            if(is_readable($file)){
+            // Bundled/pro first, uploaded custom widget as fallback.
+            $class_name = self::resolve_widget_class($widget_key, $widget_data);
 
-                $class_name = '\Themeic\MotionUI_Addons\Widgets\\' . str_replace('-', '_', ucwords($widget_key, '-'));
-
-                if(class_exists($class_name)){
-                    $widgets_manager->register(new $class_name());  
-                }
-
+            if($class_name){
+                $widgets_manager->register(new $class_name());
             }
 
+        }
+
+        // Uploaded widgets with no entry in the map still register, so a widget
+        // bought before the plugin knew about it remains usable. Entries that
+        // ARE mapped are skipped here — their toggle decides, including "off".
+        $mapped_classes = [];
+
+        foreach (self::local_widgets_map() as $widget_key => $widget_data) {
+            if(!empty($widget_data['is_in_custom_widget'])){
+                $mapped_classes[] = 'Themeic\CustomWidget\\' . self::get_class_suffix($widget_key);
+            }
+        }
+
+        foreach (Custom_Widgets_Manager::get_widget_classes() as $custom_class) {
+
+            if(in_array(ltrim($custom_class, '\\'), $mapped_classes, true)){
+                continue;
+            }
+
+            $widgets_manager->register(new $custom_class());
         }
         if ( ! muia_has_pro() && ! empty( self::get_pro_widgets() ) ) {
             // foreach ( self::get_pro_widgets() as $name => $widget ) {

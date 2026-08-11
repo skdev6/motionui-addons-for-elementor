@@ -41,41 +41,113 @@ class Custom_Widgets_Manager {
         foreach ( glob( $base . '/*', GLOB_ONLYDIR ) as $dir ) {
             // Only folders that look like a Themeic widget (must ship a themeic-widget.php).
             if ( file_exists( $dir . '/themeic-widget.php' ) ) {
-                $widgets[ basename( $dir ) ] = $dir;
+                $widgets[ basename( $dir ) ] = wp_normalize_path( $dir );
             }
         }
 
         return $widgets;
     }
 
-    /**
-     * Widget folder slug => fully qualified class name,
-     * e.g. themeic-minimal-button-widget => \Themeic\CustomWidget\Themeic_Minimal_Button_Widget.
-     */
-    public static function get_widget_class( $widget_slug ) {
-        return '\Themeic\CustomWidget\\' . str_replace( '-', '_', ucwords( $widget_slug, '-' ) );
-    }
+    /** @var bool Whether the uploaded widget files have already been included. */
+    private static $files_loaded = false;
 
     /**
-     * Register uploaded Themeic widgets with Elementor.
+     * Include every uploaded themeic-widget.php once.
      *
-     * @param \Elementor\Widgets_Manager $widgets_manager
+     * Folder and class names are independent — a folder named
+     * glow-buttons-elementor-widget may declare Glow_Button — so the class
+     * cannot be derived from the path. The files are loaded instead and PHP
+     * is asked afterwards which classes exist.
      */
-    public static function register_widgets( $widgets_manager = null ) {
+    public static function load_widget_files() {
 
-        if ( ! $widgets_manager ) {
+        if ( self::$files_loaded ) {
             return;
         }
 
-        foreach ( self::get_custom_widgets() as $widget_slug => $widget_dir ) {
+        self::$files_loaded = true;
 
-            $class_name = self::get_widget_class( $widget_slug );
+        foreach ( self::get_custom_widgets() as $widget_dir ) {
+            $file = $widget_dir . '/themeic-widget.php';
 
-            // class_exists() triggers the plugin autoloader (see Base::include_class_files).
-            if ( class_exists( $class_name ) ) {
-                $widgets_manager->register( new $class_name() );
+            if ( is_readable( $file ) ) {
+                include_once $file;
             }
         }
+    }
+
+    /**
+     * Every widget class declared by the uploaded files.
+     *
+     * @return string[] Fully qualified class names.
+     */
+    public static function get_widget_classes() {
+
+        self::load_widget_files();
+
+        $classes = [];
+
+        foreach ( get_declared_classes() as $class_name ) {
+
+            if ( 0 !== strpos( $class_name, 'Themeic\\CustomWidget\\' ) ) {
+                continue;
+            }
+
+            // Skip helpers or base classes shipped alongside a widget.
+            if ( ! is_subclass_of( $class_name, '\Elementor\Widget_Base' ) ) {
+                continue;
+            }
+
+            try {
+                if ( ( new \ReflectionClass( $class_name ) )->isAbstract() ) {
+                    continue;
+                }
+            } catch ( \ReflectionException $e ) {
+                continue;
+            }
+
+            $classes[] = $class_name;
+        }
+
+        return $classes;
+    }
+
+    /**
+     * Folder that holds the file declaring a custom widget class.
+     *
+     * @return string|false
+     */
+    public static function get_widget_dir( $class_name ) {
+
+        if ( ! class_exists( $class_name ) ) {
+            return false;
+        }
+
+        try {
+            $file = ( new \ReflectionClass( $class_name ) )->getFileName();
+        } catch ( \ReflectionException $e ) {
+            return false;
+        }
+
+        return $file ? wp_normalize_path( dirname( $file ) ) : false;
+    }
+
+    /**
+     * Widget folder path => class name, for every uploaded widget.
+     */
+    public static function get_widget_class_map() {
+
+        $map = [];
+
+        foreach ( self::get_widget_classes() as $class_name ) {
+            $dir = self::get_widget_dir( $class_name );
+
+            if ( $dir ) {
+                $map[ $dir ] = $class_name;
+            }
+        }
+
+        return $map;
     }
 
     /**
@@ -90,16 +162,16 @@ class Custom_Widgets_Manager {
         $upload   = wp_upload_dir();
         $base_url = trailingslashit( $upload['baseurl'] ) . self::MUIA_UPLOAD_FOLDER;
 
-        foreach ( self::get_custom_widgets() as $widget_slug => $widget_dir ) {
+        foreach ( self::get_widget_classes() as $class_name ) {
 
-            $class_name = self::get_widget_class( $widget_slug );
+            $widget_dir = self::get_widget_dir( $class_name );
 
-            if ( ! class_exists( $class_name ) ) {
+            if ( ! $widget_dir ) {
                 continue;
             }
 
             $widget     = new $class_name();
-            $widget_url = $base_url . '/' . $widget_slug . '/';
+            $widget_url = $base_url . '/' . basename( $widget_dir ) . '/';
 
             if ( method_exists( $widget, 'get_style_depends' ) ) {
                 foreach ( (array) $widget->get_style_depends() as $handle ) {
@@ -234,7 +306,57 @@ class Custom_Widgets_Manager {
     }
 
     /**
-     * Handle the zip upload from the dashboard (admin-post.php).
+     * Flatten $_FILES into a list of uploaded files.
+     *
+     * Accepts both shapes so the form works with or without the [] suffix
+     * on the field name.
+     *
+     * @return array[] [ [ 'name' => ..., 'tmp_name' => ..., 'size' => ... ], ... ]
+     */
+    private static function get_uploaded_files() {
+
+        if ( empty( $_FILES['muia_widget_zip'] ) ) {
+            return [];
+        }
+
+        $input = $_FILES['muia_widget_zip'];
+        $files = [];
+
+        // Multiple upload: every key holds an array.
+        if ( is_array( $input['name'] ) ) {
+
+            foreach ( array_keys( $input['name'] ) as $index ) {
+
+                if ( empty( $input['name'][ $index ] ) || ! is_uploaded_file( $input['tmp_name'][ $index ] ) ) {
+                    continue;
+                }
+
+                $files[] = [
+                    'name'     => $input['name'][ $index ],
+                    'tmp_name' => $input['tmp_name'][ $index ],
+                    'size'     => isset( $input['size'][ $index ] ) ? (int) $input['size'][ $index ] : 0,
+                ];
+            }
+
+            return $files;
+        }
+
+        if ( ! empty( $input['name'] ) && is_uploaded_file( $input['tmp_name'] ) ) {
+            $files[] = [
+                'name'     => $input['name'],
+                'tmp_name' => $input['tmp_name'],
+                'size'     => isset( $input['size'] ) ? (int) $input['size'] : 0,
+            ];
+        }
+
+        return $files;
+    }
+
+    /**
+     * Handle the zip upload(s) from the dashboard (admin-post.php).
+     *
+     * Any number of zips can be sent at once; each is installed independently
+     * so one bad file does not discard the rest.
      */
     public static function handle_upload() {
 
@@ -244,31 +366,56 @@ class Custom_Widgets_Manager {
 
         check_admin_referer( self::MUIA_UPLOAD_NONCE, 'muia_custom_widget_nonce' );
 
-        if ( empty( $_FILES['muia_widget_zip'] ) || ! is_uploaded_file( $_FILES['muia_widget_zip']['tmp_name'] ) ) {
+        $files = self::get_uploaded_files();
+
+        if ( empty( $files ) ) {
             self::redirect_back( 'no_file' );
         }
 
-        $file      = $_FILES['muia_widget_zip'];
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+
+        $first_error = '';
+
+        foreach ( $files as $file ) {
+
+            $status = self::install_widget_zip( $file );
+
+            // Report the first problem, but keep installing the rest.
+            if ( 'success' !== $status && ! $first_error ) {
+                $first_error = $status;
+            }
+        }
+
+        self::redirect_back( $first_error ? $first_error : 'success' );
+    }
+
+    /**
+     * Validate and install one uploaded zip.
+     *
+     * @param  array $file [ 'name', 'tmp_name', 'size' ]
+     * @return string Status code, 'success' when installed.
+     */
+    private static function install_widget_zip( $file ) {
+
+        global $wp_filesystem;
+
         $file_name = sanitize_file_name( $file['name'] );
         $file_type = wp_check_filetype( $file_name, [ 'zip' => 'application/zip' ] );
 
         if ( 'zip' !== $file_type['ext'] ) {
-            self::redirect_back( 'invalid_type' );
+            return 'invalid_type';
         }
 
         $file_size = ! empty( $file['size'] ) ? (int) $file['size'] : (int) filesize( $file['tmp_name'] );
         if ( $file_size > self::MUIA_MAX_ZIP_SIZE ) {
-            self::redirect_back( 'too_large' );
+            return 'too_large';
         }
-
-        global $wp_filesystem;
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-        WP_Filesystem();
 
         $base_dir = self::get_upload_dir();
 
         if ( ! wp_mkdir_p( $base_dir ) ) {
-            self::redirect_back( 'mkdir_failed' );
+            return 'mkdir_failed';
         }
 
         self::protect_upload_dir();
@@ -279,14 +426,14 @@ class Custom_Widgets_Manager {
 
         if ( is_wp_error( $unzipped ) ) {
             $wp_filesystem->delete( $temp_dir, true );
-            self::redirect_back( 'unzip_failed' );
+            return 'unzip_failed';
         }
 
         // Reject zips containing unexpected file types or too many files.
         $contents_error = self::validate_contents( $temp_dir );
         if ( $contents_error ) {
             $wp_filesystem->delete( $temp_dir, true );
-            self::redirect_back( $contents_error );
+            return $contents_error;
         }
 
         // The zip may contain the widget folder itself, or the widget files at its root.
@@ -302,13 +449,13 @@ class Custom_Widgets_Manager {
 
         if ( empty( $slug ) ) {
             $wp_filesystem->delete( $temp_dir, true );
-            self::redirect_back( 'invalid_name' );
+            return 'invalid_name';
         }
 
         // A valid Themeic widget folder must contain themeic-widget.php.
         if ( ! file_exists( $source . '/themeic-widget.php' ) ) {
             $wp_filesystem->delete( $temp_dir, true );
-            self::redirect_back( 'missing_index' );
+            return 'missing_index';
         }
 
         $destination = $base_dir . '/' . $slug;
@@ -323,11 +470,7 @@ class Custom_Widgets_Manager {
         // Clean up the temp folder (no-op when $source === $temp_dir and move succeeded).
         $wp_filesystem->delete( $temp_dir, true );
 
-        if ( ! $moved ) {
-            self::redirect_back( 'move_failed' );
-        }
-
-        self::redirect_back( 'success' );
+        return $moved ? 'success' : 'move_failed';
     }
 
     /**

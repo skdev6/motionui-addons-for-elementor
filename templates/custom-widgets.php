@@ -24,6 +24,7 @@ if ( ! class_exists( 'Themeic\MotionUI_Addons\Inc\Classes\Custom_Widgets_Manager
 }
 
 $muia_custom_widgets = Custom_Widgets_Manager::get_custom_widgets();
+$muia_widget_classes = Custom_Widgets_Manager::get_widget_class_map();
 
 // Upload status notice (set by the redirect after upload).
 $muia_upload_status  = isset( $_GET['muia_upload'] ) ? sanitize_key( $_GET['muia_upload'] ) : '';
@@ -39,7 +40,7 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 			printf(
 				/* translators: %s: linked "Themeic" brand name */  
 				esc_html__( '%s', 'motionui-addons-for-elementor' ),
-				'<a href="https://themeic.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Themeic Widget Library <i class="eicon-arrow-right"></i></a>'
+				'<a href="https://themeic.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Widget Library <i class="eicon-arrow-right"></i></a>'
 			);
 			?>
 		</h4>
@@ -65,10 +66,11 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 					<?php wp_nonce_field( Custom_Widgets_Manager::MUIA_UPLOAD_NONCE, 'muia_custom_widget_nonce' ); ?>
 					<input
 						type="file"
-						name="muia_widget_zip"
+						name="muia_widget_zip[]"
 						accept=".zip"
+						multiple
 						required
-						aria-label="<?php esc_attr_e( 'Widget zip file', 'motionui-addons-for-elementor' ); ?>"
+						aria-label="<?php esc_attr_e( 'Widget zip files', 'motionui-addons-for-elementor' ); ?>"
 					/>
 					<button type="submit" class="th-das-btn btn-sm">
 						<i class="eicon-upload" aria-hidden="true"></i>
@@ -111,9 +113,9 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 				$muia_demo_url     = '';
 				$muia_tutorial_url = '';
 				$muia_widget_icon  = '';
-				$muia_widget_class = Custom_Widgets_Manager::get_widget_class( $muia_widget_slug );
+				$muia_widget_class = isset( $muia_widget_classes[ $muia_widget_path ] ) ? $muia_widget_classes[ $muia_widget_path ] : '';
 
-				if ( class_exists( '\Elementor\Widget_Base' ) && class_exists( $muia_widget_class ) ) {
+				if ( $muia_widget_class && class_exists( '\Elementor\Widget_Base' ) ) {
 					$muia_widget_instance = new $muia_widget_class();
 
 					if ( method_exists( $muia_widget_instance, 'get_themeic_demo_url' ) ) {
@@ -130,7 +132,7 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 				<!-- Widget Card -->
 				<div class="th-widget-card <?php echo esc_attr( $muia_widget_slug ); ?>">
 					<div class="icon-wrap" aria-hidden="true">
-						<img class="icon-themeic" src="<?php echo esc_url( THEMEIC_MUIA_ASSETS . '/img/themeic-logo.svg' ); ?>">
+						<img class="icon-themeic d-none" src="<?php echo esc_url( THEMEIC_MUIA_ASSETS . '/img/themeic-logo.svg' ); ?>">
 						<?php if ( $muia_widget_icon ) : ?>
 							<i class="<?php echo esc_attr( $muia_widget_icon ); ?>"></i>
 						<?php endif; ?>

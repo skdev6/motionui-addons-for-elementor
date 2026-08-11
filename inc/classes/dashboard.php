@@ -150,10 +150,16 @@ class Dashboard{
 			$muia_is_active  = isset( $muia_widget['is_active'] ) ? (bool) $muia_widget['is_active']       : false;
 			$muia_is_pro     = isset( $muia_widget['is_pro'] )    ? (bool) $muia_widget['is_pro']          : false;
 			$muia_upcoming   = isset( $muia_widget['is_upcoming'] ) ? (bool) $muia_widget['is_upcoming']   : false;
+            // Library widgets are purchased separately from Themeic, so the pro
+            // lock never applies — they are gated by being installed instead.
+            $muia_is_custom     = ! empty( $muia_widget['is_in_custom_widget'] );
+            $muia_not_installed = $muia_is_custom && ! empty( $muia_widget['widget_not_installed'] );
+
             $is_active_pro = Motionui::is_active_pro();
-            $is_lock = $muia_is_pro && ! $is_active_pro;
-            $is_lock_widget_lbary = false;
+            $is_lock = $muia_is_pro && ! $is_active_pro && ! $muia_is_custom;
             
+            $is_actived_pro_badge   = $is_active_pro || $muia_is_custom && !$muia_not_installed ? 'actived-pro-badge' : '';
+
             if ( isset( $muia_widget['category'] ) ) {
 
                 // If category is array.
@@ -176,7 +182,7 @@ class Dashboard{
                 }
             }
 
-            if(!$is_active_pro && $muia_is_pro){
+            if(!$is_active_pro && $muia_is_pro && !$muia_is_custom){
                 $muia_is_active = false;
             }
 			// Sanitize and validate demo/tutorial URLs — only allow http/https or empty.
@@ -197,6 +203,12 @@ class Dashboard{
 			if ( $is_lock ) {
 				$muia_card_classes[] = 'not-active-pro';
 			}
+			if ( $muia_is_custom ) {
+				$muia_card_classes[] = 'is-custom-widget';
+			}
+			if ( $muia_not_installed ) {
+				$muia_card_classes[] = 'widget-not-installed';
+			}
 		?>
 
 		<div class="<?php echo esc_attr( implode( ' ', $muia_card_classes ) ); ?>">
@@ -206,11 +218,12 @@ class Dashboard{
 					<i class="<?php echo esc_attr( $muia_icon ); ?>"></i>
 				<?php endif; ?>
 			</div>
-            <?php if ($is_lock) : ?>
-                <span class="muia-badge muia-badge-pro">
-                    <?php esc_html_e( 'Pro', 'motionui-addons-for-elementor' ); ?>
+            <?php if ($muia_is_custom || $muia_is_pro) : ?>
+                <span class="<?php echo $is_actived_pro_badge; ?> muia-badge muia-badge-pro <?php echo $muia_is_custom ? 'is-library-badge' : ''; ?>">
+                    <?php $muia_is_custom ? esc_html_e( 'library', 'motionui-addons-for-elementor' ) : esc_html_e( 'Pro', 'motionui-addons-for-elementor' ); ?>
                 </span>
-            <?php endif; ?>
+            <?php endif; ?>    
+
 			<div class="card-con">
 
 				<h4 class="title">
@@ -258,7 +271,21 @@ class Dashboard{
                 <span class="muia-badge muia-badge-upcoming">
                     <?php esc_html_e( 'Upcoming', 'motionui-addons-for-elementor' ); ?>
                 </span>
-            <?php else: ?> 
+            <?php elseif ( $muia_not_installed ) : ?>
+                <a
+                    href="<?php echo esc_url( $muia_demo_url ? $muia_demo_url : 'https://themeic.com/' ); ?>"
+                    class="th-das-btn btn-sm2 ml-auto"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="<?php
+                        /* translators: %s: widget title */
+                        printf( esc_attr__( 'Get the %s widget from Themeic', 'motionui-addons-for-elementor' ), esc_attr( $muia_title ) );
+                    ?>"
+                >
+                    <i class="th-icon-link" aria-hidden="true"></i>
+                    <?php esc_html_e( 'Get Widget', 'motionui-addons-for-elementor' ); ?>
+                </a>
+            <?php else: ?>
                 <div class="th-switch-control d-flex align-items-center ml-auto">
                     <input
                         type="checkbox"
