@@ -125,7 +125,7 @@ class Widgets_Manager{
             ],
             'glow-button'=>[  
                 'title' => __('Glow Button', 'motionui-addons-for-elementor'),
-                'category'=> ['filter', 'portfolio'],
+                'category'=> ['button'],
                 'is_active'=> true,
                 'is_pro'       => true,
                 'is_upcoming'  => false,
