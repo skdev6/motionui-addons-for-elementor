@@ -132,15 +132,15 @@
         }
     });
 
-    $(document).on('click', '.is-pro.not-active-pro', function(e){
-        if(!$(e.target).hasClass('th-doc-link')){
-            $('.muia-pro-popup-wrap').addClass('open');
-        }else{
-            setTimeout(() => {
-                 $('.muia-pro-popup-wrap').addClass('open');
-            }, 1000);
-        }
-    });
+    // $(document).on('click', '.is-pro.not-active-pro', function(e){
+    //     if(!$(e.target).hasClass('th-doc-link')){
+    //         $('.muia-pro-popup-wrap').addClass('open');
+    //     }else{
+    //         setTimeout(() => {
+    //              $('.muia-pro-popup-wrap').addClass('open');
+    //         }, 1000);
+    //     }
+    // });
     $(document).on('click', '.th-widget-card .get_widget-btn', function(e){
         let allWidget = $('.themeic-das-wrap').data('all-widget');
         let urlWidget = $(this).attr('href');
