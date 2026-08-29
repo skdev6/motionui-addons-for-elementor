@@ -8,6 +8,151 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Widgets_Manager{
 
     const WIDGET_DB_KEY = 'muia_pro_inactive_widgets';
+    /** Remote catalog of library widgets, so new ones need no plugin update. */
+    const CATALOG_URL      = 'https://raw.githubusercontent.com/skdev6/cdn-js/refs/heads/main/widgets.json';
+    const CATALOG_FALLBACK = 'muia_widget_catalog';
+    const CATALOG_ACTION   = 'muia_update_widget_catalog';
+
+    /**
+     * Library widgets described by the remote catalog.
+     *
+     * PHP never fetches. The dashboard pulls the catalog in the browser and
+     * posts it back through save_catalog(), so no request — front end or
+     * admin — can ever block on an outbound connection.
+     */
+    public static function remote_widgets_map(){
+
+        $stored = get_option( self::CATALOG_FALLBACK, [] );
+
+        if ( ! empty( $stored ) && is_array( $stored ) ) {
+            return $stored;
+        }
+
+        // Nothing stored yet: fall back to the copy shipped with the plugin, so
+        // a fresh install still lists the library before anyone has opened the
+        // dashboard.
+        $file = THEMEIC_MUIA_DIR_PATH . 'assets/data/widgets.json';
+
+        if ( is_readable( $file ) ) {
+            return self::sanitize_catalog( json_decode( file_get_contents( $file ), true ) );
+        }
+
+        return [];
+    }
+
+    /**
+     * Store a catalog the dashboard fetched in the browser (AJAX).
+     *
+     * The payload arrives from the client, so it goes through exactly the same
+     * sanitiser a server-side fetch would have used — the browser is treated as
+     * an untrusted relay, never as a source of truth.
+     */
+    public static function save_catalog(){
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( __( 'Unauthorized', 'motionui-addons-for-elementor' ) );
+        }
+
+        if ( ! check_ajax_referer( Dashboard::MUIA_NONCE, 'nonce', false ) ) {
+            wp_send_json_error( __( 'Invalid Nonce', 'motionui-addons-for-elementor' ) );
+        }
+
+        $raw = isset( $_POST['catalog'] ) ? wp_unslash( $_POST['catalog'] ) : '';
+        $map = self::sanitize_catalog( json_decode( $raw, true ) );
+
+        if ( empty( $map ) ) {
+            wp_send_json_error( __( 'Catalog was empty or malformed.', 'motionui-addons-for-elementor' ) );
+        }
+
+        // Only write when something actually changed, so opening the dashboard
+        // does not cost a database write every single time. Nothing changed
+        // means the markup on screen is already correct, so no html is sent.
+        if ( get_option( self::CATALOG_FALLBACK ) === $map ) {
+            wp_send_json_success( [ 'updated' => false, 'count' => count( $map ) ] );
+        }
+
+        // Autoloaded: the front end reads this on every request to register
+        // widgets, so it should ride along with the other autoloaded options.
+        update_option( self::CATALOG_FALLBACK, $map, true );
+
+        wp_send_json_success( [
+            'updated' => true,
+            'count'   => count( $map ),
+            // Rendered after the option is written, so the template picks up
+            // the catalog that was just stored.
+            'html'    => self::render_widgets_template(),
+        ] );
+    }
+
+    /**
+     * Render templates/widgets.php to a string.
+     *
+     * The template reads the widgets map itself and takes nothing from the
+     * caller, so buffering a plain require is enough.
+     */
+    private static function render_widgets_template(){
+
+        $file = THEMEIC_MUIA_DIR_PATH . 'templates/widgets.php';
+
+        if ( ! is_readable( $file ) ) {
+            return '';
+        }
+
+        ob_start();
+        require $file;
+
+        return ob_get_clean();
+    }
+
+    /**
+     * Whitelist and clean every field. This data reaches HTML — the key becomes
+     * a CSS class and drives class resolution, icon becomes a class, and the
+     * URLs become hrefs — so nothing is passed through untouched.
+     */
+    private static function sanitize_catalog( $raw ){
+
+        if ( ! is_array( $raw ) ) {
+            return [];
+        }
+
+        // Accepts the { schema, widgets } envelope or a bare map.
+        $list = ( isset( $raw['widgets'] ) && is_array( $raw['widgets'] ) ) ? $raw['widgets'] : $raw;
+
+        $clean = [];
+
+        foreach ( $list as $key => $widget ) {
+
+            $key = sanitize_key( $key );
+
+            if ( '' === $key || ! is_array( $widget ) ) {
+                continue;
+            }
+
+            $category = [];
+
+            foreach ( (array) ( isset( $widget['category'] ) ? $widget['category'] : [] ) as $cat ) {
+                $cat = sanitize_key( $cat );
+
+                if ( '' !== $cat ) {
+                    $category[] = $cat;
+                }
+            }
+
+            $clean[ $key ] = [
+                'title'               => isset( $widget['title'] ) ? sanitize_text_field( $widget['title'] ) : ucwords( str_replace( '-', ' ', $key ) ),
+                'category'            => $category,
+                'is_active'           => ! empty( $widget['is_active'] ),
+                'is_pro'              => ! empty( $widget['is_pro'] ),
+                'is_upcoming'         => ! empty( $widget['is_upcoming'] ),
+                'is_in_custom_widget' => ! empty( $widget['is_in_custom_widget'] ),
+                'icon'                => isset( $widget['icon'] ) ? preg_replace( '/[^A-Za-z0-9_ -]/', '', $widget['icon'] ) : '',
+                'demo'                => isset( $widget['demo'] ) ? esc_url_raw( $widget['demo'] ) : '',
+                'tutorial'            => isset( $widget['tutorial'] ) ? esc_url_raw( $widget['tutorial'] ) : '',
+            ];
+        }
+
+        return $clean;
+    }
 
     public static function get_inactive_widgets(){
         return get_option(self::WIDGET_DB_KEY, []);
@@ -20,6 +165,19 @@ class Widgets_Manager{
      */
     public static function get_class_suffix($widget_key){
         return str_replace('-', '_', ucwords($widget_key, '-'));
+    }
+
+    /**
+     * The inverse: class name => map key, e.g.
+     * \Themeic\CustomWidget\Glow_Button => glow-button.
+     *
+     * Any namespace is dropped, so a class resolves to the same key whether it
+     * came from the plugin or from an uploaded widget.
+     */
+    public static function get_key_from_class($class_name){
+        $short = substr( strrchr( '\\' . ltrim( (string) $class_name, '\\' ), '\\' ), 1 );
+
+        return strtolower( str_replace( '_', '-', $short ) );
     }
 
     /**
@@ -107,7 +265,18 @@ class Widgets_Manager{
         );
     }
 
+    /**
+     * Every widget the dashboard knows about.
+     *
+     * Bundled widgets stay here because their code ships with the plugin
+     * anyway. Library widgets come from the remote catalog, so a new one can
+     * be sold without a wp.org release. A bundled key always wins a clash.
+     */
     public static function local_widgets_map(){
+        return array_merge( self::bundled_widgets_map(), self::remote_widgets_map() );
+    }
+
+    public static function bundled_widgets_map(){
         return [
             // Buttons
             'animated-button'=>[
@@ -173,51 +342,9 @@ class Widgets_Manager{
             //     'demo'=> 'dd',
             //     'tutorial'=> 'cd',
             // ],
-            'glow-button'=>[  
-                'title' => __('Glow Button', 'motionui-addons-for-elementor'),
-                'category'=> ['button'],
-                'is_active'=> true,
-                'is_pro'       => true,
-                'is_upcoming'  => false,
-                'is_in_custom_widget'    => true,
-                'icon'=>'eicon-button',
-                'demo'=> 'https://motionuiaddons.com/',
-                'tutorial'=> 'https://motionuiaddons.com/',
-            ],
-            'accordion'=>[
-                'title' => __('Accordion', 'motionui-addons-for-elementor'),
-                'category'=> ['accordion'],
-                'is_active'=> true,
-                'is_pro'       => true,
-                'is_upcoming'  => false,
-                'is_in_custom_widget'    => true,
-                'icon'=>'eicon-accordion',
-                'demo'=> 'https://motionuiaddons.com/',
-                'tutorial'=> 'https://motionuiaddons.com/',
-            ],
-            'before-after-scroll'=>[
-                'title' => __('Before After by Scroll', 'motionui-addons-for-elementor'),
-                'category'=> ['scroll'],
-                'is_active'=> true,
-                'is_pro'       => true,
-                'is_upcoming'  => false,
-                'is_in_custom_widget'    => true,
-                'icon'=>'eicon-image-before-after',
-                'demo'=> 'https://motionuiaddons.com/',
-                'tutorial'=> 'https://motionuiaddons.com/',
-            ],
-            'pricing-switcher'=>[
-                'title' => __('Before After Scroll', 'motionui-addons-for-elementor'),
-                'category'=> ['pricing'],
-                'is_active'=> true,
-                'is_pro'       => true,
-                'is_upcoming'  => false,
-                'is_in_custom_widget'    => true,
-                'icon'=>'eicon-price-table',
-                'demo'=> 'https://motionuiaddons.com/',
-                'tutorial'=> 'https://motionuiaddons.com/',
-            ],
-            // Testimonial
+            // Library widgets (glow-button, accordion, before-after-scroll,
+            // pricing-switcher, …) are no longer listed here — they come from
+            // the remote catalog. See CATALOG_URL.
 
         ];
     }

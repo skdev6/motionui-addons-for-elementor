@@ -47,7 +47,7 @@
         $('.upload-wrapper').toggleClass('active');
     });
 
-    $('.muia-dashboard-form').on('submit', function(e){
+    $(document).on('submit', '.muia-dashboard-form', function(e){
         e.preventDefault();
         let type = $(this).data('type');
         let formData = $(this).serialize();
@@ -78,40 +78,41 @@
 
     
 
-    $('.muia-enable-all').on('change', function() {  
+    $(document).on('change', '.muia-enable-all', function() {
         let isChecked = $(this).is(':checked');
-        
+
         // Find all checkboxes EXCEPT the "Enable All" one itself
         let allCheckbox = $(this).closest('form')
             .find('.th-switch-control input[type="checkbox"]')
             .not('.pro-el')
             .not('.muia-enable-all');
-        
+
         allCheckbox.prop('checked', isChecked);
-        
-        allCheckbox.trigger('change'); 
+
+        allCheckbox.trigger('change');
     });
-    $('.muia-dashboard-form').each(function() {
-        let $form = $(this);
-        let submitBtn = $form.find('[type="submit"]');
-        let enableCheckbox = $form.find('.muia-enable-all');
+    // Delegated, and everything resolved at event time rather than captured on
+    // load, so this keeps working after the widget list is replaced with the
+    // markup returned by the catalog refresh.
+    $(document).on('change', '.muia-dashboard-form .th-switch-control input[type="checkbox"]', function() {
+        let $checkbox = $(this);
+
+        if ($checkbox.hasClass('muia-enable-all')) return;
+
+        let $form = $checkbox.closest('.muia-dashboard-form');
+        if (!$form.length) return;
+
         let itemCheckboxes = $form.find('.th-switch-control input[type="checkbox"]').not('.muia-enable-all');
 
-        itemCheckboxes.on('change', function() {
-            submitBtn.removeAttr('disabled');
+        $form.find('[type="submit"]').removeAttr('disabled');
 
-            let totalItems = itemCheckboxes.length;
-            let checkedItems = itemCheckboxes.filter(':checked').length;
+        let totalItems   = itemCheckboxes.length;
+        let checkedItems = itemCheckboxes.filter(':checked').length;
 
-            if (totalItems === checkedItems) {
-                enableCheckbox.prop('checked', true);
-            } else {
-                enableCheckbox.prop('checked', false);
-            }
-        });
+        $form.find('.muia-enable-all').prop('checked', totalItems === checkedItems);
     });
 
-    $('.filter-navbar li a').on('click', function(){    
+    $(document).on('click', '.filter-navbar li a', function(){
         let navbar = $(this).closest('.filter-navbar')
         let selector = $(navbar.data('area'));
         let visableItems = $(this).data('filter');
@@ -131,7 +132,7 @@
         }
     });
 
-    $('.is-pro.not-active-pro').on('click', function(e){   
+    $(document).on('click', '.is-pro.not-active-pro', function(e){
         if(!$(e.target).hasClass('th-doc-link')){
             $('.muia-pro-popup-wrap').addClass('open');
         }else{
@@ -140,9 +141,35 @@
             }, 1000);
         }
     });
+    $(document).on('click', '.th-widget-card .get_widget-btn', function(e){
+        let allWidget = $('.themeic-das-wrap').data('all-widget');
+        let urlWidget = $(this).attr('href');
+        // The name comes from the card that was clicked, not from the popup —
+        // the popup's own heading is what we are about to fill in.
+        let title = $(this).closest('.th-widget-card').find('.title').text().trim();
 
-    $('.muia-close-btn,.muia-popup-wrap .backdrop').on('click', function(){
-        $('.muia-pro-popup-wrap').removeClass('open');
+        // No bundle URL configured: leave the button as a plain link so the
+        // card still goes somewhere useful.
+        if(!allWidget) return;
+
+        e.preventDefault();
+
+        let $popup = $('.muia-get-widget-popup-wrap');
+
+        // The popup is shared by every card, so its buttons and title are
+        // filled in per click rather than rendered per widget.
+        $popup.find('.muia-get-this-widget').attr('href', urlWidget);
+        $popup.find('.muia-get-all-widgets').attr('href', allWidget);
+        $popup.find('.muia-get-widget-name').text(title);
+        $popup.find('.widget-title-text').text(title);
+
+        $popup.addClass('open');
+    });
+
+    // Closes whichever popup the backdrop or × belongs to, so every popup gets
+    // the behaviour without needing its own handler.
+    $(document).on('click', '.muia-popup-wrap .backdrop, .muia-popup-wrap .muia-close-btn', function(){
+        $(this).closest('.muia-popup-wrap').removeClass('open');
     });
 
     // Delete custom widget: confirm via popup, then remove over AJAX.
@@ -194,5 +221,41 @@
             $deleteWidgetCard = null;
         });
     });
+
+    function refreshWidgetCatalog(){
+        if (!muiaDashboard.catalogUrl || !muiaDashboard.catalogAction) return;
+
+        $.ajax({
+            url: muiaDashboard.catalogUrl,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                if (!data) return;
+                if(data.get_all_widgets_url) $('.themeic-das-wrap').attr('data-all-widget', data.get_all_widgets_url);
+                $.post(muiaDashboard.ajaxUrl, {
+                    action: muiaDashboard.catalogAction,
+                    nonce: muiaDashboard.nonce,
+                    catalog: JSON.stringify(data)
+                },
+                function({data, success}) {
+                    console.log(data);
+                    
+                    if(data.updated){
+                        $('#muia-widgets').html(data.html);
+                    }
+                }
+                ).fail(function () {
+                    console.error('Could not store the widget catalog.');
+                })
+            },
+            error: function (xhr, status, error) {
+                // Not fatal: the stored catalog keeps being used.
+                console.error('Failed to fetch the widget catalog:', error);
+            }
+        });
+    }
+
+    $(window).on('load', refreshWidgetCatalog);
 
 })(jQuery);

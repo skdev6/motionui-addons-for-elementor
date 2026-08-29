@@ -60,6 +60,10 @@ class Base {
         add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );
         add_action( 'admin_post_' . MotionUiClasses\Custom_Widgets_Manager::MUIA_UPLOAD_ACTION, [ MotionUiClasses\Custom_Widgets_Manager::class, 'handle_upload' ] );
         add_action( 'wp_ajax_muia_delete_custom_widget', [ MotionUiClasses\Custom_Widgets_Manager::class, 'delete_widget' ] );
+
+        // The dashboard fetches the widget catalog in the browser and posts it
+        // back here, so no PHP request ever waits on an outbound connection.
+        add_action( 'wp_ajax_' . MotionUiClasses\Widgets_Manager::CATALOG_ACTION, [ MotionUiClasses\Widgets_Manager::class, 'save_catalog' ] );
     }
 
     /**

@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "updated": "2026-08-12",
+  "get_all_widgets_url" : "https://motionuiaddons.com/",
+  "widgets": {
+    "glow-button": {
+      "title": "Glow Button",
+      "category": ["button"],
+      "is_active": true,
+      "is_pro": true,
+      "is_upcoming": false,
+      "is_in_custom_widget": true,
+      "icon": "eicon-button",
+      "demo": "https://motionuiaddons.com/",
+      "tutorial": "https://motionuiaddons.com/"
+    },
+    "accordion": {
+      "title": "Accordion",
+      "category": ["accordion"],
+      "is_active": true,
+      "is_pro": true,
+      "is_upcoming": false,
+      "is_in_custom_widget": true,
+      "icon": "eicon-accordion",
+      "demo": "https://motionuiaddons.com/",
+      "tutorial": "https://motionuiaddons.com/"
+    },
+    "before-after-scroll": {
+      "title": "Before After by Scroll",
+      "category": ["scroll"],
+      "is_active": true,
+      "is_pro": true,
+      "is_upcoming": false,
+      "is_in_custom_widget": true,
+      "icon": "eicon-image-before-after",
+      "demo": "https://motionuiaddons.com/",
+      "tutorial": "https://motionuiaddons.com/"
+    },
+    "pricing-switcher": {
+      "title": "Pricing Switcher",
+      "category": ["pricing"],
+      "is_active": true,
+      "is_pro": true,
+      "is_upcoming": false,
+      "is_in_custom_widget": true,
+      "icon": "eicon-price-table",
+      "demo": "https://motionuiaddons.com/",
+      "tutorial": "https://motionuiaddons.com/"
+    }
+  }
+}

@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Themeic\MotionUI_Addons\Inc\Classes\Custom_Widgets_Manager;
+use Themeic\MotionUI_Addons\Inc\Classes\Widgets_Manager;
 
 if ( ! class_exists( 'Themeic\MotionUI_Addons\Inc\Classes\Custom_Widgets_Manager' ) ) {
 	return;
@@ -25,6 +26,11 @@ if ( ! class_exists( 'Themeic\MotionUI_Addons\Inc\Classes\Custom_Widgets_Manager
 
 $muia_custom_widgets = Custom_Widgets_Manager::get_custom_widgets();
 $muia_widget_classes = Custom_Widgets_Manager::get_widget_class_map();
+
+
+// Catalog entries, so an installed widget can be described by the map rather
+// than by its folder name. Fetched once, not per card.
+$muia_widgets_map = Widgets_Manager::local_widgets_map();
 
 // Upload status notice (set by the redirect after upload).
 $muia_upload_status  = isset( $_GET['muia_upload'] ) ? sanitize_key( $_GET['muia_upload'] ) : '';
@@ -126,6 +132,26 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 					}
 					if ( method_exists( $muia_widget_instance, 'get_icon' ) ) {
 						$muia_widget_icon = (string) $muia_widget_instance->get_icon();
+					}
+				}
+
+				// The catalog takes priority: Glow_Button resolves to the key
+				// glow-button, so a widget listed there is described by the
+				// catalog rather than by whatever the folder name happens to be
+				// or what the class hardcodes.
+				$muia_map_key = $muia_widget_class ? Widgets_Manager::get_key_from_class( $muia_widget_class ) : '';
+
+				if ( $muia_map_key && isset( $muia_widgets_map[ $muia_map_key ] ) ) {
+					$muia_mapped = $muia_widgets_map[ $muia_map_key ];
+
+					if ( ! empty( $muia_mapped['title'] ) )    $muia_widget_title = $muia_mapped['title'];
+					if ( ! empty( $muia_mapped['demo'] ) )     $muia_demo_url     = $muia_mapped['demo'];
+					if ( ! empty( $muia_mapped['tutorial'] ) ) $muia_tutorial_url = $muia_mapped['tutorial'];
+
+					// The class appends themeic-muia-logo to its icon; keep that
+					// suffix so a catalog icon still gets the brand mark.
+					if ( ! empty( $muia_mapped['icon'] ) ) {
+						$muia_widget_icon = $muia_mapped['icon'] . ' themeic-muia-logo';
 					}
 				}
 			?>

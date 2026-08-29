@@ -437,3 +437,9 @@ button[disabled] {
     top: -3px;
     padding: 18px 22px 5px 22px;
 }  
+.muia-get-widget-popup-wrap .muia-pro-card {
+    max-width: 500px;
+}  
+.muia-get-widget-popup-wrap .th-das-btn {
+    white-space: nowrap;
+}

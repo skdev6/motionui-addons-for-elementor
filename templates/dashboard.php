@@ -13,7 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Themeic\MotionUI_Addons\Inc\Classes\Dashboard;
 ?>
 
-<div class="themeic-das-wrap th-das-root">
+<?php
+$muia_all_widgets_url = apply_filters( 'muia_all_widgets_url', 'https://themeic.com/' );
+?>
+<div class="themeic-das-wrap th-das-root" data-all-widget="<?php echo esc_url( $muia_all_widgets_url ); ?>">
     <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/dasboard-header.php'; ?>
     
     <div class="th-das-content">
@@ -39,5 +42,8 @@ use Themeic\MotionUI_Addons\Inc\Classes\Dashboard;
         </div>
     </div>
 </div>
-<?php Dashboard::pro_html(); ?>
-<?php Dashboard::delete_html(); ?> 
+<?php 
+Dashboard::pro_html();
+Dashboard::delete_html();
+Dashboard::get_widget_html();
+?>

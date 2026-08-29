@@ -60,6 +60,9 @@ class Dashboard{
                     'nonce' => wp_create_nonce(self::MUIA_NONCE),
                     'ajaxUrl' => admin_url( 'admin-ajax.php' ),
                     'action' => 'muia_dashboard',
+                    // Fetched by the browser, then posted back to catalogAction.
+                    'catalogUrl' => Widgets_Manager::CATALOG_URL,
+                    'catalogAction' => Widgets_Manager::CATALOG_ACTION,
                     'saveChangesLabel' => esc_html__( 'Save Settings', 'motionui-addons-for-elementor' ),
                     'savedLabel' => esc_html__( 'Changes Saved', 'motionui-addons-for-elementor' ),
                 ]
@@ -274,7 +277,7 @@ class Dashboard{
             <?php elseif ( $muia_not_installed ) : ?>
                 <a
                     href="<?php echo esc_url( $muia_demo_url ? $muia_demo_url : 'https://themeic.com/' ); ?>"
-                    class="th-das-btn btn-sm2 ml-auto"
+                    class="th-das-btn btn-sm2 ml-auto get_widget-btn"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="<?php
@@ -344,6 +347,65 @@ class Dashboard{
                 <i class="eicon-upgrade-crown" aria-hidden="true"></i>
                 <?php esc_html_e( 'Upgrade to PRO', 'motionui-addons-for-elementor' ); ?>
             </a>
+        </div>
+        </div>
+        <?php
+    }
+    /**
+     * "Get widget" popup.
+     *
+     * Both buttons start with an empty href — the script fills them in when the
+     * popup opens, using the clicked card's own link for the single purchase and
+     * the wrapper's data-all-widget for the bundle.
+     */
+    public static function get_widget_html() {
+        ?>
+        <div class="muia-popup-wrap muia-get-widget-popup-wrap">
+        <div class="backdrop"></div>
+        <div class="muia-pro-card">
+            <div class="muia-close-btn eicon-close"></div>
+            <div class="muia-pro-crown-wrap">
+                <i class="eicon-cart-medium" aria-hidden="true"></i>
+            </div>
+            <h2><?php
+                printf(
+                    /* translators: %s: widget name, filled in by the script */
+                    esc_html__( 'Get this %s from Library', 'motionui-addons-for-elementor' ),
+                    '<span class="widget-title-text"></span>'
+                );
+            ?></h2>
+            <p><?php
+                printf(
+                    /* translators: %s: widget name, filled in by the script */
+                    esc_html__( 'Buy %s on its own, or take the whole library in one bundle and get every widget below.', 'motionui-addons-for-elementor' ),
+                    '<strong class="muia-get-widget-name"></strong>'
+                );
+            ?></p>
+            <ul class="muia-pro-features">
+                <li>
+                    <i class="eicon-check-circle" aria-hidden="true"></i>
+                    <span><?php esc_html_e( 'Every widget in the library, with new ones as they land.', 'motionui-addons-for-elementor' ); ?></span>
+                </li>
+                <li>
+                    <i class="eicon-check-circle" aria-hidden="true"></i>
+                    <span><?php esc_html_e( 'Install straight from this dashboard, no plugin update needed.', 'motionui-addons-for-elementor' ); ?></span>
+                </li>
+                <li>
+                    <i class="eicon-check-circle" aria-hidden="true"></i>
+                    <span><?php esc_html_e( 'Full control over content, colors and typography in Elementor.', 'motionui-addons-for-elementor' ); ?></span>
+                </li>
+            </ul>
+            <div class="muia-pro-divider"></div>
+            <div class="d-flex gap-2 align-items-center justify-content-center">
+                <a href="" target="_blank" rel="noopener noreferrer" class="th-das-btn btn-secondary muia-get-all-widgets">
+                    <i class="eicon-cart-medium" aria-hidden="true"></i>
+                    <?php esc_html_e( 'Get All Widgets Together', 'motionui-addons-for-elementor' ); ?>
+                </a>
+                <a href="" target="_blank" rel="noopener noreferrer" class="th-das-btn muia-get-this-widget">
+                    <i class="th-icon-link" aria-hidden="true"></i>
+                    <?php esc_html_e( 'Get This Widget', 'motionui-addons-for-elementor' ); ?>
+                </a>
+            </div>
         </div>
         </div>
         <?php
