@@ -281,7 +281,7 @@ class Widgets_Manager{
             // Buttons
             'animated-button'=>[
                 'title' => __('Button', 'motionui-addons-for-elementor'),
-                'category'=> ['button-and-glow'],
+                'category'=> ['Button'],
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
