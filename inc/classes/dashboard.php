@@ -277,7 +277,7 @@ class Dashboard{
             <?php elseif ( $muia_not_installed ) : ?>
                 <a
                     href="<?php echo esc_url( $muia_demo_url ? $muia_demo_url : 'https://themeic.com/' ); ?>"
-                    class="th-das-btn btn-sm2 ml-auto get_widget-btn"
+                    class="th-das-btn btn-sm2 ml-auto get_widget-btn btn-secondary btn-border-none"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="<?php

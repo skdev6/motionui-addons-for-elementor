@@ -443,3 +443,9 @@ button[disabled] {
 .muia-get-widget-popup-wrap .th-das-btn {
     white-space: nowrap;
 }
+.bold-btn{
+    font-weight: 600 !important;
+}
+.btn-border-none{
+    border-color: transparent !important; 
+}

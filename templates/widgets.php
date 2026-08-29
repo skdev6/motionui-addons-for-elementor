@@ -62,7 +62,7 @@ $muia_all_active = Dashboard::is_all_active_switch( $muia_widgets_map );
 						role="tab"
 						aria-selected="false"
 					>
-						<?php echo esc_html( $muia_cat_label ); ?>
+						<?php echo esc_html( str_replace("-", " ", $muia_cat_label) ); ?>
 					</a>
 				</li>
 			<?php endforeach; ?>

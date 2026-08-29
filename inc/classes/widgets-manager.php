@@ -281,7 +281,7 @@ class Widgets_Manager{
             // Buttons
             'animated-button'=>[
                 'title' => __('Button', 'motionui-addons-for-elementor'),
-                'category'=> 'button',
+                'category'=> ['button-and-glow'],
                 'is_active'=> true,
                 'is_pro'       => false,
                 'is_upcoming'  => false,
@@ -354,7 +354,9 @@ class Widgets_Manager{
             return;
         }
 
-        foreach (self::get_active_widgets() as $widget_key => $widget_data) {
+        $active_widgets = self::get_active_widgets();
+
+        foreach ($active_widgets as $widget_key => $widget_data) {
 
             // Bundled/pro first, uploaded custom widget as fallback.
             $class_name = self::resolve_widget_class($widget_key, $widget_data);
@@ -367,18 +369,20 @@ class Widgets_Manager{
 
         // Uploaded widgets with no entry in the map still register, so a widget
         // bought before the plugin knew about it remains usable. Entries that
-        // ARE mapped are skipped here — their toggle decides, including "off".
-        $mapped_classes = [];
-
-        foreach (self::local_widgets_map() as $widget_key => $widget_data) {
-            if(!empty($widget_data['is_in_custom_widget'])){
-                $mapped_classes[] = 'Themeic\CustomWidget\\' . self::get_class_suffix($widget_key);
-            }
-        }
+        // ARE mapped are skipped here — the loop above already decided, based
+        // on the toggle, so a widget switched off must not sneak back in.
+        //
+        // Matched on the derived key rather than the class name: the declared
+        // class may be Pricing_Switcher, pricing_switcher or Pricing_switcher,
+        // and PHP treats those as the same class while a string compare does
+        // not. get_key_from_class() lowercases, so every spelling agrees.
+        $widgets_map = self::local_widgets_map();
 
         foreach (Custom_Widgets_Manager::get_widget_classes() as $custom_class) {
 
-            if(in_array(ltrim($custom_class, '\\'), $mapped_classes, true)){
+            $custom_key = self::get_key_from_class($custom_class);
+
+            if(isset($widgets_map[$custom_key])){
                 continue;
             }
 

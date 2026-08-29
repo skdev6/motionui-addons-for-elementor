@@ -46,11 +46,11 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 			printf(
 				/* translators: %s: linked "Themeic" brand name */  
 				esc_html__( '%s', 'motionui-addons-for-elementor' ),
-				'<a href="https://themeic.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Widget Library <i class="eicon-arrow-right"></i></a>'
+				'<a href="https://motionuiaddons.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Widget Library <i class="eicon-arrow-right"></i></a>'
 			);
 			?>
 		</h4>
-		<a class="th-das-btn btn-sm btn-secondary ml-auto" href="https://themeic.com/">
+		<a class="th-das-btn btn-sm btn-secondary ml-auto" href="https://motionuiaddons.com/">
 			<i class="eicon-cart-medium" aria-hidden="true"></i>
 			<?php esc_html_e( 'Get Widgets', 'motionui-addons-for-elementor' ); ?>
 		</a>
@@ -222,16 +222,16 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 			<?php esc_html_e( 'No Widgets Installed Yet', 'motionui-addons-for-elementor' ); ?>
 		</h2>
 		<p class="muia-no-widgets-desc">
-			<?php esc_html_e( 'Supercharge your site with premium widgets crafted by Themeic. Browse the collection, pick the widgets you need, and import them here with one click.', 'motionui-addons-for-elementor' ); ?>
+			<?php esc_html_e( 'Supercharge your site with premium widgets crafted by MotionUi Addons. Browse the collection, pick the widgets you need, and import them here with one click.', 'motionui-addons-for-elementor' ); ?>
 		</p>
 		<a
-			href="https://themeic.com/"
+			href="https://motionuiaddons.com/"
 			class="th-das-btn"
 			target="_blank"
 			rel="noopener noreferrer"
 		>
 			<i class="eicon-cart-medium" aria-hidden="true"></i>
-			<?php esc_html_e( 'Get Widgets from Themeic', 'motionui-addons-for-elementor' ); ?>
+			<?php esc_html_e( 'Get Widgets from Library', 'motionui-addons-for-elementor' ); ?>
 		</a>
 	</div>
 

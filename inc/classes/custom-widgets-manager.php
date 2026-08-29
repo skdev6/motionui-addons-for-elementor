@@ -375,26 +375,36 @@ class Custom_Widgets_Manager {
         require_once ABSPATH . 'wp-admin/includes/file.php';
         WP_Filesystem();
 
+        $installed   = 0;
         $first_error = '';
 
         foreach ( $files as $file ) {
 
-            $status = self::install_widget_zip( $file );
+            $result = self::install_widget_zip( $file );
 
-            // Report the first problem, but keep installing the rest.
-            if ( 'success' !== $status && ! $first_error ) {
-                $first_error = $status;
+            $installed += $result['ok'];
+
+            // Report the first problem, but keep installing the rest — one bad
+            // widget inside a bundle should not discard the others.
+            if ( $result['error'] && ! $first_error ) {
+                $first_error = $result['error'];
             }
         }
 
-        self::redirect_back( $first_error ? $first_error : 'success' );
+        // Anything installed counts as success unless nothing landed at all.
+        if ( $first_error && ! $installed ) {
+            self::redirect_back( $first_error );
+        }
+
+        self::redirect_back( 'success' );
     }
 
     /**
-     * Validate and install one uploaded zip.
+     * Validate and install one uploaded zip, which may hold a single widget or
+     * a bundle of several.
      *
      * @param  array $file [ 'name', 'tmp_name', 'size' ]
-     * @return string Status code, 'success' when installed.
+     * @return array [ 'ok' => how many installed, 'error' => first status code ]
      */
     private static function install_widget_zip( $file ) {
 
@@ -404,18 +414,18 @@ class Custom_Widgets_Manager {
         $file_type = wp_check_filetype( $file_name, [ 'zip' => 'application/zip' ] );
 
         if ( 'zip' !== $file_type['ext'] ) {
-            return 'invalid_type';
+            return [ 'ok' => 0, 'error' => 'invalid_type' ];
         }
 
         $file_size = ! empty( $file['size'] ) ? (int) $file['size'] : (int) filesize( $file['tmp_name'] );
         if ( $file_size > self::MUIA_MAX_ZIP_SIZE ) {
-            return 'too_large';
+            return [ 'ok' => 0, 'error' => 'too_large' ];
         }
 
         $base_dir = self::get_upload_dir();
 
         if ( ! wp_mkdir_p( $base_dir ) ) {
-            return 'mkdir_failed';
+            return [ 'ok' => 0, 'error' => 'mkdir_failed' ];
         }
 
         self::protect_upload_dir();
@@ -426,51 +436,91 @@ class Custom_Widgets_Manager {
 
         if ( is_wp_error( $unzipped ) ) {
             $wp_filesystem->delete( $temp_dir, true );
-            return 'unzip_failed';
+            return [ 'ok' => 0, 'error' => 'unzip_failed' ];
         }
 
         // Reject zips containing unexpected file types or too many files.
         $contents_error = self::validate_contents( $temp_dir );
         if ( $contents_error ) {
             $wp_filesystem->delete( $temp_dir, true );
-            return $contents_error;
+            return [ 'ok' => 0, 'error' => $contents_error ];
         }
 
-        // The zip may contain the widget folder itself, or the widget files at its root.
-        $entries = array_values( array_diff( scandir( $temp_dir ), [ '.', '..' ] ) );
+        // One zip may hold a single widget or a whole bundle, so the tree is
+        // searched for every folder that looks like a widget rather than
+        // assuming the shape.
+        $roots = self::find_widget_roots( $temp_dir );
 
-        if ( 1 === count( $entries ) && is_dir( $temp_dir . '/' . $entries[0] ) ) {
-            $source = $temp_dir . '/' . $entries[0];
-            $slug   = sanitize_key( $entries[0] );
-        } else {
-            $source = $temp_dir;
-            $slug   = sanitize_key( pathinfo( $file_name, PATHINFO_FILENAME ) );
-        }
-
-        if ( empty( $slug ) ) {
+        if ( empty( $roots ) ) {
             $wp_filesystem->delete( $temp_dir, true );
-            return 'invalid_name';
+            return [ 'ok' => 0, 'error' => 'missing_index' ];
         }
 
-        // A valid Themeic widget folder must contain themeic-widget.php.
-        if ( ! file_exists( $source . '/themeic-widget.php' ) ) {
-            $wp_filesystem->delete( $temp_dir, true );
-            return 'missing_index';
+        $installed = 0;
+        $error     = '';
+
+        foreach ( $roots as $source ) {
+
+            // Files sitting at the zip root have no folder to name them, so the
+            // zip's own filename is used instead.
+            $slug = ( $source === $temp_dir )
+                ? sanitize_key( pathinfo( $file_name, PATHINFO_FILENAME ) )
+                : sanitize_key( basename( $source ) );
+
+            if ( empty( $slug ) ) {
+                if ( ! $error ) $error = 'invalid_name';
+                continue;
+            }
+
+            $destination = $base_dir . '/' . $slug;
+
+            // Replace an existing copy of the same widget.
+            if ( is_dir( $destination ) ) {
+                $wp_filesystem->delete( $destination, true );
+            }
+
+            if ( $wp_filesystem->move( $source, $destination, true ) ) {
+                $installed++;
+            } elseif ( ! $error ) {
+                $error = 'move_failed';
+            }
         }
 
-        $destination = $base_dir . '/' . $slug;
-
-        // Replace an existing copy of the same widget.
-        if ( is_dir( $destination ) ) {
-            $wp_filesystem->delete( $destination, true );
-        }
-
-        $moved = $wp_filesystem->move( $source, $destination, true );
-
-        // Clean up the temp folder (no-op when $source === $temp_dir and move succeeded).
+        // No-op when a move already emptied it.
         $wp_filesystem->delete( $temp_dir, true );
 
-        return $moved ? 'success' : 'move_failed';
+        return [ 'ok' => $installed, 'error' => $error ];
+    }
+
+    /**
+     * Find every widget folder inside an extracted zip.
+     *
+     * A folder counts as a widget when it holds themeic-widget.php, and the
+     * search stops there rather than descending into it. That way a bundle can
+     * be arranged as loose folders or wrapped in one, without a widget's own
+     * subfolders being mistaken for more widgets.
+     *
+     * @param  string $dir   Directory to search.
+     * @param  int    $depth How many levels below $dir to look.
+     * @return string[]      Absolute paths.
+     */
+    private static function find_widget_roots( $dir, $depth = 3 ) {
+
+        if ( file_exists( $dir . '/themeic-widget.php' ) ) {
+            return [ $dir ];
+        }
+
+        if ( $depth < 1 ) {
+            return [];
+        }
+
+        $roots = [];
+
+        foreach ( (array) glob( $dir . '/*', GLOB_ONLYDIR ) as $sub ) {
+            $roots = array_merge( $roots, self::find_widget_roots( $sub, $depth - 1 ) );
+        }
+
+        return $roots;
     }
 
     /**
