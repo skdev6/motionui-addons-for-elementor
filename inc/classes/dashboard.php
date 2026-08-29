@@ -396,7 +396,7 @@ class Dashboard{
                 </li>
             </ul>
             <div class="muia-pro-divider"></div>
-            <div class="d-flex gap-2 align-items-center justify-content-center">
+            <div class="d-flex gap-1 align-items-center justify-content-center">
                 <a href="" target="_blank" rel="noopener noreferrer" class="th-das-btn btn-secondary muia-get-all-widgets">
                     <i class="eicon-cart-medium" aria-hidden="true"></i>
                     <?php esc_html_e( 'Get All Widgets Together', 'motionui-addons-for-elementor' ); ?>
