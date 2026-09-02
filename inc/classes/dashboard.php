@@ -132,7 +132,19 @@ class Dashboard{
             'type'    => $type,
         ));
     }
-    public static function switch_card($muia_widgets_map){
+	/**
+	 * Render the toggle cards for one dashboard form.
+	 *
+	 * @param array  $muia_widgets_map Map to render.
+	 * @param string $muia_field       Field the checkboxes post under, and the
+	 *                                 prefix for their IDs. Must match the key
+	 *                                 save_data() reads for the form's type —
+	 *                                 both forms live in the same page, so the
+	 *                                 IDs have to stay distinct too.
+	 */
+    public static function switch_card($muia_widgets_map, $muia_field = 'widgets'){
+
+		$muia_field = sanitize_key( $muia_field );
 
 		foreach ( $muia_widgets_map as $muia_widget_slug => $muia_widget ) :
 
@@ -292,8 +304,8 @@ class Dashboard{
                 <div class="th-switch-control d-flex align-items-center ml-auto">
                     <input
                         type="checkbox"
-                        id="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"
-                        name="widgets[]"
+                        id="toggle-<?php echo esc_attr( $muia_field . '-' . $muia_widget_slug ); ?>"
+                        name="<?php echo esc_attr( $muia_field ); ?>[]"
                         value="<?php echo esc_attr( $muia_widget_slug ); ?>"
                         <?php checked( $muia_is_active, true ); ?>
                         <?php disabled( $muia_upcoming || $is_lock, true ); ?>
@@ -305,7 +317,7 @@ class Dashboard{
                     <?php echo $is_lock ? '<i class="pro-icon eicon-upgrade-crown"></i>' : ''; ?>
                     <label
                         class="switch-label"
-                        for="toggle-<?php echo esc_attr( $muia_widget_slug ); ?>"
+                        for="toggle-<?php echo esc_attr( $muia_field . '-' . $muia_widget_slug ); ?>"
                         aria-hidden="true"
                     >
                 </label>

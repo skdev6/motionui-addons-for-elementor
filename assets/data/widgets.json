@@ -53,8 +53,8 @@
       "demo": "",
       "tutorial": ""
     },
-    "glow-button": {
-      "title": "Glow Button",
+    "spotlight-button": {
+      "title": "Spotlight Button",
       "category": ["button"],
       "is_active": true,
       "is_pro": true,

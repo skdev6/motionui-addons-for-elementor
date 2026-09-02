@@ -73,7 +73,7 @@ $muia_all_active = Dashboard::is_all_active_switch( $muia_extensions_map );
 	</div><!-- .th-das-header-sm -->
 
 	<div class="widget-card-wrap">
-		<?php Dashboard::switch_card( $muia_extensions_map ); ?>
+		<?php Dashboard::switch_card( $muia_extensions_map, 'extensions' ); ?>
 	</div><!-- .widget-card-wrap -->
 
 </form><!-- .muia-dashboard-form -->
