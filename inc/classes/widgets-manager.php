@@ -19,25 +19,16 @@ class Widgets_Manager{
      * PHP never fetches. The dashboard pulls the catalog in the browser and
      * posts it back through save_catalog(), so no request — front end or
      * admin — can ever block on an outbound connection.
+     *
+     * Empty until that first fetch lands. Nothing is lost meanwhile:
+     * local_widgets_map() also reads bundled_widgets_map(), which ships a seed
+     * copy of the library.
      */
     public static function remote_widgets_map(){
 
         $stored = get_option( self::CATALOG_FALLBACK, [] );
 
-        if ( ! empty( $stored ) && is_array( $stored ) ) {
-            return $stored;
-        }
-
-        // Nothing stored yet: fall back to the copy shipped with the plugin, so
-        // a fresh install still lists the library before anyone has opened the
-        // dashboard.
-        $file = THEMEIC_MUIA_DIR_PATH . 'assets/data/widgets.json';
-
-        if ( is_readable( $file ) ) {
-            return self::sanitize_catalog( json_decode( file_get_contents( $file ), true ) );
-        }
-
-        return [];
+        return ( ! empty( $stored ) && is_array( $stored ) ) ? $stored : [];
     }
 
     /**
@@ -268,85 +259,43 @@ class Widgets_Manager{
     /**
      * Every widget the dashboard knows about.
      *
-     * Bundled widgets stay here because their code ships with the plugin
-     * anyway. Library widgets come from the remote catalog, so a new one can
-     * be sold without a wp.org release. A bundled key always wins a clash.
+     * The shipped file is the baseline; the remote catalog is layered on top,
+     * so a widget can be added or re-described without a wp.org release and a
+     * fetched entry always wins over the seed copy of the same key.
      */
     public static function local_widgets_map(){
         return array_merge( self::bundled_widgets_map(), self::remote_widgets_map() );
     }
 
+    /**
+     * Widgets described by the file shipped with the plugin.
+     *
+     * Everything the plugin knows about out of the box lives in
+     * assets/data/widgets.json — the bundled widgets, plus a seed copy of the
+     * library so a fresh install lists it before anyone opens the dashboard.
+     * Adding a widget is a JSON edit, not a code edit.
+     *
+     * Read once per request: the map is asked for several times while the
+     * dashboard renders, and the file never changes mid-request.
+     */
     public static function bundled_widgets_map(){
-        return [
-            // Buttons
-            'animated-button'=>[
-                'title' => __('Button', 'motionui-addons-for-elementor'),
-                'category'=> ['Button'],
-                'is_active'=> true,
-                'is_pro'       => false,
-                'is_upcoming'  => false,
-                'icon'=>'eicon-button',
-                'demo'=> '',
-                'tutorial'=> '',
-            ],
-            // Slider
-            'animated-slider'=>[  
-                'title' => __('Slider', 'motionui-addons-for-elementor'),
-                'category'=> 'image',
-                'is_active'=> true,
-                'is_pro'       => false,
-                'is_upcoming'  => false,
-                'icon'=>'eicon-post-slider',
-                'demo'=> '',
-                'tutorial'=> '',
-            ],
-            // Images and Gallery
-            'animated-image'=>[  
-                'title' => __('Image', 'motionui-addons-for-elementor'),
-                'category'=> 'image',
-                'is_active'=> true,
-                'is_pro'       => false,
-                'is_upcoming'  => false,
-                'icon'=>'eicon-image',
-                'demo'=> '',
-                'tutorial'=> '',
-            ],
-            'animated-gallery'=>[  
-                'title' => __('Gallery', 'motionui-addons-for-elementor'),
-                'category'=> 'image',
-                'is_active'=> true,
-                'is_pro'       => false,
-                'is_upcoming'  => false,
-                'icon'=>'eicon-gallery-justified',
-                'demo'=> '',
-                'tutorial'=> '',
-            ],
-            // 'motion-gallery'=>[  
-            //     'title' => __('Motion Gallery', 'motionui-addons-for-elementor'),
-            //     'category'=> 'image',
-            //     'is_active'=> true,
-            //     'is_pro'       => true,
-            //     'is_upcoming'  => true,
-            //     'icon'=>'eicon-gallery-justified',
-            //     'demo'=> 'dd',
-            //     'tutorial'=> 'cd',
-            // ],
-            // // Portfolio and Filter
-            // 'post-filter'=>[  
-            //     'title' => __('Portfolio and Post Filter', 'motionui-addons-for-elementor'),
-            //     'category'=> ['filter', 'portfolio'],
-            //     'is_active'=> true,
-            //     'is_pro'       => true,
-            //     'is_upcoming'  => false,
-            //     'icon'=>'eicon-posts-grid',
-            //     'demo'=> 'dd',
-            //     'tutorial'=> 'cd',
-            // ],
-            // Library widgets (glow-button, accordion, before-after-scroll,
-            // pricing-switcher, …) are no longer listed here — they come from
-            // the remote catalog. See CATALOG_URL.
 
-        ];
+        static $map = null;
+
+        if ( null !== $map ) {
+            return $map;
+        }
+
+        $file = THEMEIC_MUIA_DIR_PATH . 'assets/data/widgets.json';
+
+        // Run through the same sanitiser as the remote catalog, so both
+        // sources produce identically shaped entries and every field the
+        // template expects is present.
+        $map = is_readable( $file )
+            ? self::sanitize_catalog( json_decode( file_get_contents( $file ), true ) )
+            : [];
+
+        return $map;
     }
     public static function register_widgets($widgets_manager = null){
 

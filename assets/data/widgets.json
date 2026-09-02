@@ -1,8 +1,58 @@
 {
   "schema": 1,
-  "updated": "2026-08-12",
-  "get_all_widgets_url" : "https://motionuiaddons.com/",
+  "updated": "2026-09-02",
+  "get_all_widgets_url": "https://motionuiaddons.com/",
   "widgets": {
+    "animated-button": {
+      "title": "Button",
+      "category": ["button"],
+      "is_active": true,
+      "is_pro": false,
+      "is_upcoming": false,
+      "icon": "eicon-button",
+      "demo": "",
+      "tutorial": ""
+    },
+    "burger-button": {
+      "title": "Burger Button",
+      "category": ["button"],
+      "is_active": true,
+      "is_pro": false,
+      "is_upcoming": false,
+      "icon": "eicon-menu-bar",
+      "demo": "",
+      "tutorial": ""
+    },
+    "animated-slider": {
+      "title": "Slider",
+      "category": ["image"],
+      "is_active": true,
+      "is_pro": false,
+      "is_upcoming": false,
+      "icon": "eicon-post-slider",
+      "demo": "",
+      "tutorial": ""
+    },
+    "animated-image": {
+      "title": "Image",
+      "category": ["image"],
+      "is_active": true,
+      "is_pro": false,
+      "is_upcoming": false,
+      "icon": "eicon-image",
+      "demo": "",
+      "tutorial": ""
+    },
+    "animated-gallery": {
+      "title": "Gallery",
+      "category": ["image"],
+      "is_active": true,
+      "is_pro": false,
+      "is_upcoming": false,
+      "icon": "eicon-gallery-justified",
+      "demo": "",
+      "tutorial": ""
+    },
     "glow-button": {
       "title": "Glow Button",
       "category": ["button"],

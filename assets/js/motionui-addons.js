@@ -38,7 +38,23 @@
             })
         }
     }
-    // 
+    // Burger toggle. Delegated once from the document, so a button that
+    // Elementor re-renders in the editor keeps working without re-binding.
+    function initBurgerToggle(){
+        $(document).on('click', '[data-muia-burger]', function(){
+            var $btn    = $(this).toggleClass('is-open');
+            var isOpen  = $btn.hasClass('is-open');
+            var target  = $btn.attr('data-muia-target');
+
+            $btn.attr('aria-expanded', isOpen ? 'true' : 'false');
+
+            if(target){
+                try{ $(target).toggleClass('is-open', isOpen); }
+                catch(e){ /* Author-supplied selector; ignore an invalid one. */ }
+            }
+        });
+    }
+    //
 
     // Text Animations
     function textAnimation( $scope, settings ) {
@@ -507,7 +523,9 @@
     }
     // init elementor frontend
     $(window).on('elementor/frontend/init', function(){
-        
+
+        initBurgerToggle();
+
         $.each(widgets, function(widget, fun){
            elementorFrontend.hooks.addAction('frontend/element_ready/' + widget, fun);
         });
