@@ -234,7 +234,7 @@ class Dashboard{
 				<?php endif; ?>
 			</div>
             <?php if ($muia_is_custom || $muia_is_pro) : ?>
-                <span class="<?php echo $is_actived_pro_badge; ?> muia-badge muia-badge-pro ">
+                <span class="<?php echo esc_attr( $is_actived_pro_badge ); ?> muia-badge muia-badge-pro ">
                     <?php esc_html_e( 'Pro', 'motionui-addons-for-elementor' ); ?>
                 </span>
             <?php endif; ?>    

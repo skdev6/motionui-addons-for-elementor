@@ -43,10 +43,13 @@ $muia_has_notice     = $muia_upload_status && isset( $muia_status_notices[ $muia
 	<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-1 justify-content-between">
 		<h4 class="title-md">
 			<?php
+			// The markup is the literal and the label is the placeholder, not
+			// the other way round: '%s' on its own is not a translatable
+			// string, and wrapping the anchor in __() would ask translators
+			// to edit HTML.
 			printf(
-				/* translators: %s: linked "Themeic" brand name */  
-				esc_html__( '%s', 'motionui-addons-for-elementor' ),
-				'<a href="https://motionuiaddons.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Widget Library <i class="eicon-arrow-right"></i></a>'
+				'<a href="https://motionuiaddons.com/" class="text-dark text-link-btn" target="_blank" rel="noopener noreferrer">%s <i class="eicon-arrow-right"></i></a>',
+				esc_html__( 'Widget Library', 'motionui-addons-for-elementor' )
 			);
 			?>
 		</h4>

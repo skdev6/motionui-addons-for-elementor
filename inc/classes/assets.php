@@ -76,7 +76,9 @@ class Assets {
 			'desc'=>'Take your designs further. Upgrade to MotionUI Addons Pro and unlock',
 			'proImage'=>THEMEIC_MUIA_ASSETS . 'img/get-pro.svg',
 			'i18n' => [
+				/* translators: %s: widget name. */
 				'promotionDialogHeader'     => esc_html__('%s Widget', 'motionui-addons-for-elementor'),
+				/* translators: %s: widget name. */
 				'promotionDialogMessage'    => esc_html__('Use %s widget with other exclusive pro widgets and 100% unique features to extend your toolbox and build sites faster and better.', 'motionui-addons-for-elementor'),
 				'promotionDialogBtnTxt'    => esc_html__('Upgrade Now', 'motionui-addons-for-elementor'),
 				'templatesEmptyTitle'       => esc_html__('No Templates Found', 'motionui-addons-for-elementor'),

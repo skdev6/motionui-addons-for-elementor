@@ -24,10 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
             </span>
         </span>
         <?php
+        // The markup is the literal and the label is the placeholder, not the
+        // other way round: '%s' on its own is not a translatable string, and
+        // wrapping the anchor in __() would ask translators to edit HTML.
         printf(
-            /* translators: %s: linked "Themeic" brand name */  
-            esc_html__( '%s', 'motionui-addons-for-elementor' ),
-            '<a href="https://themeic.com/" class="d-none title-md text-dark text-link-btn" target="_blank" rel="noopener noreferrer">Widget Library <i class="eicon-arrow-right"></i></a>'
+            '<a href="https://themeic.com/" class="d-none title-md text-dark text-link-btn" target="_blank" rel="noopener noreferrer">%s <i class="eicon-arrow-right"></i></a>',
+            esc_html__( 'Widget Library', 'motionui-addons-for-elementor' )
         );
         ?>
         <a href="https://motionuiaddons.com/" target="_blank" class="th-das-btn btn-sm btn-secondary">

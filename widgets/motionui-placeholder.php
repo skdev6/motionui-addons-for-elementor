@@ -22,17 +22,19 @@ class Motionui_Placeholder extends \Elementor\Widget_Base {
         return [
             'condition'   => true,
             'image'       => THEMEIC_MUIA_ASSETS . 'assets/images/get-pro-sm.png',
-            'image_alt'   => esc_attr__( 'Upgrade to Pro', 'motionui-addons' ),
+            'image_alt'   => esc_attr__( 'Upgrade to Pro', 'motionui-addons-for-elementor' ),
             'title'       => sprintf(
-                esc_html__( 'Get %s Widget', 'motionui-addons' ),
+                /* translators: %s: widget name. */
+                esc_html__( 'Get %s Widget', 'motionui-addons-for-elementor' ),
                 $this->get_title()
             ),
             'description' => sprintf(
-                esc_html__( 'Unlock the %s widget and 50+ Pro widgets by upgrading to MotionUI Addons Pro.', 'motionui-addons' ),
+                /* translators: %s: widget name. */
+                esc_html__( 'Unlock the %s widget and 50+ Pro widgets by upgrading to MotionUI Addons Pro.', 'motionui-addons-for-elementor' ),
                 $this->get_title()
             ),
-            'upgrade_url'  => esc_url( 'https://motionuiaddons.com/pricing/' ), 
-            'upgrade_text' => esc_html__( 'Upgrade to Pro', 'motionui-addons' ),
+            'upgrade_url'  => esc_url( 'https://motionuiaddons.com/pricing/' ),
+            'upgrade_text' => esc_html__( 'Upgrade to Pro', 'motionui-addons-for-elementor' ),
         ];
     }
 

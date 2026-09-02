@@ -464,10 +464,12 @@ trait Button_Controls {
 					'muia-btn-default'       => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
 					'muia-btn-wave'          => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
 					'muia-btn-reveal'        => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
-					'muia-btn-reveal-random' => esc_html__(
-						! Motionui::is_active_pro() ? 'Reveal Random (Pro ✦)' : 'Reveal Random',
-						'motionui-addons-for-elementor'
-					),
+					// Each branch has to be its own literal call: the string
+					// extractor reads the source, so a variable or a ternary
+					// inside __() leaves the label untranslatable.
+					'muia-btn-reveal-random' => ! Motionui::is_active_pro()
+						? esc_html__( 'Reveal Random (Pro ✦)', 'motionui-addons-for-elementor' )
+						: esc_html__( 'Reveal Random', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
@@ -517,8 +519,8 @@ trait Button_Controls {
 					[
 						'label'       => esc_html__( 'Dynamic Post Url', 'motionui-addons-for-elementor' ),
 						'type'        => Controls_Manager::SWITCHER,
-						'label_on' => esc_html__( 'Yes', 'textdomain' ),
-						'label_off' => esc_html__( 'No', 'textdomain' ),
+						'label_on' => esc_html__( 'Yes', 'motionui-addons-for-elementor' ),
+						'label_off' => esc_html__( 'No', 'motionui-addons-for-elementor' ),
 						'return_value' => 'yes',
 						'default' => 'no',
 					]
