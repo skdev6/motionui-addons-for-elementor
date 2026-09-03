@@ -214,6 +214,62 @@ class Custom_Widgets_Manager {
     }
 
     /**
+     * Enqueue editor-only scripts a widget asks for.
+     *
+     * Separate from register_assets() because these belong to the editor app,
+     * not the preview: a nested widget has to register its element type with
+     * Elementor's editor before anything can be dropped into it, and that code
+     * must not ship to the front end.
+     *
+     * Handles map to files the same way as everywhere else — handle.js in the
+     * widget folder, minified preferred.
+     */
+    public static function enqueue_editor_assets() {
+
+        $upload   = wp_upload_dir();
+        $base_url = trailingslashit( $upload['baseurl'] ) . self::MUIA_UPLOAD_FOLDER;
+
+        foreach ( self::get_widget_classes() as $class_name ) {
+
+            $widget_dir = self::get_widget_dir( $class_name );
+
+            if ( ! $widget_dir ) {
+                continue;
+            }
+
+            $widget = new $class_name();
+
+            if ( ! method_exists( $widget, 'get_editor_script_depends' ) ) {
+                continue;
+            }
+
+            $widget_url = $base_url . '/' . basename( $widget_dir ) . '/';
+
+            foreach ( (array) $widget->get_editor_script_depends() as $handle ) {
+
+                if ( wp_script_is( $handle, 'enqueued' ) ) {
+                    continue;
+                }
+
+                foreach ( [ $handle . '.min.js', $handle . '.js' ] as $file_name ) {
+                    $file = $widget_dir . '/' . $file_name;
+
+                    if ( file_exists( $file ) ) {
+                        wp_enqueue_script(
+                            $handle,
+                            $widget_url . $file_name,
+                            [ 'elementor-editor' ],
+                            (string) filemtime( $file ),
+                            true
+                        );
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * File extensions a widget zip is allowed to contain.
      */
     public static function get_allowed_extensions() {

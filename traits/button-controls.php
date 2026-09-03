@@ -467,9 +467,7 @@ trait Button_Controls {
 					// Each branch has to be its own literal call: the string
 					// extractor reads the source, so a variable or a ternary
 					// inside __() leaves the label untranslatable.
-					'muia-btn-reveal-random' => ! Motionui::is_active_pro()
-						? esc_html__( 'Reveal Random (Pro ✦)', 'motionui-addons-for-elementor' )
-						: esc_html__( 'Reveal Random', 'motionui-addons-for-elementor' ),
+					'muia-btn-reveal-random' => esc_html__( 'Reveal Random', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
