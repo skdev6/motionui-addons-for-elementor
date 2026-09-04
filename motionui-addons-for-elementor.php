@@ -3,7 +3,7 @@
  * Plugin Name:           MotionUI Addons for Elementor
  * Plugin URI:            https://motionuiaddons.com/
  * Description:           Bring powerful GSAP animations to Elementor with ease. Includes advanced widgets like Animated Slider, Testimonial Carousel, News Ticker, Floating Effects, and more.
- * Version:               1.1.3
+ * Version:               1.1.4
  * Requires at least:     6.4
  * Tested up to:          6.9
  * Requires PHP:          7.4
@@ -27,9 +27,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // define( 'THEMEIC_MUIA_DEV', true );
 
 if ( defined( 'THEMEIC_MUIA_DEV' ) && true == THEMEIC_MUIA_DEV ) {
-    define( 'THEMEIC_MUIA_VERSION', '1.1.3.' . time() );
+    define( 'THEMEIC_MUIA_VERSION', '1.1.4.' . time() );
 } else {
-    define( 'THEMEIC_MUIA_VERSION', '1.1.3' );
+    define( 'THEMEIC_MUIA_VERSION', '1.1.4' );
 }
 
 /**

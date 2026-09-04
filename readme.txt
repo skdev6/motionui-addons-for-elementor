@@ -4,7 +4,7 @@ Tags:              elementor, animation, elementor addons, gsap, motion
 Requires at least: 6.4
 Tested up to:      6.9
 Requires PHP:      7.4
-Stable tag:        1.1.3
+Stable tag:        1.1.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Bring powerful animations to Elementor with ease. Animate text, images, sliders,
 
 Whether you want silky-smooth text reveals, cinematic image transitions, scroll-triggered effects, or animated sliders, MotionUI Addons gives you full creative control from a simple, intuitive interface.
 
-🔗 **[Live Demo](https://motionuiaddons.com/)** | 🌐 **[Author Website](https://themeic.com/)**
+🔗 **[Live Demo](https://motionuiaddons.com/)**
 
 = ✨ Features =
 
