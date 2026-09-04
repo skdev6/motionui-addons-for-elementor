@@ -33,9 +33,6 @@ $muia_all_widgets_url = apply_filters( 'muia_all_widgets_url', 'https://themeic.
                 <div id="muia-extensions" class="tab-content">
                     <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/extensions.php'; ?>
                 </div>
-                <div id="muia-custom-widgets" class="tab-content">
-                    <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/custom-widgets.php'; ?>
-                </div>
                 <?php do_action('add_muia_dashboard_page'); ?>
             </div>
             
@@ -44,6 +41,5 @@ $muia_all_widgets_url = apply_filters( 'muia_all_widgets_url', 'https://themeic.
 </div>
 <?php 
 Dashboard::pro_html();
-Dashboard::delete_html();
 Dashboard::get_widget_html();
 ?>

@@ -20,9 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <i class="eicon-shape"></i>
                 <?php esc_html_e('Widgets', 'motionui-addons-for-elementor'); ?>
             </a>
-            <ul class="submenu">    
-                <li><a  href="#muia-custom-widgets"><?php esc_html_e('Add Widget', 'motionui-addons-for-elementor'); ?></a></li>
-            </ul>
         </li>
         
         <li>

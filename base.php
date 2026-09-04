@@ -55,16 +55,8 @@ class Base {
 		add_action( 'elementor/editor/after_enqueue_styles', array( MotionUiClasses\Assets::class, 'enqueue_editor_css' ) );
 		add_action( 'elementor/editor/after_enqueue_scripts', array( MotionUiClasses\Assets::class, 'enqueue_editor_js' ) );
         add_action( 'elementor/widgets/widgets_registered', [ MotionUiClasses\Widgets_Manager::class, 'register_widgets'] );
-        add_action( 'elementor/frontend/after_register_scripts', [ MotionUiClasses\Custom_Widgets_Manager::class, 'register_assets'] );
-        add_action( 'elementor/editor/after_enqueue_scripts', [ MotionUiClasses\Custom_Widgets_Manager::class, 'enqueue_editor_assets'] );
         add_action( 'elementor/init', [ MotionUiClasses\Extensions_Manager::class, 'init' ] );
         add_action( 'wp_ajax_muia_dashboard', [ MotionUiClasses\Dashboard::class, 'save_data' ] );
-        add_action( 'admin_post_' . MotionUiClasses\Custom_Widgets_Manager::MUIA_UPLOAD_ACTION, [ MotionUiClasses\Custom_Widgets_Manager::class, 'handle_upload' ] );
-        add_action( 'wp_ajax_muia_delete_custom_widget', [ MotionUiClasses\Custom_Widgets_Manager::class, 'delete_widget' ] );
-
-        // The dashboard fetches the widget catalog in the browser and posts it
-        // back here, so no PHP request ever waits on an outbound connection.
-        add_action( 'wp_ajax_' . MotionUiClasses\Widgets_Manager::CATALOG_ACTION, [ MotionUiClasses\Widgets_Manager::class, 'save_catalog' ] );
     }
 
     /**
@@ -109,14 +101,7 @@ class Base {
      * * Maps namespaced class names to physical file paths and includes them.
      * * @param string $class_name
      */
-    public function include_class_files($class_name){ 
-        // Custom Widgets (Themeic\CustomWidget) — folder names do not map to
-        // class names, so every uploaded widget file is loaded on first use.
-        if(strpos($class_name, 'Themeic\CustomWidget\\') === 0){
-            MotionUiClasses\Custom_Widgets_Manager::load_widget_files();
-            return;
-        }
-
+    public function include_class_files($class_name){
         // Ensure we only process classes belonging to this plugin
         if(strpos($class_name, __NAMESPACE__) !== 0){
             return;

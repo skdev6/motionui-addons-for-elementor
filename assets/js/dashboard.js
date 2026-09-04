@@ -112,58 +112,77 @@
         $form.find('.muia-enable-all').prop('checked', totalItems === checkedItems);
     });
 
-    $(document).on('click', '.filter-navbar li a', function(){
-        let navbar = $(this).closest('.filter-navbar')
-        let selector = $(navbar.data('area'));
-        let visableItems = $(this).data('filter');
-        let listItems = navbar.find('> li');
-        let listItem = $(this).closest('li');
-
-        listItems.removeClass('current-menu-item');
-        listItem.addClass('current-menu-item');
-
-        if(selector.length){
-            let all = selector.find('> *');
-            let filteredItems = visableItems === '*' ? all : $(visableItems);
-            if(filteredItems.length){
-                all.addClass('d-none');
-                filteredItems.removeClass('d-none');
-            }
-        }
+    // Card filtering: the category select and the search box both narrow the
+    // same area, so each change re-runs both rules rather than one hiding what
+    // the other just showed.
+    $(document).on('change', 'select[data-area]', function(){
+        filterCards($(this).data('area'));
     });
 
-    // $(document).on('click', '.is-pro.not-active-pro', function(e){
-    //     if(!$(e.target).hasClass('th-doc-link')){
-    //         $('.muia-pro-popup-wrap').addClass('open');
-    //     }else{
-    //         setTimeout(() => {
-    //              $('.muia-pro-popup-wrap').addClass('open');
-    //         }, 1000);
-    //     }
-    // });
-    $(document).on('click', '.th-widget-card .get_widget-btn', function(e){
-        let allWidget = $('.themeic-das-wrap').data('all-widget');
-        let urlWidget = $(this).attr('href');
-        // The name comes from the card that was clicked, not from the popup —
-        // the popup's own heading is what we are about to fill in.
-        let title = $(this).closest('.th-widget-card').find('.title').text().trim();
+    $(document).on('input', 'input[type="text"][data-area]', function(){
+        filterCards($(this).data('area'));
+    });
 
-        // No bundle URL configured: leave the button as a plain link so the
-        // card still goes somewhere useful.
-        if(!allWidget) return;
+    function filterCards(area){
+        let $area = $(area);
 
-        e.preventDefault();
+        if(!$area.length) return;
 
-        let $popup = $('.muia-get-widget-popup-wrap');
+        let rawTerm  = ($('input[type="text"][data-area="' + area + '"]').val() || '').trim();
+        let category = $('select[data-area="' + area + '"]').val() || '*';
+        let term     = rawTerm.toLowerCase();
+        let visible  = 0;
 
-        // The popup is shared by every card, so its buttons and title are
-        // filled in per click rather than rendered per widget.
-        $popup.find('.muia-get-this-widget').attr('href', urlWidget);
-        $popup.find('.muia-get-all-widgets').attr('href', allWidget);
-        $popup.find('.muia-get-widget-name').text(title);
-        $popup.find('.widget-title-text').text(title);
+        $area.find('> *').each(function(){
+            let $card = $(this);
 
-        $popup.addClass('open');
+            // data-title and data-category are printed by Dashboard::switch_card;
+            // the category attribute holds readable names, not the slug classes.
+            let haystack = (($card.data('title') || '') + ' ' + ($card.data('category') || '')).toLowerCase();
+
+            let inCategory = category === '*' || $card.is(category);
+            let inSearch   = term === '' || haystack.indexOf(term) !== -1;
+            let matches    = inCategory && inSearch;
+
+            if(matches) visible++;
+
+            $card.toggleClass('d-none', !matches);
+        });
+
+        showNoResults(area, visible === 0, rawTerm);
+    }
+
+    // Nothing left after filtering: offer to build the widget instead of
+    // leaving an empty screen.
+    function showNoResults(area, isEmpty, term){
+        let $empty = $('.muia-no-results[data-empty-for="' + area + '"]');
+
+        if(!$empty.length) return;
+
+        $empty.toggleClass('d-none', !isEmpty);
+
+        if(!isEmpty) return;
+
+        $empty.find('.muia-no-results-term').text(term ? '“' + term + '”' : '');
+
+        // Carry the search term over so the request arrives with the widget
+        // name already in it.
+        let $btn = $empty.find('.muia-request-widget-btn');
+        let base = $btn.data('base-url');
+
+        if(base){
+            $btn.attr('href', term ? base + (base.indexOf('?') === -1 ? '?' : '&') + 'widget=' + encodeURIComponent(term) : base);
+        }
+    }
+
+    $(document).on('click', '.is-pro.not-active-pro', function(e){
+        if(!$(e.target).hasClass('th-doc-link')){
+            $('.muia-pro-popup-wrap').addClass('open');
+        }else{
+            setTimeout(() => {
+                 $('.muia-pro-popup-wrap').addClass('open');
+            }, 1000);
+        }
     });
 
     // Closes whichever popup the backdrop or × belongs to, so every popup gets
@@ -171,91 +190,5 @@
     $(document).on('click', '.muia-popup-wrap .backdrop, .muia-popup-wrap .muia-close-btn', function(){
         $(this).closest('.muia-popup-wrap').removeClass('open');
     });
-
-    // Delete custom widget: confirm via popup, then remove over AJAX.
-    var $deletePopup = $('.muia-delete-popup-wrap');
-    var deleteWidgetSlug = '';
-    var $deleteWidgetCard = null;
-
-    $('.delete-custom-widget').on('click', function(){
-        deleteWidgetSlug  = $(this).data('widget');
-        $deleteWidgetCard = $(this).closest('.th-widget-card');
-
-        $deletePopup.find('.muia-delete-widget-name').text(
-            $deleteWidgetCard.find('.title').text().trim()
-        );
-        $deletePopup.addClass('open');
-    });
-
-    $deletePopup.find('.muia-cancel-delete, .muia-close-btn, .backdrop').on('click', function(){
-        $deletePopup.removeClass('open');
-    });
-
-    $deletePopup.find('.muia-confirm-delete').on('click', function(){
-        var submitBtn = $(this);
-
-        if (!deleteWidgetSlug || submitBtn.hasClass('loading')) return;
-
-        submitBtn.addClass('loading');
-        submitBtn.append('<span class="spinner-border"></span>');
-
-        $.post(muiaDashboard.ajaxUrl, {
-            action: 'muia_delete_custom_widget',
-            nonce: muiaDashboard.nonce,
-            widget: deleteWidgetSlug
-        }).done(function(response){
-            if (response && response.success && $deleteWidgetCard) {
-                $deleteWidgetCard.remove();
-
-                // Last widget deleted: show the empty state.
-                if (!$('.muia-installed-custom-widgets .th-widget-card').length) {
-                    $('.muia-installed-custom-widgets').remove();
-                    $('.muia-no-custom-widgets').show();
-                }
-            }
-        }).always(function(){
-            submitBtn.removeClass('loading');
-            submitBtn.find('.spinner-border').remove();
-            $deletePopup.removeClass('open');
-            deleteWidgetSlug  = '';
-            $deleteWidgetCard = null;
-        });
-    });
-
-    function refreshWidgetCatalog(){
-        if (!muiaDashboard.catalogUrl || !muiaDashboard.catalogAction) return;
-
-        $.ajax({
-            url: muiaDashboard.catalogUrl,
-            method: 'GET',
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                if (!data) return;
-                if(data.get_all_widgets_url) $('.themeic-das-wrap').attr('data-all-widget', data.get_all_widgets_url);
-                $.post(muiaDashboard.ajaxUrl, {
-                    action: muiaDashboard.catalogAction,
-                    nonce: muiaDashboard.nonce,
-                    catalog: JSON.stringify(data)
-                },
-                function({data, success}) {
-                    console.log(data);
-                    
-                    if(data.updated){
-                        $('#muia-widgets').html(data.html);
-                    }
-                }
-                ).fail(function () {
-                    console.error('Could not store the widget catalog.');
-                })
-            },
-            error: function (xhr, status, error) {
-                // Not fatal: the stored catalog keeps being used.
-                console.error('Failed to fetch the widget catalog:', error);
-            }
-        });
-    }
-
-    $(window).on('load', refreshWidgetCatalog);
 
 })(jQuery);
