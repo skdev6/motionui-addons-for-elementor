@@ -35,7 +35,37 @@ class Motionui {
     public static function get_extention_logo() {
         return __( 'MotionUI Addons', 'motionui-addons-for-elementor' );
     }
-    public static function is_active_pro() {
+    /**
+     * Is the Pro plugin installed and running?
+     *
+     * Says nothing about the licence — use it to tell "no Pro at all" apart
+     * from "Pro is here but not activated", so the dashboard can offer to
+     * activate a licence instead of selling one that is already owned.
+     */
+    public static function is_pro_installed() {
         return defined('THEMEIC_MUIA_PRO_VERSION');
+    }
+
+    /**
+     * Are the Pro features unlocked?
+     *
+     * True only when Pro is running AND its licence is valid. The licence
+     * itself lives in the Pro plugin, which answers through this filter — the
+     * free plugin never sees a key or talks to the store.
+     *
+     * Defaults to false, so Pro without a valid licence stays locked.
+     */
+    public static function is_active_pro() {
+
+        if ( ! self::is_pro_installed() ) {
+            return false;
+        }
+
+        /**
+         * Filter the licence state.
+         *
+         * @param bool $is_active Whether the Pro licence is valid.
+         */
+        return (bool) apply_filters( 'muia_pro_license_active', false );
     }
 }

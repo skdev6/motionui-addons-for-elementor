@@ -126,7 +126,41 @@ class Widgets_Manager{
             $map = $bundled;
         }
 
+        // An entry with no file behind it is not ready yet, whatever the
+        // catalog says. Marking it here keeps the dashboard honest without
+        // having to remember to flip is_upcoming by hand on release day.
+        foreach ( $map as $key => $widget ) {
+
+            if ( ! empty( $widget['is_upcoming'] ) ) {
+                continue;
+            }
+
+            if ( ! self::has_widget_file( $key, ! empty( $widget['is_pro'] ) ) ) {
+                $map[ $key ]['is_upcoming'] = true;
+            }
+        }
+
         return $map;
+    }
+
+    /**
+     * Is the file that implements a widget on disk?
+     *
+     * Free widgets live in this plugin, Pro widgets in the Pro plugin. When Pro
+     * is not installed there is nothing to look at, so the entry is left alone
+     * and the dashboard keeps offering it as a Pro widget to buy.
+     */
+    private static function has_widget_file( $widget_key, $is_pro ){
+
+        if ( ! $is_pro ) {
+            return is_readable( THEMEIC_MUIA_DIR_PATH . 'widgets/' . $widget_key . '.php' );
+        }
+
+        if ( ! defined( 'THEMEIC_MUIA_PRO_DIR_PATH' ) ) {
+            return true;
+        }
+
+        return is_readable( THEMEIC_MUIA_PRO_DIR_PATH . 'widgets/' . $widget_key . '.php' );
     }
     public static function register_widgets($widgets_manager = null){
 

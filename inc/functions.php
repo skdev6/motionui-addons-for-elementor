@@ -14,8 +14,14 @@ function muia_sanitize_array_recursively($array) {
 	return $array;
 }
 if ( ! function_exists( 'muia_has_pro' ) ) {
+	/**
+	 * Are the Pro features unlocked?
+	 *
+	 * Pro installed but unlicensed counts as no Pro, so the controls stay
+	 * locked. See Motionui::is_active_pro().
+	 */
 	function muia_has_pro(){
-		return defined('THEMEIC_MUIA_PRO_VERSION');
+		return \Themeic\MotionUI_Addons\Inc\Classes\Motionui::is_active_pro();
 	}
 }
 if ( ! function_exists( 'muia_get_pronotice_html' ) ) {
