@@ -66,6 +66,6 @@ class Motionui {
          *
          * @param bool $is_active Whether the Pro licence is valid.
          */
-        return (bool) apply_filters( 'muia_pro_license_active', false );
+        return self::is_pro_installed();//(bool) apply_filters( 'muia_pro_license_active', false );
     }
 }

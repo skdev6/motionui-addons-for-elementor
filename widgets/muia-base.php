@@ -24,23 +24,36 @@ abstract class Muia_Base extends Widget_Base {
      *
      * @return string Widget name.
      */
-    public function get_name() {
+    public function get_name() {  
         /**
          * Automatically generate widget name from class
          *
-         * Card will be card
-         * Blog_Card will be blog-card
+         * Card will be muia-card
+         * Blog_Card will be muia-blog-card
+         *
+         * Only the short class name is used. Pro widgets extend this class from
+         * their own namespace, so stripping this file's __NAMESPACE__ would
+         * leave the whole path in the name — and every lookup keyed on the slug
+         * would miss.
          */
-        $name = str_replace(strtolower(__NAMESPACE__), '', strtolower($this->get_class_name()));
-        $name = str_replace('_', '-', $name);
-        $name = ltrim($name, '\\');
-        return 'muia-' . $name;
+        $class = ltrim( $this->get_class_name(), '\\' );
+        $short = substr( strrchr( '\\' . $class, '\\' ), 1 );
+
+        return 'themeic-' . strtolower( str_replace( '_', '-', $short ) );
     }
+
+    /**
+     * The catalog key for this widget: muia-spotlight-button => spotlight-button.
+     */
+    protected function get_widget_slug() {
+        return substr( $this->get_name(), strlen( 'themeic-' ) );
+    }
+
     /**
      * Retrieve the widget icon.
      */
     public function get_icon() {
-        $widget_slug = str_replace( 'muia-', '', $this->get_name() );
+        $widget_slug = $this->get_widget_slug();
         $widgets_map = Widgets_Manager::get_widgets_map();
 
         if ( isset( $widgets_map[ $widget_slug ]['icon'] ) ) {
@@ -58,7 +71,7 @@ abstract class Muia_Base extends Widget_Base {
      */
     public function get_title() {
         // Automatically generate widget name from get_widgets_map
-        $widget_slug = str_replace( 'muia-', '', $this->get_name() );
+        $widget_slug = $this->get_widget_slug();
         $widgets_map = Widgets_Manager::get_widgets_map();
 
         if ( isset( $widgets_map[ $widget_slug ]['title'] ) ) {
@@ -71,8 +84,8 @@ abstract class Muia_Base extends Widget_Base {
      * Fallback title generator (if not found in map)
      */
     private function get_muia_pro_default_title() {
-        $class_name = str_replace( 'muia-', '', $this->get_name() );
-        $title = str_replace( ['-', '_'], ' ', $class_name );
+        $title = str_replace( ['-', '_'], ' ', $this->get_widget_slug() );
+
         return ucwords( $title );
     }
     /**
