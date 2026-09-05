@@ -449,3 +449,38 @@ button[disabled] {
 .btn-border-none{
     border-color: transparent !important; 
 }
+select.muia-form-control, input.muia-form-control {
+    font-family: var(--themeic-ff-base);
+    border: 1px solid #ddd;
+    font-size: 14px;
+    border-radius: 6px;
+    padding: 14px 19px;
+    line-height: 1;
+}  
+select.muia-form-control:focus, input.muia-form-control:focus {
+    outline: none;
+    border-color: var(--themeic-color-brand);
+    box-shadow: none;
+} 
+.search-wrap {
+    position: relative;
+}
+.search-wrap > i {
+    position: absolute;
+    right: 15px;
+    font-weight: bold;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.search-wrap .muia-form-control,select.muia-form-control {
+    padding-right: 40px;
+}
+.muia-no-results {  
+    max-width: 350px;
+    margin-inline: auto;
+    margin-top: 2rem;
+}
+.muia-no-results .muia-no-results-icon img {
+    max-width: 120px;
+    margin-bottom: 1rem;
+}

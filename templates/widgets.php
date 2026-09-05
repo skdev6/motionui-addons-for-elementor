@@ -45,7 +45,7 @@ $muia_current_filter = '*';
 
 	<div class="th-das-header-sm flex-wrap sticky-nav sticky-das-nav-top-30 d-flex align-items-center gap-2 justify-content-between">
 
-		<div class="d-flex">
+		<div class="d-flex gap-1">
 			<select class="muia-form-control" data-area="#widgets-area" aria-label="<?php esc_attr_e( 'Filter widgets by category', 'motionui-addons-for-elementor' ); ?>">
 
 				<option value="*" <?php selected( $muia_current_filter, '*' ); ?>>
@@ -59,7 +59,10 @@ $muia_current_filter = '*';
 				<?php endforeach; ?>
 
 			</select>
-			<input type="text" class="muia-form-control" placeholder="<?php esc_attr_e( 'Search Widgets', 'motionui-addons-for-elementor' ); ?>" data-area="#widgets-area" aria-label="<?php esc_attr_e( 'Search widgets', 'motionui-addons-for-elementor' ); ?>" />
+			<div class="search-wrap">
+				<input type="text" class="muia-form-control" placeholder="<?php esc_attr_e( 'Search Widgets', 'motionui-addons-for-elementor' ); ?>" data-area="#widgets-area" aria-label="<?php esc_attr_e( 'Search widgets', 'motionui-addons-for-elementor' ); ?>" />
+				<i class="eicon-search"></i>
+			</div>
 		</div>
 
 		<div class="right-menu-item d-flex gap-2 align-items-center">
@@ -106,7 +109,7 @@ $muia_current_filter = '*';
 	<div class="muia-no-results text-center d-none" data-empty-for="#widgets-area">
 
 		<div class="muia-no-results-icon" aria-hidden="true">
-			<i class="eicon-search"></i>
+			<img src="<?php echo esc_url( THEMEIC_MUIA_ASSETS . 'img/empty-search.svg' ); ?>" alt="" />
 		</div>
 
 		<h4><?php esc_html_e( 'No widget found', 'motionui-addons-for-elementor' ); ?></h4>
@@ -128,7 +131,6 @@ $muia_current_filter = '*';
 			target="_blank"
 			rel="noopener noreferrer"
 		>
-			<i class="eicon-cart-medium" aria-hidden="true"></i>
 			<?php esc_html_e( 'Request a Custom Widget', 'motionui-addons-for-elementor' ); ?>
 		</a>
 
