@@ -11,18 +11,6 @@
  *
  * Adding a widget: add an entry keyed by the slug that maps to its class name —
  * glow-button => Glow_Button.
- *
- * Fields:
- *   title               string  Shown on the dashboard card and in Elementor.
- *   category            array   Slugs; drive the filter select and the search.
- *   is_active           bool    Default state before the user toggles anything.
- *   is_pro              bool    Needs the Pro plugin.
- *   is_upcoming         bool    Listed, but not released yet.
- *   is_in_custom_widget bool    Sold separately, as its own plugin.
- *   icon                string  Elementor eicon class.
- *   demo, tutorial      string  Links on the card. Empty hides the link.
- *
- * @package MotionUI_Addons
  */
 
 defined( 'ABSPATH' ) || exit;

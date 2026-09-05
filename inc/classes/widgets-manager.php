@@ -37,7 +37,6 @@ class Widgets_Manager{
         $suffix     = self::get_class_suffix($widget_key);
         $class_name = '\Themeic\MotionUI_Addons\Widgets\\' . $suffix;
         $resolved   = class_exists($class_name) ? $class_name : false;
-
         /**
          * Filter the class that renders a widget.
          *
@@ -55,20 +54,6 @@ class Widgets_Manager{
         foreach ($get_inactive_widgets as $key) {
             if (isset($local_widgets[$key])) {
                 $local_widgets[$key]['is_active'] = false;
-            }
-        }
-
-        // Library widgets are sold separately and ship as their own plugin, so
-        // flag the ones with nothing installed to render them. The dashboard
-        // shows those as "Get Widget" instead of a toggle.
-        foreach ($local_widgets as $key => $widget) {
-
-            if(empty($widget['is_in_custom_widget'])){
-                continue;
-            }
-
-            if(!self::resolve_widget_class($key, $widget)){
-                $local_widgets[$key]['widget_not_installed'] = true;
             }
         }
 
@@ -90,7 +75,9 @@ class Widgets_Manager{
         return array_filter(
             self::get_widgets_map(),
             function( $widget ) {
-                return isset( $widget['is_active'] ) && $widget['is_active'] === true;
+                // Loose check: an entry added through the muia_widgets_map
+                // filter may use 1 or 'yes' rather than a real boolean.
+                return ! empty( $widget['is_active'] );
             }
         );
     }
@@ -99,7 +86,7 @@ class Widgets_Manager{
         return array_filter(
             self::local_widgets_map(),
             function( $widget ) {
-                return isset( $widget['is_pro'] ) && $widget['is_pro'] === true;
+                return ! empty( $widget['is_pro'] );
             }
         );
     }
@@ -107,76 +94,14 @@ class Widgets_Manager{
     /**
      * Every widget the dashboard knows about.
      *
-     * The bundled list is the baseline. A companion plugin adds the widgets it
-     * ships through the filter, so the library can grow without a release here.
+     * The list lives in inc/widgets-map.php. A companion plugin adds the
+     * widgets it ships through the muia_widgets_map filter, so the library can
+     * grow without a release here.
+     *
+     * Built once per request: the map is asked for several times while the
+     * dashboard renders.
      */
     public static function local_widgets_map(){
-
-        /**
-         * Filter the full widget catalog.
-         *
-         * @param array $map Widget key => entry.
-         */
-        $map = apply_filters( 'muia_widgets_map', self::bundled_widgets_map() );
-
-        return is_array( $map ) ? self::normalize_map( $map ) : self::bundled_widgets_map();
-    }
-
-    /**
-     * Guarantee every entry has the fields the templates read.
-     *
-     * The bundled list below is written by hand and always complete; this only
-     * has to cover entries a companion plugin adds through the filter, which
-     * may leave optional keys out.
-     */
-    private static function normalize_map( $map ){
-
-        $clean = [];
-
-        foreach ( $map as $key => $widget ) {
-
-            $key = sanitize_key( $key );
-
-            if ( '' === $key || ! is_array( $widget ) ) {
-                continue;
-            }
-
-            $category = [];
-
-            foreach ( (array) ( isset( $widget['category'] ) ? $widget['category'] : [] ) as $cat ) {
-                $cat = sanitize_key( $cat );
-
-                if ( '' !== $cat ) {
-                    $category[] = $cat;
-                }
-            }
-
-            $clean[ $key ] = [
-                'title'               => isset( $widget['title'] ) ? $widget['title'] : ucwords( str_replace( '-', ' ', $key ) ),
-                'category'            => $category,
-                'is_active'           => ! empty( $widget['is_active'] ),
-                'is_pro'              => ! empty( $widget['is_pro'] ),
-                'is_upcoming'         => ! empty( $widget['is_upcoming'] ),
-                // Sold separately, as its own plugin.
-                'is_in_custom_widget' => ! empty( $widget['is_in_custom_widget'] ),
-                'icon'                => isset( $widget['icon'] ) ? preg_replace( '/[^A-Za-z0-9_ -]/', '', $widget['icon'] ) : '',
-                'demo'                => isset( $widget['demo'] ) ? esc_url_raw( $widget['demo'] ) : '',
-                'tutorial'            => isset( $widget['tutorial'] ) ? esc_url_raw( $widget['tutorial'] ) : '',
-            ];
-        }
-
-        return $clean;
-    }
-
-    /**
-     * Every widget shipped with the plugin, plus the library widgets sold
-     * separately so the dashboard can list them.
-     *
-     * The list itself lives in inc/widgets-map.php, which returns the array.
-     * Read once per request: the map is asked for several times while the
-     * dashboard renders, and the file cannot change mid-request.
-     */
-    public static function bundled_widgets_map(){
 
         static $map = null;
 
@@ -188,7 +113,18 @@ class Widgets_Manager{
 
         // require, not require_once: the file returns the array, and
         // require_once would hand back true on any later call.
-        $map = is_readable( $file ) ? (array) require $file : [];
+        $bundled = is_readable( $file ) ? (array) require $file : [];
+
+        /**
+         * Filter the full widget catalog.
+         *
+         * @param array $bundled Widget key => entry.
+         */
+        $map = apply_filters( 'muia_widgets_map', $bundled );
+
+        if ( ! is_array( $map ) ) {
+            $map = $bundled;
+        }
 
         return $map;
     }
