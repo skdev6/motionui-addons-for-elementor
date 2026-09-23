@@ -46,7 +46,7 @@ if ( ! function_exists( 'muia_get_pronotice_html' ) ) {
 			</div>',
 			$is_thumb ? 'has-thumb' : 'no-thumb',
 			$img_html,
-			__( 'Upgrade to premium plan and unlock every feature!', 'motionui-addons-for-elementor' ),
+			__( 'Upgrade to premium and unlock every feature!', 'motionui-addons-for-elementor' ),
 			__( 'Upgrade and get access to every feature.', 'motionui-addons-for-elementor' ),
 			$upgrade_url,
 			__( 'Upgrade MotionUI Addons', 'motionui-addons-for-elementor' )

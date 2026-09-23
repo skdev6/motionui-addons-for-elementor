@@ -169,7 +169,10 @@ trait Cards {
 
 		<?php
 	}
-	public function muia_get_card_buttons($prefix = '', $args = array(), $repeter_key){   
+	// $repeter_key carries a default so it does not sit after two optional
+	// parameters: PHP 8.0 deprecates that signature and warns when the file is
+	// compiled, which is as soon as anything uses this trait.
+	public function muia_get_card_buttons($prefix = '', $args = array(), $repeter_key = ''){
 		unset($args['title']);
 		unset($args['url']);
 

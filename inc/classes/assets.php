@@ -8,17 +8,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Assets {
 
     public static function register_scripts() {
-        wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], '0.3.4', true );
-        wp_register_script( 'isotope', THEMEIC_MUIA_ASSETS . 'vendor/isotope/isotope.pkgd.min.js', [], '3.0.6', true );
+		wp_register_script( 'isotope', THEMEIC_MUIA_ASSETS . 'vendor/isotope/isotope.pkgd.min.js', [], '3.0.6', true );
         // plugin script
-        wp_register_script( 'motionui-ani', THEMEIC_MUIA_ASSETS . 'js/motionui-ani.min.js', [], THEMEIC_MUIA_VERSION, true );
-        wp_register_script( 'motionui-addons', THEMEIC_MUIA_ASSETS . 'js/motionui-addons.js', [], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], '0.3.4', true );
+        wp_register_script( 'ScrollMagic', THEMEIC_MUIA_ASSETS . 'js/ScrollMagic.min.js', [], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'muia-tween', THEMEIC_MUIA_ASSETS . 'js/tween.umd.min.js', [], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'motionui-addons', THEMEIC_MUIA_ASSETS . 'js/muia-addons.js', [], THEMEIC_MUIA_VERSION, true );
     }
 
     public static function enqueue_scripts() {
-        wp_enqueue_script( 'motionui-ani' );
         wp_enqueue_script( 'split-type' );
-        wp_enqueue_script( 'isotope' );
+        wp_enqueue_script( 'muia-tween' );
+        wp_enqueue_script( 'ScrollMagic' );
         wp_enqueue_script( 'motionui-addons' );
     }
 

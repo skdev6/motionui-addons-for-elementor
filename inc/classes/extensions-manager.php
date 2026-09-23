@@ -125,7 +125,7 @@ class Extensions_Manager {
 				'section' => 'section_image',
 			),
 			array(
-				'name'    => 'muia-animated-image',
+				'name'    => 'themeic-animated-image',
 				'section' => 'section_content',
 			),
 		);

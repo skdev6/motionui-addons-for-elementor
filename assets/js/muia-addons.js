@@ -1,6 +1,94 @@
 ;(function($){
     'use strict';
 
+
+    /**
+     * Initialized all widgets
+    */
+    const widgets = {
+        'muia-animated-slider.default':muiaSlide, 
+        'muia-animated-gallery.default':gallery, 
+    }
+    const extensions = {
+        'has-muia-img-ani':imageAnimation,
+        'has-muia-text-animation':textAnimation
+    }
+    // init elementor frontend
+    $(window).on('elementor/frontend/init', function(){
+
+        initBurgerToggle();
+
+        $.each(widgets, function(widget, fun){
+           elementorFrontend.hooks.addAction('frontend/element_ready/' + widget, fun);
+        });
+          
+
+        const debouncedExtensions = new Map();
+
+        function debounce(func, wait = 80) {
+            let timeoutId;
+            return function executedFunction(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, wait);
+            };
+        }
+
+        function initExtension(element, getSettings) {  
+            const elementId = element.data('id') || element.attr('data-id') || 'unknown';
+            $.each(extensions, function(extension, fun) {
+                if (!element.hasClass(extension)) return;
+
+                const key = `${elementId}_${extension}`;
+
+                if (!debouncedExtensions.has(key)) {
+                    const debouncedFn = debounce((latestSettings) => {
+
+                        afterLoad(() =>fun(element, latestSettings));
+
+                    }, 50);
+
+                    debouncedExtensions.set(key, debouncedFn);
+                }
+
+                // Pass fresh settings every time
+                debouncedExtensions.get(key)(getSettings);
+            });
+        }
+
+        var widgetsAnimation = elementorModules.frontend.handlers.Base.extend({
+            onInit: function() {
+                if(typeof themeicMotionUiPro === 'undefined'){ 
+                    initExtension(this.$element, this.getElementSettings());
+                }
+            },
+            onElementChange: function onElementChange(e){
+                if(typeof themeicMotionUiPro === 'undefined'){   
+                    initExtension(this.$element, this.getElementSettings());
+                }
+            },
+            getReadySettings:function (){
+                var settings = {
+                    trigger: this.getElementSettings()
+                };
+                return $.extend({}, settings);
+            }
+        });
+        
+        elementorFrontend.hooks.addAction('frontend/element_ready/global', function ($scope) {
+
+            if($scope.find('.muia-btn').length) $scope.find('.muia-btn').each(function(){button($(this))});  
+            
+            elementorFrontend.elementsHandler.addHandler(widgetsAnimation, {
+                $element: $scope
+            });
+        });
+    }); 
+    /**
+     * Widget Functions
+    * */
+
     function initScrollTrigger(trigger, settings){   
         let start = settings?.isWithScroll ? 'top 95%' : "top 80%";
         let end = settings?.isWithScroll ? 'top 5%' : "+=100%";
@@ -54,8 +142,6 @@
             }
         });
     }
-    //
-
     // Text Animations
     function textAnimation( $scope, settings ) {
         var textElement = $scope.find( 'h1,h2,h3,h4,h5,h6,p' );
@@ -510,88 +596,6 @@
         } );
     }
     
-    /**
-     * Initialized all widgets
-    */
-    const widgets = {
-        'muia-animated-slider.default':muiaSlide, 
-        'muia-animated-gallery.default':gallery, 
-    }
-    const extensions = {
-        'has-muia-img-ani':imageAnimation,
-        'has-muia-text-animation':textAnimation
-    }
-    // init elementor frontend
-    $(window).on('elementor/frontend/init', function(){
 
-        initBurgerToggle();
-
-        $.each(widgets, function(widget, fun){
-           elementorFrontend.hooks.addAction('frontend/element_ready/' + widget, fun);
-        });
-          
-
-        const debouncedExtensions = new Map();
-
-        function debounce(func, wait = 80) {
-            let timeoutId;
-            return function executedFunction(...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => {
-                    func.apply(this, args);
-                }, wait);
-            };
-        }
-
-        function initExtension(element, getSettings) {  
-            const elementId = element.data('id') || element.attr('data-id') || 'unknown';
-            $.each(extensions, function(extension, fun) {
-                if (!element.hasClass(extension)) return;
-
-                const key = `${elementId}_${extension}`;
-
-                if (!debouncedExtensions.has(key)) {
-                    const debouncedFn = debounce((latestSettings) => {
-
-                        afterLoad(() =>fun(element, latestSettings));
-
-                    }, 50);
-
-                    debouncedExtensions.set(key, debouncedFn);
-                }
-
-                // Pass fresh settings every time
-                debouncedExtensions.get(key)(getSettings);
-            });
-        }
-
-        var widgetsAnimation = elementorModules.frontend.handlers.Base.extend({
-            onInit: function() {
-                if(typeof themeicMotionUiPro === 'undefined'){ 
-                    initExtension(this.$element, this.getElementSettings());
-                }
-            },
-            onElementChange: function onElementChange(e){
-                if(typeof themeicMotionUiPro === 'undefined'){   
-                    initExtension(this.$element, this.getElementSettings());
-                }
-            },
-            getReadySettings:function (){
-                var settings = {
-                    trigger: this.getElementSettings()
-                };
-                return $.extend({}, settings);
-            }
-        });
-        
-        elementorFrontend.hooks.addAction('frontend/element_ready/global', function ($scope) {
-
-            if($scope.find('.muia-btn').length) $scope.find('.muia-btn').each(function(){button($(this))});  
-            
-            elementorFrontend.elementsHandler.addHandler(widgetsAnimation, {
-                $element: $scope
-            });
-        });
-    }); 
     
 })(jQuery);
