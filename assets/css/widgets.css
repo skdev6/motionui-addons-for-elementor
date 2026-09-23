@@ -462,7 +462,7 @@
 }
 
 .muia-slide-basic {
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   padding-top: 120px;
   padding-bottom: 120px;
@@ -496,6 +496,10 @@
   margin-left: auto;
   margin-right: auto;
   width: var(--tf-w, auto);
+  gap: 1rem;
+}
+.muia-slide-basic .title-wrapper .slide-title-item .inner-title {
+  display: block;
 }
 .muia-slide-basic .title-wrapper .slide-title-item {
   display: inline-block;
@@ -507,7 +511,6 @@
   white-space: nowrap;
   text-align: center;
   margin-bottom: 0;
-  padding-inline: 0.227em;
   --color:white;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: var(--color);
@@ -574,7 +577,8 @@
   flex-shrink: 0;
   --x:0;
   --gx:0;
-  transform: translateX(calc(var(--x) + var(--gx)));
+  transform: translateX(var(--tx, 0));
+  transition: transform var(--txspeed);
 }
 .muia-slide-basic .muia-prev, .muia-slide-basic .muia-next {
   font-size: 1.146vw;

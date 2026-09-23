@@ -37,7 +37,7 @@ return [
 		'tutorial'    => '',
 	],
 	'animated-slider' => [
-		'title'       => __( 'Slider', 'motionui-addons-for-elementor' ),
+		'title'       => __( 'Animated Slider', 'motionui-addons-for-elementor' ),
 		'category'    => [ 'image' ],
 		'is_active'   => true,
 		'is_pro'      => false,

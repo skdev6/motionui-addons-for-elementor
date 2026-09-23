@@ -114,47 +114,30 @@ class Animated_Slider extends Muia_Base {
                 'title_field' => '{{{ slide_title }}}',
             ]
         );
-
+		$this->add_responsive_control(
+			'slide__heightd',
+			[
+				'label' => esc_html__( 'Height', 'textdomain' ),
+				'type' => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem','vh','vw', 'custom' ],
+				'range' => [
+					'px' => [
+						'min' => 0,
+						'max' => 1000,
+						'step' => 5,
+					],
+					'%' => [
+						'min' => 0,
+						'max' => 100,
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .muia-slide-basic' => 'height: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
         $this->end_controls_section();
-
-        // ==================== Pagination Section ====================
-        $this->start_controls_section(
-            'pagi_content_section',
-            [
-                'label' => esc_html__( 'Pagination', 'motionui-addons-for-elementor' ),
-                'tab'   => Controls_Manager::TAB_CONTENT,
-            ]
-        );
-
-        $this->add_control(
-            'prev_p_icon',
-            [
-                'label'       => esc_html__( 'Previous Icon', 'motionui-addons-for-elementor' ),
-                'type'        => Controls_Manager::ICONS,
-                'skin'        => 'inline',
-                'default'     => [
-                    'value'   => 'fas fa-arrow-left',
-                    'library' => 'fa-solid',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'next_p_icon',
-            [
-                'label'       => esc_html__( 'Next Icon', 'motionui-addons-for-elementor' ),
-                'type'        => Controls_Manager::ICONS,
-                'skin'        => 'inline',
-                'default'     => [
-                    'value'   => 'fas fa-arrow-right',
-                    'library' => 'fa-solid',
-                ],
-            ]
-        );
-
-        $this->end_controls_section();
-
-        // ==================== Style Sections ====================
+       
         $this->start_controls_section(
             'slide_style',
             [
@@ -284,11 +267,11 @@ class Animated_Slider extends Muia_Base {
                         target="<?php echo esc_attr( $target ); ?>" 
                         rel="<?php echo esc_attr( $rel ); ?>" 
                         class="slide-title-item elementor-repeater-item-<?php printf( '%s%s', esc_attr( $slide['_id'] ), $count === 0 ? ' active' : '' ); ?>">
-                            <?php echo esc_html( $slide['slide_title'] ); ?>
+                            <span class="inner-title"><?php echo esc_html( $slide['slide_title'] ); ?></span>
                         </a>
                     <?php else : ?>
                         <h2 class="slide-title-item elementor-repeater-item-<?php printf( '%s%s', esc_attr( $slide['_id'] ), $count === 0 ? ' active' : '' ); ?>">
-                            <?php echo esc_html( $slide['slide_title'] );  ?>
+                           <span class="inner-title"> <?php echo esc_html( $slide['slide_title'] );  ?></span>
                         </h2>
                     <?php endif; $count++; ?>
                 <?php endforeach; ?>
@@ -296,15 +279,11 @@ class Animated_Slider extends Muia_Base {
 
             <!-- Pagination -->
             <div class="pagi-wrapper">
-                <div class="muia-dot-pagi">
-                    <?php $count=0;  foreach ( $slides as $slide ) : ?>
-                            <div class="dot-item<?php echo $count === 0 ? ' active' : ''; ?>" data-go="<?php echo esc_attr($count) ?>"><span></span></div>  
-                        <?php $count++; endforeach; ?>
-                </div>
+                <div class="muia-dot-pagi"></div>
                 <div class="muia-thumb-pagi-wrapper">
                     <div class="muia-thumb-pagi">
                         <?php $count=0; foreach ( $slides as $slide ) : ?>
-                            <div class="pagi-thumb sb-item elementor-repeater-item-<?php echo esc_attr( $slide['_id'] ); echo $count === 0 ? ' active' : ''; ?>" data-go="<?php echo esc_attr($count) ?>"></div>
+                            <div style="--index:<?php echo $count; ?>" class="pagi-thumb sb-item elementor-repeater-item-<?php echo esc_attr( $slide['_id'] ); echo $count === 0 ? ' active' : ''; ?>" data-go="<?php echo esc_attr($count) ?>"></div>
                         <?php $count++; endforeach; ?>
                     </div>
                     <div class="muia-slide-nav">
