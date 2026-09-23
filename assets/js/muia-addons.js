@@ -4,10 +4,7 @@
     /**
      * Initialized all widgets
     */
-    const widgets = {
-        'muia-animated-slider.default':muiaSlide, 
-        'muia-animated-gallery.default':gallery, 
-    }
+    const widgets = {}
     const extensions = {
         'has-muia-img-ani':imageAnimation,
         'has-muia-text-animation':textAnimation
@@ -86,7 +83,89 @@
     }); 
 
     function afterLoad(fun){
-        fun(); 
+        fun();
+    }
+
+    /* -----------------------------------------------------------------
+     * ScrollMagic helpers
+     * -------------------------------------------------------------- */
+
+    // The motion controls offer GSAP ease names; CSS wants a timing function.
+    // These are the standard Penner cubic-bezier equivalents.
+    var CSS_EASES = {
+        'none':                'linear',
+        'expo.out':            'cubic-bezier(0.19, 1, 0.22, 1)',
+        'expo.in':             'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
+        'expo.inOut':          'cubic-bezier(1, 0, 0, 1)',
+        'power1.out':          'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        'power1.in':           'cubic-bezier(0.55, 0.085, 0.68, 0.53)',
+        'power1.inOut':        'cubic-bezier(0.455, 0.03, 0.515, 0.955)',
+        'power2.out':          'cubic-bezier(0.215, 0.61, 0.355, 1)',
+        'power2.in':           'cubic-bezier(0.55, 0.055, 0.675, 0.19)',
+        'power2.inOut':        'cubic-bezier(0.645, 0.045, 0.355, 1)',
+        'power3.out':          'cubic-bezier(0.165, 0.84, 0.44, 1)',
+        'power3.in':           'cubic-bezier(0.895, 0.03, 0.685, 0.22)',
+        'power3.inOut':        'cubic-bezier(0.77, 0, 0.175, 1)',
+        'power4.out':          'cubic-bezier(0.23, 1, 0.32, 1)',
+        'power4.in':           'cubic-bezier(0.755, 0.05, 0.855, 0.06)',
+        'power4.inOut':        'cubic-bezier(0.86, 0, 0.07, 1)',
+        'back.out(1.7)':       'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        'back.in(1.7)':        'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
+        'back.inOut(1.7)':     'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        // A cubic-bezier cannot oscillate, so these take the nearest
+        // single-overshoot curve rather than quietly flattening to linear.
+        'elastic.out(1, 0.3)': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        'elastic.in(1, 0.3)':  'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
+        'bounce.out':          'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        'bounce.in':           'cubic-bezier(0.6, -0.28, 0.735, 0.045)'
+    };
+
+    function cssEase(name){
+        return CSS_EASES[name] || CSS_EASES['expo.out'];
+    }
+
+    // One controller for the whole page; scenes are cheap, controllers are not.
+    var muiaScrollController = null;
+
+    function muiaController(){
+        if (typeof ScrollMagic === 'undefined') return null;
+        if (!muiaScrollController) muiaScrollController = new ScrollMagic.Controller();
+        return muiaScrollController;
+    }
+
+    /**
+     * Add `className` once the element's top reaches 90% down the viewport.
+     *
+     * triggerHook 0.9 is ScrollMagic's spelling of "top 90%". The scene is torn
+     * down on entry: these are reveals, and replaying one every time the
+     * element passes back through is not what the author asked for.
+     */
+    function muiaInView($el, className){
+        var el = $el[0];
+        if (!el) return null;
+
+        var controller = muiaController();
+
+        // Without ScrollMagic, reveal immediately rather than leaving the
+        // element stuck in its starting state.
+        if (!controller) {
+            $el.addClass(className);
+            return null;
+        }
+
+        var scene = new ScrollMagic.Scene({
+            triggerElement: el,
+            triggerHook: 0.9
+        });
+
+        scene.on('enter', function(){
+            $el.addClass(className);
+            scene.destroy(true);
+        });
+
+        // addTo() updates the scene straight away, so something already past
+        // the trigger point reveals here instead of waiting for a scroll.
+        return scene.addTo(controller);
     }
     /**
      * Widget Functions
@@ -120,7 +199,7 @@
         if(btn.hasClass('muia-btn-reveal') || btn.hasClass('muia-btn-reveal-random')){
             var chars = new SplitType(buttonTextElement[0], {types:"chars"}).chars;    
             chars.forEach((el, index)=>{
-                motionuiAni.set(el, {'--index':index}); 
+                $(el).css('--index',index); 
             })
         }
     }
@@ -140,22 +219,66 @@
             }
         });
     }
-    // Text Animations
+    /**
+     * Text reveal.
+     *
+     * Same split of duties as imageAnimation: SplitType breaks the text up,
+     * this marks the pieces and publishes the timing, ScrollMagic adds
+     * `is-inview` at top 90%, and `components/text-ani.scss` owns the motion.
+     *
+     * Classes it works from:
+     *
+     *     .muia-text-fade | .muia-text-reveal          type, from prefix_class
+     *     .muia-text-by-lines | -words | -chars        split level
+     *     .is-inview                                   play
+     *
+     * and these custom properties on the widget:
+     *
+     *     --text-ani-duration  --text-ani-delay
+     *     --text-ani-stagger   --text-ani-ease
+     *
+     * Every animated piece gets `.muia-text-piece` and its own `--index`, so
+     * the stylesheet staggers with
+     * `calc(var(--text-ani-delay) + var(--index) * var(--text-ani-stagger))`
+     * and never has to care which split level is in play.
+     */
     function textAnimation( $scope, settings ) {
+
         var textElement = $scope.find( 'h1,h2,h3,h4,h5,h6,p' );
-        var aniSettings = getAniSettings( settings, 'text' );
         var aniType     = settings && settings.muia_text_ani    ? settings.muia_text_ani    : '';
         var aniBy       = settings && settings.muia_text_ani_by ? settings.muia_text_ani_by : 'words';
 
-        if ( ! textElement.length || ! aniType ) return;
+        if ( ! textElement.length ) return;
 
-        if ( ! textElement.hasClass( 'muia-split-initialized' ) ) {
-            textElement.addClass( 'muia-split-initialized' );
-            new SplitType( textElement[0], {
-                types:      'lines, words, chars',
-                lineClass:  'line-text',
-                wordClass:  'word-text',
-                charClass:  'char-text',
+        // Undo the previous pass: Elementor re-runs this whenever the panel
+        // changes, and the split level may have moved.
+        $scope.removeClass( function ( index, className ) {
+            return ( className.match( /muia-text-by-\S+/g ) || [] ).join( ' ' );
+        } ).removeClass( 'is-inview' );
+
+        $scope.find( '.muia-reveal-wrap' ).children().unwrap();
+        $scope.find( '.muia-text-piece' ).removeClass( 'muia-text-piece' ).css( '--index', '' );
+
+        $scope.removeClass( 'visibility__hidden' );
+
+        // Only the two free types are handled here; the Pro build takes over
+        // for wave, scramble and auto scroll.
+        if ( aniType !== 'fade' && aniType !== 'reveal' ) return;
+
+        // Split once, with every level, so changing "Animate By" later only
+        // moves the marker class instead of rebuilding the DOM. Filtered so a
+        // second heading in the same widget is not skipped.
+        var unsplit = textElement.filter( function () {
+            return ! $( this ).hasClass( 'muia-split-initialized' );
+        } );
+
+        if ( unsplit.length ) {
+            unsplit.addClass( 'muia-split-initialized' );
+            new SplitType( unsplit.toArray(), {
+                types:     'lines, words, chars',
+                lineClass: 'line-text',
+                wordClass: 'word-text',
+                charClass: 'char-text',
             } );
         }
 
@@ -165,209 +288,106 @@
             chars: '.char-text',
         };
 
-        var elements = textElement.find( selectorMap[ aniBy ] || '.word-text' );
-        if ( ! elements.length ) return;
+        var pieces = textElement.find( selectorMap[ aniBy ] || '.word-text' );
+        if ( ! pieces.length ) return;
 
-        $scope.removeClass( 'visibility__hidden' );
+        var aniSettings = getAniSettings( settings, 'text', 0.8, 0, 'expo.out', 0.04 );
 
-        var getDuration = function ( s ) { return s.duration || 0.8; };
-        var getDelay    = function ( s ) { return s.delay    || 0;   };
-        var getStagger  = function ( s ) { return s.stagger  || 0.04; };
-        var getEase     = function ( s, fallback ) { return s.ease || fallback; };
+        $scope.css( {
+            '--text-ani-duration': aniSettings.duration + 's',
+            '--text-ani-delay':    aniSettings.delay + 's',
+            '--text-ani-stagger':  aniSettings.stagger + 's',
+            '--text-ani-ease':     cssEase( aniSettings.ease )
+        } );
 
-        var animations = {
+        $scope.addClass( 'muia-text-by-' + aniBy );
 
-            'fade': function ( els, s ) {
-                motionuiAni.set( els, { opacity: 0, translateY: '40px' } );
-                motionuiAni.to( els, {
-                    opacity:    1,
-                    translateY: '0px',
-                    duration:   getDuration( s ),
-                    delay:      getDelay( s ),
-                    stagger:    getStagger( s ),
-                    ease:       getEase( s, 'power4.out' ),
-                } );
-            },
+        pieces.each( function ( index ) {
+            $( this ).addClass( 'muia-text-piece' ).css( '--index', index );
+        } );
 
-            'reveal': function ( els, s ) {
-                els.each( function () {
-                    var $el = $( this );
-                    if ( ! $el.parent().hasClass( 'muia-reveal-wrap' ) ) {
-                        $el.wrap( '<span class="muia-reveal-wrap" style="overflow:hidden;display:inline-block;"></span>' );
-                    }
-                } );
-                motionuiAni.set( els.toArray(), { translateY: '110%' } );
-                motionuiAni.to( els.toArray(), {
-                    translateY: '0%',
-                    duration:   getDuration( s ),
-                    delay:      getDelay( s ),
-                    stagger:    getStagger( s ),
-                    ease:       getEase( s, 'expo.out' ),
-                } );
-            },
-        };
-
-        if ( animations[ aniType ] ) {
-            motionuiAni.addScrollTrigger( $scope[0], {
-                start: 'top 90%',
-                once:  true,
-                onEnter: function () {
-                    animations[ aniType ]( elements, aniSettings );
+        // A reveal slides each piece up from behind a clipped box, so it needs
+        // one to be clipped by. Fade animates in place and needs no wrapper.
+        if ( aniType === 'reveal' ) {
+            pieces.each( function () {
+                var $piece = $( this );
+                if ( ! $piece.parent().hasClass( 'muia-reveal-wrap' ) ) {
+                    $piece.wrap( '<span class="muia-reveal-wrap"></span>' );
                 }
             } );
         }
-    }
-    function imageAnimation($scope, settings){
-        let imgElement = $scope.find('img');
-        let aniSettings = getAniSettings(settings, 'img', 1, 0, 'expo.out', 0.05);
-        let wrap = $scope.find('.muia-ani-wrap');
-        let direction = settings?.muia_ani_direction;
 
-        if(!wrap.length) imgElement.wrap('<div class="muia-ani-wrap"></div>');
+        muiaInView( $scope, 'is-inview' );
+    }
+    
+    function imageAnimation($scope, settings){
+
+        var imgElement = $scope.find('img');
+        if (!imgElement.length) return;
+
+        var aniSettings = getAniSettings(settings, 'img', 1, 0, 'expo.out', 0.05);
+        var type        = settings && settings.muia_img_ani_type  ? settings.muia_img_ani_type  : '';
+        var direction   = settings && settings.muia_ani_direction ? settings.muia_ani_direction : 'ttb';
+
+        $scope.removeClass(function(index, className){
+            return (className.match(/muia-img-dir-\S+/g) || []).join(' ');
+        }).removeClass('is-inview');
+
+        $scope.find('.muia-img-grid-reveal').remove();
+
+        var wrap = $scope.find('.muia-ani-wrap');
+        if (!wrap.length) {
+            imgElement.wrap('<div class="muia-ani-wrap"></div>');
+            wrap = $scope.find('.muia-ani-wrap');
+        }
+
         $scope.removeClass('visibility__hidden');
 
-        wrap = $scope.find('.muia-ani-wrap');
-
-        motionuiAni.set(wrap, {
-            'overflow':'hidden',
-            'display':'inline-block',
-        })
-        
-        let isColumn = settings?.muia_img_ani_type === 'column-reveal';
-        let isGrid   = settings?.muia_img_ani_type === 'grid-reveal';
-        let isReveal   = settings?.muia_img_ani_type === 'reveal';
-
-        // Determine animation starting values based on direction
-        let fromVars = {};
-        let revealToEmpty = true;
-        switch (direction) { // ← fixed typo  
-            case 'ltr':
-                if(!isReveal){
-                    if (!isColumn) fromVars['--cb'] = '100%';
-                    fromVars['--cr'] = '100%';
-                }else{
-                    fromVars['--cl1'] = '0%';
-                    fromVars['--cl2'] = '0%';
-                    revealToEmpty = false
-                }
-                break;
-
-            case 'rtl':
-                if(!isReveal){
-                    if (!isColumn) fromVars['--cb'] = '100%';
-                    fromVars['--cl'] = '100%';
-                }else{
-                    fromVars['--cr1'] = '100%';
-                    fromVars['--cr2'] = '100%';
-                    revealToEmpty = true
-                }
-                break;
-
-            case 'btt':   // bottom to top
-                if(!isReveal){
-                    fromVars['--ct'] = '100%';
-                }else{
-                    fromVars['--cb1'] = '100%';
-                    fromVars['--cb2'] = '100%';
-                    revealToEmpty = true
-                }
-                break;
-
-            case 'ttb':   // top to bottom
-                if(!isReveal){
-                    fromVars['--cb'] = '100%';
-                }else{
-                    fromVars['--ct1'] = '0%';
-                    fromVars['--ct2'] = '0%';
-                    revealToEmpty = false
-                }
-                break;
-
-            default:
-                if(!isReveal){
-                    fromVars['--cb'] = '100%';
-                }
+        // No animation picked: leave the image as it is.
+        if (!type) {
+            muiaWatchElementWidth(wrap);
+            return;
         }
 
-        if (isGrid || isColumn) {
-            // Clean up previous grid if exists
-            $scope.find('.muia-img-grid-reveal').remove();
+        // Seconds, matching how the controls express them.
+        $scope.css({
+            '--img-ani-duration': aniSettings.duration + 's',
+            '--img-ani-delay':    aniSettings.delay + 's',
+            '--img-ani-stagger':  aniSettings.stagger + 's',
+            '--img-ani-ease':     cssEase(aniSettings.ease)
+        });
 
-            motionuiAni.set(imgElement, { opacity: 0 });
+        // `muia-img-<type>` is already on the widget from the control's
+        // prefix_class; the direction control has none, so it is added here.
+        $scope.addClass('muia-img-dir-' + direction);
 
-            const src = imgElement.attr('src');
-            const cols = 3;
-            const rows = isColumn ? 1 : 2;           // Adjust as needed
-            const totalItems = cols * rows;
-            
-            let spansHTML = '';
-            for (let i = 0; i < totalItems; i++) {
-                const col = i % cols;
-                const row = Math.floor(i / cols);
-                spansHTML += `<span style="--col-index: ${col}; --row-index: ${row}; background-image: url(${src});"></span>`;
+        // A grid or column reveal animates tiles rather than the image, so the
+        // tiles are built here and the image is hidden by the stylesheet.
+        if (type === 'grid-reveal' || type === 'column-reveal') {
+
+            var cols = 3;
+            var rows = type === 'column-reveal' ? 1 : 2;
+            var src  = imgElement.attr('src');
+            var tiles = '';
+
+            for (var i = 0; i < cols * rows; i++) {
+                tiles += '<span style="' +
+                    '--col-index:'  + (i % cols) + ';' +
+                    '--row-index:'  + Math.floor(i / cols) + ';' +
+                    '--tile-index:' + i + ';' +
+                    'background-image:url(' + src + ');"></span>';
             }
 
-            // Create the container once
-            const gridHTML = `<div class="muia-img-grid-reveal">${spansHTML}</div>`;
-            wrap.append(gridHTML);
-
-            const gridItems = $scope.find('.muia-img-grid-reveal span');
-
-            motionuiAni.set(gridItems, fromVars);
-
-            // Trigger animation after load
-            afterLoad(() => {
-                motionuiAni.addScrollTrigger($scope, { 
-                    start: 'top 75%',
-                    onEnter(){
-                        motionuiAni.to(gridItems, {
-                            '--cb': '0%',
-                            '--cr': '0%',
-                            '--cl': '0%',
-                            '--ct': '0%',
-                            duration: aniSettings.duration,
-                            delay: aniSettings.delay,
-                            ease:aniSettings.isWithScroll ? 'none' : aniSettings.ease,
-                            stagger: aniSettings.stagger,
-                        });
-                    }
-                })
-            });
+            wrap.append(
+                '<div class="muia-img-grid-reveal" style="--cols:' + cols + ';--rows:' + rows + ';">' +
+                tiles +
+                '</div>'
+            );
         }
-        if (isReveal){
-            motionuiAni.set(imgElement, fromVars);
-            let obj1 = {};
-            let obj2 = {};
-            obj1[Object.keys(fromVars)[0]] = revealToEmpty ? '0%' : '100%';
-            obj2[Object.keys(fromVars)[1]] = revealToEmpty ? '0%' : '100%';
-            
-            afterLoad(() => {
-                motionuiAni.addScrollTrigger($scope, { 
-                    start: 'top 75%',
-                    onEnter(){
-                        motionuiAni.to(imgElement, {  
-                            ...obj1,
-                            duration: aniSettings.duration,
-                            delay: aniSettings.delay,
-                            ease: aniSettings.isWithScroll ? 'none' : aniSettings.ease,
-                            stagger: aniSettings.stagger,
-                        });
-                        motionuiAni.to(imgElement, {  
-                            ...obj2,
-                            duration: aniSettings.duration,
-                            ease:aniSettings.isWithScroll ? 'none' : aniSettings.ease,
-                            delay: (aniSettings.delay + .05),
-                            stagger: aniSettings.stagger,
-                        });
-                    }
-                })
-            }); 
-        }
-        function destroy(){
-            motionuiAni.set(imgElement, {opacity:''})
-        }
-        if (settings?.muia_img_ani_type === '') destroy();    
-        muiaWatchElementWidth(wrap); 
+
+        muiaWatchElementWidth(wrap);
+
+        muiaInView($scope, 'is-inview');
     }
     function muiaWatchElementWidth($element) {
         if (!$element || !$element.length) {
@@ -389,209 +409,6 @@
         });
         // Optional: Also update when Elementor frontend is ready
         $(window).on('elementor/frontend/init', updateWidth);
-    }
-    // Slide
-    function muiaSlide($scope){
-        let currentindex   = 0;
-        let isSliding      = false;
-        let bgs            = $scope.find('.slide-bg-item');
-        let bgMain         = bgs.find('.sb-item');
-        let bgsArray       = bgs.toArray();
-        let titles         = $scope.find('.slide-title-item');
-        let pagiThumbWrap  = $scope.find('.muia-thumb-pagi');
-        let pagiThumbs     = pagiThumbWrap.find('.pagi-thumb');
-        let prevBtn        = $scope.find('.muia-prev');
-        let nextBtn        = $scope.find('.muia-next');
-        let paginationDots = $scope.find('.muia-dot-pagi .dot-item');
-        let totalSlide     = bgs.length - 1; 
-
-       motionuiAni.set(bgs, {
-            'transition':'none',
-            '--cleft':i=> i === 0 ? '0%' : '100%',
-            '--cright':i=> i === 0 ? '0%' : '100%',  
-            translateX:(i)=> i === 0 ? '0%' : '50%', 
-            scale:1
-       })
-       
-        function goToSlide(nextIndex, direction){ 
-            if(isSliding) return;
-            isSliding = true;
-            let slideItems = [bgsArray[currentindex], bgsArray[nextIndex]];
-            let nextBg = bgMain.toArray()[nextIndex];
-            let duration = 1;
-            let ease = 'expo.inOut';
-            // 
-            motionuiAni.set(slideItems, {   
-                autoAlpha:1,
-                zIndex:i=> i === 0 ? 1 : 0,
-                '--cleft': (i) => {
-                    return direction === 'prev' ? (i === 0 ? '0%' : '50%') : '0%';
-                },
-
-                '--cright': (i) => {
-                    return direction === 'next' ? (i === 0 ? '0%' : '50%') : '0%';
-                },
-                translateX:(i)=>{
-                    if(direction === 'next'){
-                        return i === 1 ? '50%' : '0%'
-                    }else{
-                        return i === 1 ? '-50%' : '0%'
-                    }
-                }
-            });
-            motionuiAni.set(nextBg, {scale:1.2});
-            motionuiAni.to(nextBg, {scale:1, duration:3, delay:0, ease:'expo.out'});  
-            motionuiAni.to(slideItems, {
-                '--cleft': (i) => {
-                    return direction === 'prev' ? (i === 0 ? '50%' : '0%') : '0%';
-                },
-
-                '--cright': (i) => {
-                    return direction === 'next' ? (i === 0 ? '50%' : '0%') : '0%';
-                },
-                translateX:(i)=>{
-                    if(direction === 'next'){
-                        return i === 0 ? '-50%' : '0%'
-                    }else{
-                        return i === 0 ? '50%' : '0%'
-                    }
-                },
-                ease:'expo.out',
-                duration,
-                scale:1,
-                onComplete(){   
-                    isSliding = false;  
-                    currentindex = nextIndex; 
-                }
-            });  
-            // 
-            let gapX = parseInt(pagiThumbWrap.css('column-gap'));
-            motionuiAni.to(pagiThumbs, {
-                '--x':-nextIndex * 100+'%',
-                '--gx':-nextIndex * gapX+'px',
-                ease:'expo.out',
-                duration,
-            })
-            motionuiAni.to(titles, {  
-                '--x':-nextIndex * 100+'%',
-                ease:'expo.out',
-                duration,
-            })
-            titles.removeClass('active');
-            bgs.removeClass('active');
-            paginationDots.removeClass('active');
-            pagiThumbs.removeClass('active');
-
-            $(titles.toArray()[nextIndex]).addClass('active'); 
-            $(bgs.toArray()[nextIndex]).addClass('active');
-            $(pagiThumbs.toArray()[nextIndex]).addClass('active');
-            $(paginationDots.toArray()[nextIndex]).addClass('active');
-        }
-        prevBtn.on('click', function(){  
-            goToSlide(currentindex === 0 ? totalSlide : currentindex - 1, 'prev');
-        });
-        nextBtn.on('click', function(){
-            goToSlide(currentindex === totalSlide ? 0 : currentindex + 1, 'next');
-        });
-        $scope.find('[data-go]').on('click', function(){
-            let index = parseInt($(this).data('go'));
-            if(currentindex !== index) goToSlide(index, index > currentindex ? 'next' : 'prev');  
-        });
-        
-    }
-    //
-    function gallery($scope){
-        let gallery = $scope.find('.muia-gallery-wrap');
-
-        if(gallery.hasClass('muia-layout-masonry')){
-            let gap = parseInt(gallery.css('--gap')); 
-            let gh = parseInt(gallery.css('height')); 
-            
-            gallery.isotope({
-                itemSelector: '.muia-gallery-item',
-                masonry: {
-                    columnWidth: '.muia-gallery-item',
-                    fitWidth: true,
-                    gutter: gap
-                }
-            });
-
-            setTimeout(() => {   
-                let gallery = $scope.find('.muia-gallery-wrap');
-                let afteGh = parseInt(gallery.css('height')); 
-                gallery.css('min-height', afteGh < 50 ? gh : 'auto'); 
-            }, 50);
-        }
-    }
-    // Scroll Animation
-    function scrollAnimation( $scope, settings ) {
-        const wrapper     = $scope[0];
-        const aniSettings = getAniSettings( settings );
-
-        if ( ! wrapper ) return;
-
-        const getVar = ( name, fallback = undefined ) => {
-            const val = parseFloat( getComputedStyle( wrapper ).getPropertyValue( name ).trim() );
-            return isNaN( val ) ? fallback : val;
-        };
-
-        const getVarWithUnit = ( name, fallback = undefined ) => {
-            const val = getComputedStyle( wrapper ).getPropertyValue( name ).trim();
-            return val !== '' ? val : fallback;
-        };
-
-        const fromVars = {
-            x:       getVarWithUnit( '--mui-x' ),
-            y:       getVarWithUnit( '--mui-y' ),
-            rotateX: getVar( '--mui-rotate-x' ),
-            rotateY: getVar( '--mui-rotate-y' ),
-            rotateZ: getVar( '--mui-rotate-z' ),
-            scaleX:  getVar( '--mui-scale-x' ),
-            scaleY:  getVar( '--mui-scale-y' ),
-            skewX:   getVar( '--mui-skew-x' ),
-            skewY:   getVar( '--mui-skew-y' ),
-            opacity: getVar( '--mui-opacity' ),
-            transition:'none'
-        };
-
-        const toVars = {
-            x:       getVarWithUnit( '--mui-x-to',       '0px' ),
-            y:       getVarWithUnit( '--mui-y-to',        '0px' ),
-            rotateX: getVar( '--mui-rotate-x-to', 0 ),
-            rotateY: getVar( '--mui-rotate-y-to', 0 ),
-            rotateZ: getVar( '--mui-rotate-z-to', 0 ),
-            scaleX:  getVar( '--mui-scale-x-to',  1 ),
-            scaleY:  getVar( '--mui-scale-y-to',  1 ),
-            skewX:   getVar( '--mui-skew-x-to',   0 ),
-            skewY:   getVar( '--mui-skew-y-to',   0 ),
-            opacity: getVar( '--mui-opacity-to',   1 ),
-            ease:       aniSettings.isWithScroll ? 'none' : aniSettings.ease,
-            duration:   aniSettings.duration,
-            delay:      aniSettings.delay,
-        };
-
-        Object.keys( fromVars ).forEach( key => {
-            if ( fromVars[ key ] === undefined ) {
-                delete fromVars[ key ];
-                
-                const cssToVar = '--mui-' + key.replace( /([A-Z])/g, '-$1' ).toLowerCase() + '-to';
-                if ( getComputedStyle( wrapper ).getPropertyValue( cssToVar ).trim() === '' ) {
-                    delete toVars[ key ];
-                }
-            }
-        } );
-
-        if ( ! Object.keys( fromVars ).length ) return;
-
-        $scope.removeClass( 'visibility__hidden' );
-
-        let animateEl = $scope.find('> *:not(.elementor-element-overlay,.ui-resizable-handle)')[0];
-        afterLoad( () => {
-            motionuiAni.fromTo( animateEl, fromVars, {
-                ...toVars,
-                scrollTrigger: initScrollTrigger(wrapper, aniSettings),
-            } );
-        } );
     }
     
 

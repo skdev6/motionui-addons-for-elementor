@@ -1,5 +1,5 @@
 /*Buttons styles*/
-.visibility__hidden {
+body:not(.elementor-editor-active) .visibility__hidden {
   visibility: hidden;
 }
 
@@ -618,15 +618,24 @@
 
 .muia-ani-wrap {
   position: relative;
+  display: inline-block;
+  overflow: hidden;
 }
 
 .has-muia-img-ani {
-  --cl:0%;
-  --cr:0%;
-  --ct:0%;
-  --cb:0%;
+  --cl: 0%;
+  --cr: 0%;
+  --ct: 0%;
+  --cb: 0%;
+  --img-ani-duration: 1s;
+  --img-ani-delay: 0s;
+  --img-ani-stagger: 0.05s;
+  --img-ani-ease: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+/* -----------------------------------------------------------------------
+ * Grid and column reveal
+ * -------------------------------------------------------------------- */
 .muia-ani-wrap .muia-img-grid-reveal {
   position: absolute;
   inset: 0;
@@ -639,6 +648,8 @@
   background-repeat: no-repeat;
   background-position-y: calc(var(--row-index) * 100%);
   clip-path: inset(var(--ct) var(--cr) var(--cb) var(--cl));
+  transition: clip-path var(--img-ani-duration) var(--img-ani-ease);
+  transition-delay: calc(var(--img-ani-delay) + var(--tile-index, 0) * var(--img-ani-stagger));
 }
 
 .muia-img-column-reveal .muia-img-grid-reveal {
@@ -649,21 +660,129 @@
   background-position-y: calc(var(--col-index) * 50%);
 }
 
+.has-muia-img-ani.muia-img-grid-reveal .muia-ani-wrap > img,
+.has-muia-img-ani.muia-img-column-reveal .muia-ani-wrap > img {
+  opacity: 0;
+}
+
+.has-muia-img-ani.muia-img-dir-ltr {
+  --cr: 100%;
+}
+.has-muia-img-ani.muia-img-dir-rtl {
+  --cl: 100%;
+}
+.has-muia-img-ani.muia-img-dir-btt {
+  --ct: 100%;
+}
+.has-muia-img-ani.muia-img-dir-ttb {
+  --cb: 100%;
+}
+.has-muia-img-ani:where(.muia-img-grid-reveal).muia-img-dir-ltr, .has-muia-img-ani:where(.muia-img-grid-reveal).muia-img-dir-rtl {
+  --cb: 100%;
+}
+
+/* -----------------------------------------------------------------------
+ * Reveal
+ * -------------------------------------------------------------------- */
 .has-muia-img-ani.muia-img-reveal {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  --cr1:0%;
-  --cb1:0%;
-  --cl1:100%;
-  --cb1:0%;
-  --cl2:100%;
+  --cr1: 0%;
+  --cb1: 0%;
+  --cl1: 100%;
+  --cl2: 100%;
   --ct1: 100%;
-  --cr2: 0;
+  --cr2: 0%;
   --ct2: 100%;
 }
 .has-muia-img-ani.muia-img-reveal img {
   clip-path: polygon(var(--cr1) var(--cb1), var(--cl1) var(--cb1), var(--cl2) var(--ct1), var(--cr2) var(--ct2));
+  transition: clip-path var(--img-ani-duration) var(--img-ani-ease);
+  transition-delay: var(--img-ani-delay);
+}
+.has-muia-img-ani.muia-img-reveal.muia-img-dir-ltr {
+  --cl1: 0%;
+  --cl2: 0%;
+}
+.has-muia-img-ani.muia-img-reveal.muia-img-dir-rtl {
+  --cr1: 100%;
+  --cr2: 100%;
+}
+.has-muia-img-ani.muia-img-reveal.muia-img-dir-btt {
+  --cb1: 100%;
+}
+.has-muia-img-ani.muia-img-reveal.muia-img-dir-ttb {
+  --ct1: 0%;
+  --ct2: 0%;
 }
 
+/* -----------------------------------------------------------------------
+ * Played
+ * -------------------------------------------------------------------- */
+.has-muia-img-ani.is-inview {
+  --cl: 0%;
+  --cr: 0%;
+  --ct: 0%;
+  --cb: 0%;
+}
+
+.has-muia-img-ani.muia-img-reveal.is-inview {
+  --cr1: 0%;
+  --cb1: 0%;
+  --cl1: 100%;
+  --cl2: 100%;
+  --ct1: 100%;
+  --cr2: 0%;
+  --ct2: 100%;
+}
+
+.has-muia-text-animation {
+  --text-ani-duration: 0.8s;
+  --text-ani-delay: 0s;
+  --text-ani-stagger: 0.04s;
+  --text-ani-ease: cubic-bezier(0.19, 1, 0.22, 1);
+}
+.has-muia-text-animation .muia-text-piece {
+  transition: transform var(--text-ani-duration) var(--text-ani-ease), opacity var(--text-ani-duration) var(--text-ani-ease);
+  transition-delay: calc(var(--text-ani-delay) + var(--index, 0) * var(--text-ani-stagger));
+}
+
+/* -----------------------------------------------------------------------
+ * Fade
+ * -------------------------------------------------------------------- */
+.has-muia-text-animation.muia-text-fade .muia-text-piece {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.has-muia-text-animation.muia-text-fade.is-inview .muia-text-piece {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* -----------------------------------------------------------------------
+ * Reveal
+ * -------------------------------------------------------------------- */
+.has-muia-text-animation.muia-text-reveal .muia-reveal-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+.has-muia-text-animation.muia-text-reveal.muia-text-by-lines .muia-reveal-wrap {
+  display: block;
+}
+.has-muia-text-animation.muia-text-reveal .muia-text-piece {
+  transform: translateY(110%);
+}
+.has-muia-text-animation.muia-text-reveal.is-inview .muia-text-piece {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .has-muia-text-animation .muia-text-piece {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
 .muia-gallery-wrap {
   display: grid;
   width: 100%;

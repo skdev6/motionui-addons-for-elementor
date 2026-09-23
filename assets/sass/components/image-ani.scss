@@ -1,45 +1,160 @@
+// Image reveal animations.
+//
+// muia-addons.js only builds the structure and flips a class: it wraps the
+// image, builds the tiles a grid reveal needs, publishes the timing as custom
+// properties, and adds `.is-inview` through ScrollMagic once the element's top
+// reaches 90% down the viewport. Everything below is the motion itself.
+//
+// Classes it works from:
+//   .muia-img-reveal / -grid-reveal / -column-reveal   type, from prefix_class
+//   .muia-img-dir-ltr / -rtl / -btt / -ttb             direction, from the JS
+//   .is-inview                                         play
+//
+// Nothing animates a custom property directly — those are not interpolatable.
+// The properties feed `clip-path`, which is, so the transition sits on
+// clip-path and the browser interpolates between the two computed shapes.
+
 .muia-ani-wrap {
     position: relative;
+    // Set from JS previously; the tiles and the clipped image both need it.
+    display: inline-block;
+    overflow: hidden;
 }
-.has-muia-img-ani{
-    --cl:0%;
-    --cr:0%;
-    --ct:0%;
-    --cb:0%;
+
+.has-muia-img-ani {
+    // Clip insets for the grid and column tiles. 0 on every side = fully open.
+    --cl: 0%;
+    --cr: 0%;
+    --ct: 0%;
+    --cb: 0%;
+
+    // Overwritten from JS with the widget's own motion settings; these keep
+    // the animation sane if it runs before the script has had its say.
+    --img-ani-duration: 1s;
+    --img-ani-delay: 0s;
+    --img-ani-stagger: 0.05s;
+    --img-ani-ease: cubic-bezier(0.19, 1, 0.22, 1);
 }
-.muia-ani-wrap{
+
+/* -----------------------------------------------------------------------
+ * Grid and column reveal
+ * -------------------------------------------------------------------- */
+
+.muia-ani-wrap {
     .muia-img-grid-reveal {
         position: absolute;
         inset: 0;
         display: grid;
-        grid-template-columns: repeat(3,minmax(0,1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+
         span {
             background-size: var(--elw);
             background-position-x: calc(var(--col-index) * 50%);
             background-repeat: no-repeat;
             background-position-y: calc(var(--row-index) * 100%);
             clip-path: inset(var(--ct) var(--cr) var(--cb) var(--cl));
+
+            // --tile-index is stamped on each tile by the JS, so the stagger
+            // is per tile while the duration and delay are shared.
+            transition: clip-path var(--img-ani-duration) var(--img-ani-ease);
+            transition-delay: calc(
+                var(--img-ani-delay) + var(--tile-index, 0) * var(--img-ani-stagger)
+            );
         }
     }
-}  
-.muia-img-column-reveal .muia-img-grid-reveal { 
+}
+
+.muia-img-column-reveal .muia-img-grid-reveal {
     grid-template-columns: none;
+
     span {
         background-position-x: 0;
         background-position-y: calc(var(--col-index) * 50%);
     }
-} 
+}
+
+// The tiles stand in for the image once they exist.
+.has-muia-img-ani.muia-img-grid-reveal,
+.has-muia-img-ani.muia-img-column-reveal {
+    .muia-ani-wrap > img {
+        opacity: 0;
+    }
+}
+
+// Starting edges, by direction. :where() keeps the type qualifier at zero
+// specificity so the `.is-inview` reset below still outranks these.
+.has-muia-img-ani {
+    &.muia-img-dir-ltr { --cr: 100%; }
+    &.muia-img-dir-rtl { --cl: 100%; }
+    &.muia-img-dir-btt { --ct: 100%; }
+    &.muia-img-dir-ttb { --cb: 100%; }
+
+    // A grid closes from the bottom as well on the horizontal directions, so
+    // the tiles wipe in diagonally. A single column does not.
+    &:where(.muia-img-grid-reveal) {
+        &.muia-img-dir-ltr,
+        &.muia-img-dir-rtl {
+            --cb: 100%;
+        }
+    }
+}
+
+/* -----------------------------------------------------------------------
+ * Reveal
+ * -------------------------------------------------------------------- */
+
 .has-muia-img-ani.muia-img-reveal {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    --cr1:0%;
-    --cb1:0%;
-    --cl1:100%;
-    --cb1:0%;
-    --cl2:100%;
+
+    // Corners of the clip, as x/y pairs: (cr1,cb1) (cl1,cb1) (cl2,ct1) (cr2,ct2).
+    // These defaults describe the full rectangle, so the image ends up visible.
+    --cr1: 0%;
+    --cb1: 0%;
+    --cl1: 100%;
+    --cl2: 100%;
     --ct1: 100%;
-    --cr2: 0;
+    --cr2: 0%;
     --ct2: 100%;
-    img{
-        clip-path: polygon(var(--cr1) var(--cb1), var(--cl1) var(--cb1), var(--cl2) var(--ct1), var(--cr2) var(--ct2));    
+
+    img {
+        clip-path: polygon(
+            var(--cr1) var(--cb1),
+            var(--cl1) var(--cb1),
+            var(--cl2) var(--ct1),
+            var(--cr2) var(--ct2)
+        );
+        transition: clip-path var(--img-ani-duration) var(--img-ani-ease);
+        transition-delay: var(--img-ani-delay);
     }
-}      
+
+    // Collapse the rectangle against the edge the reveal comes from. Both
+    // points on that edge move, so the shape keeps its four corners and stays
+    // interpolatable.
+    &.muia-img-dir-ltr { --cl1: 0%;   --cl2: 0%;   }
+    &.muia-img-dir-rtl { --cr1: 100%; --cr2: 100%; }
+    &.muia-img-dir-btt { --cb1: 100%; }
+    &.muia-img-dir-ttb { --ct1: 0%;   --ct2: 0%;   }
+}
+
+/* -----------------------------------------------------------------------
+ * Played
+ * -------------------------------------------------------------------- */
+
+// Same specificity as the direction rules above and written after them, so
+// these win on source order.
+.has-muia-img-ani.is-inview {
+    --cl: 0%;
+    --cr: 0%;
+    --ct: 0%;
+    --cb: 0%;
+}
+
+.has-muia-img-ani.muia-img-reveal.is-inview {
+    --cr1: 0%;
+    --cb1: 0%;
+    --cl1: 100%;
+    --cl2: 100%;
+    --ct1: 100%;
+    --cr2: 0%;
+    --ct2: 100%;
+}

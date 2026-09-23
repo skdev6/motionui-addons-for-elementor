@@ -1,0 +1,92 @@
+// Text reveal animations.
+//
+// muia-addons.js splits the text with SplitType, marks each animated piece
+// with `.muia-text-piece` and its own `--index`, publishes the timing as custom
+// properties, and adds `.is-inview` through ScrollMagic once the element's top
+// reaches 90% down the viewport. The motion is all here.
+//
+// Classes it works from:
+//   .muia-text-fade / .muia-text-reveal         type, from prefix_class
+//   .muia-text-by-lines / -words / -chars       split level
+//   .is-inview                                  play
+//
+// Because every piece carries the same marker class whatever the split level
+// is, the rules below never have to know whether they are moving lines, words
+// or characters.
+
+.has-muia-text-animation {
+    // Overwritten from JS with the widget's own motion settings; these keep
+    // the animation sane if it runs before the script has had its say.
+    --text-ani-duration: 0.8s;
+    --text-ani-delay: 0s;
+    --text-ani-stagger: 0.04s;
+    --text-ani-ease: cubic-bezier(0.19, 1, 0.22, 1);
+
+    // SplitType sets its own display on the pieces it creates, so nothing is
+    // forced here beyond the transition.
+    .muia-text-piece {
+        transition:
+            transform var(--text-ani-duration) var(--text-ani-ease),
+            opacity var(--text-ani-duration) var(--text-ani-ease);
+        transition-delay: calc(
+            var(--text-ani-delay) + var(--index, 0) * var(--text-ani-stagger)
+        );
+    }
+}
+
+/* -----------------------------------------------------------------------
+ * Fade
+ * -------------------------------------------------------------------- */
+
+.has-muia-text-animation.muia-text-fade {
+    .muia-text-piece {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    // One class more specific than the rule above, and after it.
+    &.is-inview .muia-text-piece {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* -----------------------------------------------------------------------
+ * Reveal
+ * -------------------------------------------------------------------- */
+
+.has-muia-text-animation.muia-text-reveal {
+
+    // Added by the JS around each piece: the box the piece slides out from.
+    // Descenders are clipped by design; give the text a little line-height if
+    // a `g` or `y` looks shaved.
+    .muia-reveal-wrap {
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: top;
+    }
+
+    // A line is a block, so its wrapper has to be one too or the lines would
+    // collapse onto a single row.
+    &.muia-text-by-lines .muia-reveal-wrap {
+        display: block;
+    }
+
+    .muia-text-piece {
+        transform: translateY(110%);
+    }
+
+    &.is-inview .muia-text-piece {
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .has-muia-text-animation {
+        .muia-text-piece {
+            transition: none;
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
