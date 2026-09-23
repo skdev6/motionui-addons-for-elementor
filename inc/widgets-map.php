@@ -44,7 +44,7 @@ return [
 		'is_upcoming' => false,
 		'icon'        => 'eicon-post-slider',
 		'demo'        => '',
-		'tutorial'    => '',
+		'tutorial'    => ''
 	],
 	'animated-image' => [
 		'title'       => __( 'Image', 'motionui-addons-for-elementor' ),

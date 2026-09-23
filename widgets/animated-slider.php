@@ -31,6 +31,15 @@ class Animated_Slider extends Muia_Base {
     public function get_keywords() {
         return [ 'slider', 'slide', 'animated slider', 'hero', 'banner', 'slideshow', 'motionui' ];
     }
+
+    public function get_style_depends() {
+        return [ 'swiper' ];
+    }
+
+    public function get_script_depends() {
+        // DrawSVGPlugin draws the arrow strokes as a panel opens and closes.
+        return [ 'muia-animated-slider', 'swiper' ];
+    }
     /**
      * Register widget controls.
      */
@@ -242,16 +251,22 @@ class Animated_Slider extends Muia_Base {
             <!-- Backgrounds -->
             <div class="slide-bg-wrap">
                 <div class="overlay"></div>
-                <?php 
-                $slide_count = 0;
-                foreach ( $slides as $slide ) : 
-                    $slide_count++;
-                ?>
-                    <div class="slide-bg-item elementor-repeater-item-<?php printf( '%s%s', esc_attr( $slide['_id'] ), $slide_count === 0 ? ' active' : '' ); ?>" 
-                         style="--index: <?php echo esc_attr( $slide_count ); ?>;">
-                         <div class="sb-item"></div>
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        <?php 
+                        $slide_count = 0;
+                        foreach ( $slides as $slide ) : 
+                            $slide_count++;
+                        ?>
+                            <div class="swiper-slide">
+                            <div class="slide-bg-item elementor-repeater-item-<?php printf( '%s%s', esc_attr( $slide['_id'] ), $slide_count === 0 ? ' active' : '' ); ?>" 
+                                style="--index: <?php echo esc_attr( $slide_count ); ?>;">
+                                <div class="sb-item"></div>
+                            </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                <?php endforeach; ?>
+                </div>
             </div>
 
             <!-- Titles -->

@@ -11,19 +11,28 @@ class Assets {
 		wp_register_script( 'isotope', THEMEIC_MUIA_ASSETS . 'vendor/isotope/isotope.pkgd.min.js', [], '3.0.6', true );
         // plugin script
         wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], '0.3.4', true );
-        wp_register_script( 'ScrollMagic', THEMEIC_MUIA_ASSETS . 'js/ScrollMagic.min.js', [], THEMEIC_MUIA_VERSION, true );
-        wp_register_script( 'muia-tween', THEMEIC_MUIA_ASSETS . 'js/tween.umd.min.js', [], THEMEIC_MUIA_VERSION, true );
-        wp_register_script( 'motionui-addons', THEMEIC_MUIA_ASSETS . 'js/muia-addons.js', [], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'ScrollMagic', THEMEIC_MUIA_ASSETS . 'vendor/ScrollMagic/ScrollMagic.min.js', [], '2.0.7', true );
+        wp_register_script( 'anime', THEMEIC_MUIA_ASSETS . 'vendor/anime/anime.esm.min.js', [], '25.0.0', true );
+        wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.js', [], '14.2.0', true );
+        wp_register_script( 'muia-animated-slider', THEMEIC_MUIA_ASSETS . 'js/widgets/animated-slider.js', [], THEMEIC_MUIA_VERSION, true );
+        // muia-addons.js reads jQuery, SplitType, TWEEN and ScrollMagic at
+        // load time, so all four are declared rather than assumed to be first.
+        wp_register_script(
+            'motionui-addons',
+            THEMEIC_MUIA_ASSETS . 'js/muia-addons.js',
+            [ 'jquery', 'split-type', 'ScrollMagic' ],
+            THEMEIC_MUIA_VERSION,
+            true
+        );
     }
 
     public static function enqueue_scripts() {
-        wp_enqueue_script( 'split-type' );
-        wp_enqueue_script( 'muia-tween' );
-        wp_enqueue_script( 'ScrollMagic' );
+        // The three libraries come along as declared dependencies.
         wp_enqueue_script( 'motionui-addons' );
     }
 
     public static function enqueue_styles() {
+        wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.css', [], '14.2.0' );
         wp_enqueue_style(
             'motionui-addons-widgets',
             THEMEIC_MUIA_ASSETS . 'css/widgets.css',

@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Define Versioning
  */
-// define( 'THEMEIC_MUIA_DEV', true );
+define( 'THEMEIC_MUIA_DEV', true );
 
 if ( defined( 'THEMEIC_MUIA_DEV' ) && true == THEMEIC_MUIA_DEV ) {
     define( 'THEMEIC_MUIA_VERSION', '1.1.4.' . time() );

@@ -1,7 +1,458 @@
 ;(function($){
     'use strict';
 
-    return;
+    /* =================================================================
+     * Animation engine
+     * =================================================================
+     * The Pro build animates through a global `motionuiAni`, which wraps
+     * GSAP. GSAP's standard licence is not GPL compatible, so it cannot
+     * ship on wp.org. This build provides the same small surface —
+     * set / to / fromTo / addScrollTrigger — on top of two MIT libraries:
+     * @tweenjs/tween.js for the tweening and ScrollMagic for the scroll
+     * triggers. SplitType is used directly, as before.
+     *
+     * Kept module-private on purpose. When the Pro plugin is active it
+     * registers its own global `motionuiAni`, and nothing here touches it.
+     *
+     * Every method degrades rather than throws: with a library missing,
+     * animated elements jump straight to their end state, so content is
+     * never left invisible.
+     * ============================================================== */
+
+    var hasTween      = typeof TWEEN !== 'undefined';
+    var hasScrollMagic = typeof ScrollMagic !== 'undefined';
+
+    // Own group rather than TWEEN's default one, so the ticker below only
+    // ever drives this plugin's tweens.
+    var tweenGroup = hasTween ? new TWEEN.Group() : null;
+    var tickerId   = null;
+    var controller = null;
+
+    // Transform components and the unit a bare number means for each.
+    var TRANSFORMS = {
+        x: 'px',  y: 'px',  z: 'px',
+        translateX: 'px', translateY: 'px', translateZ: 'px',
+        rotate: 'deg', rotateX: 'deg', rotateY: 'deg', rotateZ: 'deg',
+        skewX: 'deg', skewY: 'deg',
+        scale: '', scaleX: '', scaleY: ''
+    };
+
+    var TRANSFORM_ALIAS = { x: 'translateX', y: 'translateY', z: 'translateZ', rotate: 'rotateZ' };
+
+    // Keys that configure a tween instead of being animated by it.
+    var CONTROL_KEYS = [ 'duration', 'delay', 'stagger', 'ease', 'onStart', 'onUpdate', 'onComplete', 'scrollTrigger' ];
+
+    // GSAP ease name -> TWEEN easing family.
+    var EASE_FAMILY = {
+        power1: 'Quadratic', power2: 'Cubic',  power3: 'Quartic', power4: 'Quintic',
+        quad:   'Quadratic', cubic:  'Cubic',  quart:  'Quartic', quint:   'Quintic',
+        expo:   'Exponential', circ: 'Circular', sine: 'Sinusoidal',
+        back:   'Back', elastic: 'Elastic', bounce: 'Bounce'
+    };
+
+    var EASE_DIRECTION = { 'in': 'In', out: 'Out', inout: 'InOut' };
+
+    /**
+     * Normalise anything the widgets pass as a target into an element array.
+     * Accepts a jQuery object, a single node, a NodeList or an array.
+     */
+    function toElements(target){
+        if (!target) return [];
+        if (target.jquery) return target.get();
+        if (target.nodeType === 1) return [target];
+        if (typeof target.length === 'number') {
+            return Array.prototype.slice.call(target).filter(function(el){
+                return el && el.nodeType === 1;
+            });
+        }
+        return [];
+    }
+
+    // A value may be given as a function of the element's index, the way
+    // GSAP allows, e.g. `translateX: i => i === 0 ? '0%' : '50%'`.
+    function resolve(value, index, element){
+        return typeof value === 'function' ? value(index, element) : value;
+    }
+
+    /** Split "110%" or 40 into { n: 110, u: '%' }, or null when not numeric. */
+    function parseValue(value, fallbackUnit){
+        if (value === null || value === undefined || value === '') return null;
+        if (typeof value === 'number') return { n: value, u: fallbackUnit || '' };
+
+        var match = String(value).trim().match(/^(-?[\d.]+)(.*)$/);
+        if (!match) return null;
+
+        return { n: parseFloat(match[1]), u: match[2] || fallbackUnit || '' };
+    }
+
+    function unitFor(key){
+        return Object.prototype.hasOwnProperty.call(TRANSFORMS, key) ? TRANSFORMS[key] : '';
+    }
+
+    /**
+     * Transform components are tracked per element rather than read back from
+     * the computed matrix, which cannot be decomposed reliably once skew and
+     * rotation are combined.
+     */
+    function transformState(el){
+        if (!el._muiaTransform) {
+            el._muiaTransform = {
+                translateX: { n: 0, u: 'px'  }, translateY: { n: 0, u: 'px'  }, translateZ: { n: 0, u: 'px' },
+                rotateX:    { n: 0, u: 'deg' }, rotateY:    { n: 0, u: 'deg' }, rotateZ:    { n: 0, u: 'deg' },
+                skewX:      { n: 0, u: 'deg' }, skewY:      { n: 0, u: 'deg' },
+                scaleX:     { n: 1, u: ''    }, scaleY:     { n: 1, u: ''    }
+            };
+        }
+        return el._muiaTransform;
+    }
+
+    function withUnit(component){
+        return component.n + (component.u || '');
+    }
+
+    function applyTransform(el){
+        var t = transformState(el);
+
+        el.style.transform =
+            'translate3d(' + withUnit(t.translateX) + ',' + withUnit(t.translateY) + ',' + withUnit(t.translateZ) + ') ' +
+            'rotateX(' + withUnit(t.rotateX) + ') rotateY(' + withUnit(t.rotateY) + ') rotateZ(' + withUnit(t.rotateZ) + ') ' +
+            'skew(' + withUnit(t.skewX) + ',' + withUnit(t.skewY) + ') ' +
+            'scale(' + t.scaleX.n + ',' + t.scaleY.n + ')';
+    }
+
+    /**
+     * Write one property. Returns true when it touched the transform state,
+     * so the caller can rebuild the transform string once per element rather
+     * than once per property.
+     */
+    function setProp(el, key, value){
+
+        if (key.indexOf('--') === 0) {
+            el.style.setProperty(key, String(value));
+            return false;
+        }
+
+        if (key === 'autoAlpha') {
+            el.style.opacity    = value;
+            el.style.visibility = parseFloat(value) > 0 ? 'visible' : 'hidden';
+            return false;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(TRANSFORMS, key)) {
+            var parsed = parseValue(value, TRANSFORMS[key]);
+            if (!parsed) return false;
+
+            var state = transformState(el);
+
+            if (key === 'scale') {
+                state.scaleX = parsed;
+                state.scaleY = { n: parsed.n, u: parsed.u };
+            } else {
+                state[TRANSFORM_ALIAS[key] || key] = parsed;
+            }
+            return true;
+        }
+
+        el.style[key] = value;
+        return false;
+    }
+
+    function applyVars(el, index, props){
+        var touchedTransform = false;
+
+        Object.keys(props).forEach(function(key){
+            if (setProp(el, key, resolve(props[key], index, el))) touchedTransform = true;
+        });
+
+        if (touchedTransform) applyTransform(el);
+    }
+
+    /** Current value of a property, as the starting point for a tween. */
+    function readValue(el, key, unit){
+
+        if (key.indexOf('--') === 0) {
+            return parseValue(getComputedStyle(el).getPropertyValue(key).trim(), unit) || { n: 0, u: unit };
+        }
+
+        if (Object.prototype.hasOwnProperty.call(TRANSFORMS, key)) {
+            var name  = key === 'scale' ? 'scaleX' : (TRANSFORM_ALIAS[key] || key);
+            var state = transformState(el)[name];
+            return { n: state.n, u: unit || state.u };
+        }
+
+        if (key === 'autoAlpha' || key === 'opacity') {
+            return { n: parseFloat(getComputedStyle(el).opacity) || 0, u: '' };
+        }
+
+        return parseValue(getComputedStyle(el)[key], unit) || { n: 0, u: unit };
+    }
+
+    function easing(name){
+        if (!hasTween) return null;
+
+        var value = String(name || '').trim().toLowerCase();
+        if (!value || value === 'none' || value === 'linear') return TWEEN.Easing.Linear.None;
+
+        var parts  = value.split('.');
+        var family = TWEEN.Easing[ EASE_FAMILY[ parts[0] ] ];
+        if (!family) return TWEEN.Easing.Linear.None;
+
+        return family[ EASE_DIRECTION[ parts[1] ] || 'Out' ] || TWEEN.Easing.Linear.None;
+    }
+
+    /**
+     * Drive the group from rAF, and stop as soon as nothing is running.
+     *
+     * TWEEN 25 leaves finished tweens in their group, so they are pruned here
+     * rather than from onComplete, which would mutate the list the group is
+     * iterating over.
+     */
+    function startTicker(){
+        if (tickerId !== null || !tweenGroup) return;
+
+        var loop = function(time){
+            tweenGroup.update(time);
+
+            var running = 0;
+            tweenGroup.getAll().forEach(function(tween){
+                if (tween.isPlaying() || tween.isPaused()) running++;
+                else tweenGroup.remove(tween);
+            });
+
+            tickerId = running ? requestAnimationFrame(loop) : null;
+        };
+
+        tickerId = requestAnimationFrame(loop);
+    }
+
+    function scrollController(){
+        if (!hasScrollMagic) return null;
+        if (!controller) controller = new ScrollMagic.Controller();
+        return controller;
+    }
+
+    /**
+     * 'top 90%' -> 0.9. ScrollMagic's triggerHook is the same idea as the
+     * viewport half of a GSAP start string, so only that number is needed.
+     */
+    function triggerHook(start){
+        var match = String(start || '').match(/(-?[\d.]+)\s*%/);
+        if (!match) return 0.85;
+
+        return Math.min(Math.max(parseFloat(match[1]) / 100, 0), 1);
+    }
+
+    var muiaAni = {
+
+        /** Apply values immediately, with no tween. */
+        set: function(target, vars){
+            toElements(target).forEach(function(el, index){
+                applyVars(el, index, vars);
+            });
+        },
+
+        /** Tween from the current values to the ones given. */
+        to: function(target, vars){
+            var elements = toElements(target);
+            if (!elements.length) return null;
+
+            var config = {};
+            var props  = {};
+
+            Object.keys(vars).forEach(function(key){
+                if (CONTROL_KEYS.indexOf(key) > -1) config[key] = vars[key];
+                else props[key] = vars[key];
+            });
+
+            // Without the tween library, land on the end state so nothing is
+            // left half animated or hidden.
+            if (!hasTween) {
+                elements.forEach(function(el, index){ applyVars(el, index, props); });
+                if (config.onComplete) config.onComplete();
+                return null;
+            }
+
+            var duration = (config.duration != null ? config.duration : 0.5) * 1000;
+            var delay    = (config.delay   || 0) * 1000;
+            var stagger  = (config.stagger || 0) * 1000;
+            var ease     = easing(config.ease);
+            var pending  = elements.length;
+
+            var finish = function(){
+                pending--;
+                if (pending <= 0 && config.onComplete) config.onComplete();
+            };
+
+            elements.forEach(function(el, index){
+                var from  = {};
+                var to    = {};
+                var units = {};
+
+                Object.keys(props).forEach(function(key){
+                    var value = resolve(props[key], index, el);
+                    var end   = parseValue(value, unitFor(key));
+
+                    // Not a number — a keyword like 'none' or ''. Nothing to
+                    // interpolate, so write it and move on.
+                    if (!end) {
+                        applyVars(el, index, { [key]: value });
+                        return;
+                    }
+
+                    var start = readValue(el, key, end.u);
+
+                    from[key]  = start.n;
+                    to[key]    = end.n;
+                    units[key] = end.u;
+                });
+
+                if (!Object.keys(to).length) {
+                    finish();
+                    return;
+                }
+
+                new TWEEN.Tween(from, tweenGroup)
+                    .to(to, duration)
+                    .delay(delay + index * stagger)
+                    .easing(ease)
+                    .onUpdate(function(values){
+                        var frame = {};
+                        Object.keys(values).forEach(function(key){
+                            frame[key] = values[key] + units[key];
+                        });
+                        applyVars(el, index, frame);
+                        if (config.onUpdate) config.onUpdate(el, index);
+                    })
+                    .onComplete(finish)
+                    .onStop(finish)
+                    .start();
+            });
+
+            startTicker();
+            return null;
+        },
+
+        /**
+         * Set a starting state, then animate to the end one. `toVars` may
+         * carry a `scrollTrigger` object, in which case the tween waits for
+         * the scroll position — or follows it, when `scrub` is on.
+         */
+        fromTo: function(target, fromVars, toVars){
+            var elements = toElements(target);
+            if (!elements.length) return null;
+
+            var trigger = toVars.scrollTrigger;
+            var rest    = {};
+
+            Object.keys(toVars).forEach(function(key){
+                if (key !== 'scrollTrigger') rest[key] = toVars[key];
+            });
+
+            muiaAni.set(elements, fromVars);
+
+            if (!trigger) return muiaAni.to(elements, rest);
+
+            if (trigger.scrub) return scrub(elements, fromVars, rest, trigger);
+
+            return muiaAni.addScrollTrigger(trigger.trigger || elements[0], {
+                start:   trigger.start,
+                onEnter: function(){ muiaAni.to(elements, rest); }
+            });
+        },
+
+        /**
+         * Run `onEnter` when the element reaches the trigger point.
+         *
+         * Fires once and then tears the scene down, unless `once: false` is
+         * passed: these are reveal animations, and replaying one on every pass
+         * is rarely what the author wants.
+         */
+        addScrollTrigger: function(target, options){
+            options = options || {};
+
+            var el      = toElements(target)[0];
+            var onEnter = typeof options.onEnter === 'function' ? options.onEnter : function(){};
+
+            if (!el) return null;
+
+            var ctrl = scrollController();
+
+            // No ScrollMagic — run now, so the content is not stuck in its
+            // starting state.
+            if (!ctrl) {
+                onEnter();
+                return null;
+            }
+
+            var scene = new ScrollMagic.Scene({
+                triggerElement: el,
+                triggerHook:    triggerHook(options.start),
+                reverse:        options.once === false
+            });
+
+            scene.on('enter', function(){
+                onEnter();
+                if (options.once !== false) scene.destroy(true);
+            });
+
+            // addTo() updates the scene straight away, so an element already
+            // past the trigger point enters here rather than waiting for a
+            // scroll that may never come.
+            return scene.addTo(ctrl);
+        }
+    };
+
+    /**
+     * A scrubbed tween: scroll position drives progress directly, so it is
+     * interpolated by hand instead of being handed to TWEEN.
+     */
+    function scrub(elements, fromVars, toVars, config){
+        var ctrl = scrollController();
+
+        if (!ctrl) return muiaAni.to(elements, toVars);
+
+        var props = {};
+        Object.keys(toVars).forEach(function(key){
+            if (CONTROL_KEYS.indexOf(key) === -1) props[key] = toVars[key];
+        });
+
+        var tracks = elements.map(function(el, index){
+            var track = {};
+
+            Object.keys(props).forEach(function(key){
+                var unit = unitFor(key);
+                var end  = parseValue(resolve(props[key], index, el), unit);
+                if (!end) return;
+
+                var start = parseValue(resolve(fromVars[key], index, el), end.u)
+                    || readValue(el, key, end.u);
+
+                track[key] = { from: start.n, to: end.n, unit: end.u };
+            });
+
+            return { el: el, index: index, track: track };
+        });
+
+        return new ScrollMagic.Scene({
+            triggerElement: config.trigger || elements[0],
+            triggerHook:    triggerHook(config.start),
+            duration:       '100%'
+        })
+        .on('progress', function(event){
+            tracks.forEach(function(item){
+                var frame = {};
+
+                Object.keys(item.track).forEach(function(key){
+                    var t = item.track[key];
+                    frame[key] = (t.from + (t.to - t.from) * event.progress) + t.unit;
+                });
+
+                applyVars(item.el, item.index, frame);
+            });
+        })
+        .addTo(ctrl);
+    }
+
     /**
      * Initialized all widgets
     */
@@ -85,14 +536,11 @@
             });
         });
     }); 
-
-    function afterLoad(fun){
-        fun(); 
-    }
     /**
      * Widget Functions
     * */
-    function initScrollTrigger(trigger, settings){
+
+    function initScrollTrigger(trigger, settings){   
         let start = settings?.isWithScroll ? 'top 95%' : "top 80%";
         let end = settings?.isWithScroll ? 'top 5%' : "+=100%";
         return{   
@@ -114,6 +562,10 @@
             ease:         settings[ prefix + 'muia_motion_ease' ]        || degaultEase,
             isWithScroll: settings[ prefix + 'muia_motion_with_scroll' ] === 'yes',
         };
+    }
+
+    function afterLoad(fun){
+        fun(); 
     }
     // Init Button
     function button(btn){
