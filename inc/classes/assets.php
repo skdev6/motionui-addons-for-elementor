@@ -12,10 +12,11 @@ class Assets {
         // plugin script
         wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], '0.3.4', true );
         wp_register_script( 'ScrollMagic', THEMEIC_MUIA_ASSETS . 'vendor/ScrollMagic/ScrollMagic.min.js', [], '2.0.7', true );
+        wp_register_script( 'ScrollMagic-addIndicators', THEMEIC_MUIA_ASSETS . 'vendor/ScrollMagic/debug.addIndicators.min.js', [], '2.0.7', true );
         wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.js', [], '14.2.0', true );
         wp_register_script( 'muia-animated-slider', THEMEIC_MUIA_ASSETS . 'js/widgets/animated-slider.js', [], THEMEIC_MUIA_VERSION, true );
         // muia-addons.js reads jQuery, SplitType, TWEEN and ScrollMagic at
-        // load time, so all four are declared rather than assumed to be first.
+        // load time, so all four are declared rather than assumed to be first.  
         wp_register_script(
             'motionui-addons',
             THEMEIC_MUIA_ASSETS . 'js/muia-addons.js',

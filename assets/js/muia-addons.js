@@ -141,7 +141,7 @@
 
         var scene = new ScrollMagic.Scene({
             triggerElement: el,
-            triggerHook: 0.9,
+            triggerHook: 0.8,
             reverse: false
         });
 
