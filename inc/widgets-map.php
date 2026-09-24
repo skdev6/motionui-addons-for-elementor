@@ -11,6 +11,13 @@
  *
  * Adding a widget: add an entry keyed by the slug that maps to its class name —
  * glow-button => Glow_Button.
+ *
+ * `demo` takes a path on the product site; `tutorial` takes a full URL, since
+ * tutorials live on YouTube or elsewhere. get_muia_demo_url() and
+ * get_muia_tuto_url() in inc/functions.php sort out the rest, and hand back any
+ * absolute URL untouched. Empty means "no link" and the dashboard hides the
+ * button — except for a tutorial, which falls back to whatever
+ * `muia_tutorial_default_url` supplies.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -23,8 +30,8 @@ return [
 		'is_pro'      => false,
 		'is_upcoming' => false,
 		'icon'        => 'eicon-button',
-		'demo'        => '',
-		'tutorial'    => '',
+		'demo'        => get_muia_demo_url( '/element/button/' ),
+		'tutorial'    => get_muia_tuto_url( '' ),
 	],
 	'burger-button' => [
 		'title'       => __( 'Burger Button', 'motionui-addons-for-elementor' ),
@@ -33,8 +40,8 @@ return [
 		'is_pro'      => false,
 		'is_upcoming' => false,
 		'icon'        => 'eicon-menu-bar',
-		'demo'        => '',
-		'tutorial'    => '',
+		'demo'        => get_muia_demo_url( '/element/burger-button/' ),
+		'tutorial'    => get_muia_tuto_url( '' ),
 	],
 	'animated-slider' => [
 		'title'       => __( 'Animated Slider', 'motionui-addons-for-elementor' ),
@@ -43,8 +50,8 @@ return [
 		'is_pro'      => false,
 		'is_upcoming' => false,
 		'icon'        => 'eicon-post-slider',
-		'demo'        => '',
-		'tutorial'    => ''
+		'demo'        => get_muia_demo_url( '/element/animated-slider/' ),
+		'tutorial'    => get_muia_tuto_url( '' ),
 	],
 	'animated-image' => [
 		'title'       => __( 'Image', 'motionui-addons-for-elementor' ),
@@ -53,8 +60,8 @@ return [
 		'is_pro'      => false,
 		'is_upcoming' => false,
 		'icon'        => 'eicon-image',
-		'demo'        => '',
-		'tutorial'    => '',
+		'demo'        => get_muia_demo_url( '/element/animated-image/' ),
+		'tutorial'    => get_muia_tuto_url( '' ),
 	],
 	'animated-gallery' => [
 		'title'       => __( 'Gallery', 'motionui-addons-for-elementor' ),
@@ -63,8 +70,8 @@ return [
 		'is_pro'      => false,
 		'is_upcoming' => false,
 		'icon'        => 'eicon-gallery-justified',
-		'demo'        => '',
-		'tutorial'    => '',
+		'demo'        => get_muia_demo_url( '/element/animated-gallery/' ),
+		'tutorial'    => get_muia_tuto_url( '' ),
 	],
 	'spotlight-button' => [
 		'title'               => __( 'Spotlight Button', 'motionui-addons-for-elementor' ),
@@ -73,8 +80,8 @@ return [
 		'is_pro'              => true,
 		'is_upcoming'         => false,
 		'icon'                => 'eicon-button',
-		'demo'                => 'https://motionuiaddons.com/',
-		'tutorial'            => 'https://motionuiaddons.com/',
+		'demo'                => get_muia_demo_url( '/element/spotlight-button-effect/' ),
+		'tutorial'            => get_muia_tuto_url( '' ),
 	],
 	'accordion' => [
 		'title'               => __( 'Accordion', 'motionui-addons-for-elementor' ),
@@ -83,8 +90,8 @@ return [
 		'is_pro'              => true,
 		'is_upcoming'         => false,
 		'icon'                => 'eicon-accordion',
-		'demo'                => 'https://motionuiaddons.com/',
-		'tutorial'            => 'https://motionuiaddons.com/',
+		'demo'                => get_muia_demo_url( '/element/animate-accordion/' ),
+		'tutorial'            => get_muia_tuto_url( '' ),
 	],
 	'before-after-scroll' => [
 		'title'               => __( 'Before After by Scroll', 'motionui-addons-for-elementor' ),
@@ -93,8 +100,8 @@ return [
 		'is_pro'              => true,
 		'is_upcoming'         => false,
 		'icon'                => 'eicon-image-before-after',
-		'demo'                => 'https://motionuiaddons.com/',
-		'tutorial'            => 'https://motionuiaddons.com/',
+		'demo'                => get_muia_demo_url( '/element/before-after-by-scroll/' ),
+		'tutorial'            => get_muia_tuto_url( '' ),
 	],
 	'pricing-switcher' => [
 		'title'               => __( 'Pricing Switcher', 'motionui-addons-for-elementor' ),
@@ -103,7 +110,7 @@ return [
 		'is_pro'              => true,
 		'is_upcoming'         => false,
 		'icon'                => 'eicon-price-table',
-		'demo'                => 'https://motionuiaddons.com/',
-		'tutorial'            => 'https://motionuiaddons.com/',
+		'demo'                => get_muia_demo_url( '/element/pricing-plan-switcher/' ),
+		'tutorial'            => get_muia_tuto_url( '' ),
 	],
 ];

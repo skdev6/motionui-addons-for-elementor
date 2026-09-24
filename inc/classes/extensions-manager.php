@@ -196,55 +196,48 @@ class Extensions_Manager {
 	}
 
 	/**
-	 * Returns the default local extensions map.
-	 * All extensions default to active (is_active: true) on first install.
+	 * Every extension the dashboard knows about.
+	 *
+	 * The list lives in inc/extensions-map.php. A companion plugin adds the
+	 * extensions it ships through the muia_extensions_map filter, so the
+	 * library can grow without a release here.
+	 *
+	 * These are the shipped defaults — every extension active on a fresh
+	 * install. extension_map() overlays whatever the site has since switched
+	 * off, so nothing in the map file needs to know about the database.
+	 *
+	 * Built once per request: the map is asked for several times while the
+	 * dashboard renders.
 	 *
 	 * @since  1.0.0
 	 * @return array
 	 */
 	public static function local_extensions_map() {
-		return array(
-			'text-animation'   => array(
-				'title'       => __( 'Text Animation', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Add entrance animations to heading and text editor widgets.', 'motionui-addons-for-elementor' ),
-				'is_active'   => true,
-				'is_pro'      => false,
-				'is_upcoming' => false,
-				'icon'        => 'eicon-t-letter',
-				'demo'        => '',
-				'tutorial'    => '',
-			),
-			'image-animation'  => array(
-				'title'       => __( 'Image Animation', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Add entrance animations to image widgets.', 'motionui-addons-for-elementor' ),
-				'is_active'   => true,
-				'is_pro'      => false,
-				'is_upcoming' => false,
-				'icon'        => 'eicon-image',
-				'demo'        => '',
-				'tutorial'    => '',
-			),
-			'advance-position' => array(
-				'title'       => __( 'Advance Position', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Fine-tune widget positioning with advanced CSS controls.', 'motionui-addons-for-elementor' ),
-				'is_active'   => true,
-				'is_pro'      => false,
-				'is_upcoming' => false,
-				'icon'        => 'eicon-page-transition',
-				'demo'        => '',
-				'tutorial'    => '',
-			),
-			'motion-effects' => array(
-				'title'       => __( 'MotionUI Effects', 'motionui-addons-for-elementor' ),
-				'description' => __( 'Add scroll-based animations to widgets.', 'motionui-addons-for-elementor' ),
-				'is_active'   => true,
-				'is_pro'      => true,
-				'is_upcoming' => true,
-				'icon'        => 'eicon-page-transition',
-				'demo'        => '',
-				'tutorial'    => '',
-			)
-		);
+
+		static $map = null;
+
+		if ( null !== $map ) {
+			return $map;
+		}
+
+		$file = THEMEIC_MUIA_DIR_PATH . 'inc/extensions-map.php';
+
+		// require, not require_once: the file returns the array, and
+		// require_once would hand back true on any later call.
+		$bundled = is_readable( $file ) ? (array) require $file : array();
+
+		/**
+		 * Filter the full extension catalog.
+		 *
+		 * @param array $bundled Extension key => entry.
+		 */
+		$map = apply_filters( 'muia_extensions_map', $bundled );
+
+		if ( ! is_array( $map ) ) {
+			$map = $bundled;
+		}
+
+		return $map;
 	}
 
 	/**
