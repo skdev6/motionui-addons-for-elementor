@@ -89,9 +89,6 @@
     /* -----------------------------------------------------------------
      * ScrollMagic helpers
      * -------------------------------------------------------------- */
-
-    // The motion controls offer GSAP ease names; CSS wants a timing function.
-    // These are the standard Penner cubic-bezier equivalents.
     var CSS_EASES = {
         'none':                'linear',
         'expo.out':            'cubic-bezier(0.19, 1, 0.22, 1)',
@@ -112,8 +109,6 @@
         'back.out(1.7)':       'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
         'back.in(1.7)':        'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
         'back.inOut(1.7)':     'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        // A cubic-bezier cannot oscillate, so these take the nearest
-        // single-overshoot curve rather than quietly flattening to linear.
         'elastic.out(1, 0.3)': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
         'elastic.in(1, 0.3)':  'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
         'bounce.out':          'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
@@ -133,21 +128,12 @@
         return muiaScrollController;
     }
 
-    /**
-     * Add `className` once the element's top reaches 90% down the viewport.
-     *
-     * triggerHook 0.9 is ScrollMagic's spelling of "top 90%". The scene is torn
-     * down on entry: these are reveals, and replaying one every time the
-     * element passes back through is not what the author asked for.
-     */
     function muiaInView($el, className){
         var el = $el[0];
         if (!el) return null;
 
         var controller = muiaController();
 
-        // Without ScrollMagic, reveal immediately rather than leaving the
-        // element stuck in its starting state.
         if (!controller) {
             $el.addClass(className);
             return null;
@@ -155,31 +141,19 @@
 
         var scene = new ScrollMagic.Scene({
             triggerElement: el,
-            triggerHook: 0.9
+            triggerHook: 0.9,
+            reverse: false
         });
 
         scene.on('enter', function(){
             $el.addClass(className);
-            scene.destroy(true);
         });
 
-        // addTo() updates the scene straight away, so something already past
-        // the trigger point reveals here instead of waiting for a scroll.
         return scene.addTo(controller);
     }
     /**
      * Widget Functions
     * */
-    function initScrollTrigger(trigger, settings){
-        let start = settings?.isWithScroll ? 'top 95%' : "top 80%";
-        let end = settings?.isWithScroll ? 'top 5%' : "+=100%";
-        return{   
-            trigger,
-            start,
-            end,
-            scrub:settings?.isWithScroll ?? false
-        }
-    }
     function getAniSettings( settings, prefix = '', degaultDuration = 1, degaultDelay = 0, degaultEase = 'expo.out', degaultStagger = 0.01 ) {
         const toNum = ( val, fallback ) => {
             const n = parseFloat( val?.size ?? val );
@@ -195,16 +169,19 @@
     }
     // Init Button
     function button(btn){
+        if(!btn.hasClass('muia-btn-reveal') && !btn.hasClass('muia-btn-reveal-random')) return;
+
         let buttonTextElement = btn.find('.muia-btn-text');
-        if(btn.hasClass('muia-btn-reveal') || btn.hasClass('muia-btn-reveal-random')){
-            var chars = new SplitType(buttonTextElement[0], {types:"chars"}).chars;    
-            chars.forEach((el, index)=>{
-                $(el).css('--index',index); 
-            })
-        }
+
+        if(!buttonTextElement.length || buttonTextElement.hasClass('muia-split-initialized')) return;
+
+        buttonTextElement.addClass('muia-split-initialized');
+
+        var chars = new SplitType(buttonTextElement[0], {types:"chars"}).chars || [];
+        chars.forEach((el, index)=>{
+            $(el).css('--index',index);
+        })
     }
-    // Burger toggle. Delegated once from the document, so a button that
-    // Elementor re-renders in the editor keeps working without re-binding.
     function initBurgerToggle(){
         $(document).on('click', '[data-muia-burger]', function(){
             var $btn    = $(this).toggleClass('is-open');
@@ -219,39 +196,14 @@
             }
         });
     }
-    /**
-     * Text reveal.
-     *
-     * Same split of duties as imageAnimation: SplitType breaks the text up,
-     * this marks the pieces and publishes the timing, ScrollMagic adds
-     * `is-inview` at top 90%, and `components/text-ani.scss` owns the motion.
-     *
-     * Classes it works from:
-     *
-     *     .muia-text-fade | .muia-text-reveal          type, from prefix_class
-     *     .muia-text-by-lines | -words | -chars        split level
-     *     .is-inview                                   play
-     *
-     * and these custom properties on the widget:
-     *
-     *     --text-ani-duration  --text-ani-delay
-     *     --text-ani-stagger   --text-ani-ease
-     *
-     * Every animated piece gets `.muia-text-piece` and its own `--index`, so
-     * the stylesheet staggers with
-     * `calc(var(--text-ani-delay) + var(--index) * var(--text-ani-stagger))`
-     * and never has to care which split level is in play.
-     */
     function textAnimation( $scope, settings ) {
 
-        var textElement = $scope.find( 'h1,h2,h3,h4,h5,h6,p' );
+        $scope.removeClass( 'visibility__hidden' );
+
+        var textElement = $scope.find( 'h1,h2,h3,h4,h5,h6,p,.elementor-heading-title' );
         var aniType     = settings && settings.muia_text_ani    ? settings.muia_text_ani    : '';
         var aniBy       = settings && settings.muia_text_ani_by ? settings.muia_text_ani_by : 'words';
 
-        if ( ! textElement.length ) return;
-
-        // Undo the previous pass: Elementor re-runs this whenever the panel
-        // changes, and the split level may have moved.
         $scope.removeClass( function ( index, className ) {
             return ( className.match( /muia-text-by-\S+/g ) || [] ).join( ' ' );
         } ).removeClass( 'is-inview' );
@@ -259,37 +211,26 @@
         $scope.find( '.muia-reveal-wrap' ).children().unwrap();
         $scope.find( '.muia-text-piece' ).removeClass( 'muia-text-piece' ).css( '--index', '' );
 
-        $scope.removeClass( 'visibility__hidden' );
+        if ( ! textElement.length ) return;
 
-        // Only the two free types are handled here; the Pro build takes over
-        // for wave, scramble and auto scroll.
         if ( aniType !== 'fade' && aniType !== 'reveal' ) return;
 
-        // Split once, with every level, so changing "Animate By" later only
-        // moves the marker class instead of rebuilding the DOM. Filtered so a
-        // second heading in the same widget is not skipped.
-        var unsplit = textElement.filter( function () {
-            return ! $( this ).hasClass( 'muia-split-initialized' );
-        } );
+        textElement.each( function () {
+            if ( this._muiaSplit ) return;
 
-        if ( unsplit.length ) {
-            unsplit.addClass( 'muia-split-initialized' );
-            new SplitType( unsplit.toArray(), {
+            this._muiaSplit = new SplitType( this, {
                 types:     'lines, words, chars',
                 lineClass: 'line-text',
                 wordClass: 'word-text',
                 charClass: 'char-text',
             } );
-        }
+        } );
 
         var selectorMap = {
             lines: '.line-text',
             words: '.word-text',
             chars: '.char-text',
         };
-
-        var pieces = textElement.find( selectorMap[ aniBy ] || '.word-text' );
-        if ( ! pieces.length ) return;
 
         var aniSettings = getAniSettings( settings, 'text', 0.8, 0, 'expo.out', 0.04 );
 
@@ -302,28 +243,94 @@
 
         $scope.addClass( 'muia-text-by-' + aniBy );
 
-        pieces.each( function ( index ) {
-            $( this ).addClass( 'muia-text-piece' ).css( '--index', index );
-        } );
+        // Re-runnable: a re-split replaces the pieces, so the marking has to be
+        // applied again afterwards.
+        function markPieces() {
+            var pieces = textElement.find( selectorMap[ aniBy ] || '.word-text' );
+            if ( ! pieces.length ) return false;
 
-        // A reveal slides each piece up from behind a clipped box, so it needs
-        // one to be clipped by. Fade animates in place and needs no wrapper.
-        if ( aniType === 'reveal' ) {
-            pieces.each( function () {
-                var $piece = $( this );
-                if ( ! $piece.parent().hasClass( 'muia-reveal-wrap' ) ) {
-                    $piece.wrap( '<span class="muia-reveal-wrap"></span>' );
-                }
+            pieces.each( function ( index ) {
+                $( this ).addClass( 'muia-text-piece' ).css( '--index', index );
             } );
+
+            // A reveal slides each piece up from behind a clipped box, so it
+            // needs one to be clipped by. Fade animates in place.
+            if ( aniType === 'reveal' ) {
+                pieces.each( function () {
+                    var $piece = $( this );
+                    if ( ! $piece.parent().hasClass( 'muia-reveal-wrap' ) ) {
+                        $piece.wrap( '<span class="muia-reveal-wrap"></span>' );
+                    }
+                } );
+            }
+
+            return true;
+        }
+
+        if ( ! markPieces() ) return;
+
+        if ( aniBy === 'lines' ) {
+            muiaWatchLineResplit( $scope, textElement, markPieces );
         }
 
         muiaInView( $scope, 'is-inview' );
     }
+
+    /**
+     * Rebuild line boxes on resize.
+     *
+     * Registered per widget and driven from one shared, debounced window
+     * listener; entries whose element Elementor has re-rendered away are
+     * dropped on the next pass.
+     */
+    var muiaResplitTargets = [];
+    var muiaResplitBound = false;
+
+    function muiaWatchLineResplit( $scope, textElement, remark ) {
+        var el = $scope[0];
+        if ( ! el ) return;
+
+        var isNew = ! el._muiaResplit;
+
+        // Overwrite rather than stack: a panel change gives fresh closures.
+        el._muiaResplit = { textElement: textElement, remark: remark };
+
+        if ( isNew ) muiaResplitTargets.push( el );
+
+        if ( muiaResplitBound ) return;
+        muiaResplitBound = true;
+
+        var timer;
+        $( window ).on( 'resize.muiaSplit', function () {
+            clearTimeout( timer );
+            timer = setTimeout( function () {
+
+                muiaResplitTargets = muiaResplitTargets.filter( function ( node ) {
+                    return node.isConnected;
+                } );
+
+                muiaResplitTargets.forEach( function ( node ) {
+                    var entry = node._muiaResplit;
+                    if ( ! entry ) return;
+
+                    // split() rebuilds innerHTML, so the wrappers go with it.
+                    $( node ).find( '.muia-reveal-wrap' ).children().unwrap();
+
+                    entry.textElement.each( function () {
+                        if ( this._muiaSplit ) this._muiaSplit.split( {} );
+                    } );
+
+                    entry.remark();
+                } );
+            }, 200 );
+        } );
+    }
     
     function imageAnimation($scope, settings){
 
+        $scope.removeClass('visibility__hidden');
+
         var imgElement = $scope.find('img');
-        if (!imgElement.length) return;
 
         var aniSettings = getAniSettings(settings, 'img', 1, 0, 'expo.out', 0.05);
         var type        = settings && settings.muia_img_ani_type  ? settings.muia_img_ani_type  : '';
@@ -335,13 +342,13 @@
 
         $scope.find('.muia-img-grid-reveal').remove();
 
+        if (!imgElement.length) return;
+
         var wrap = $scope.find('.muia-ani-wrap');
         if (!wrap.length) {
             imgElement.wrap('<div class="muia-ani-wrap"></div>');
             wrap = $scope.find('.muia-ani-wrap');
         }
-
-        $scope.removeClass('visibility__hidden');
 
         // No animation picked: leave the image as it is.
         if (!type) {
@@ -357,58 +364,95 @@
             '--img-ani-ease':     cssEase(aniSettings.ease)
         });
 
-        // `muia-img-<type>` is already on the widget from the control's
-        // prefix_class; the direction control has none, so it is added here.
         $scope.addClass('muia-img-dir-' + direction);
 
-        // A grid or column reveal animates tiles rather than the image, so the
-        // tiles are built here and the image is hidden by the stylesheet.
         if (type === 'grid-reveal' || type === 'column-reveal') {
 
             var cols = 3;
             var rows = type === 'column-reveal' ? 1 : 2;
-            var src  = imgElement.attr('src');
-            var tiles = '';
 
-            for (var i = 0; i < cols * rows; i++) {
-                tiles += '<span style="' +
-                    '--col-index:'  + (i % cols) + ';' +
-                    '--row-index:'  + Math.floor(i / cols) + ';' +
-                    '--tile-index:' + i + ';' +
-                    'background-image:url(' + src + ');"></span>';
-            }
+            wrap.each(function(){
 
-            wrap.append(
-                '<div class="muia-img-grid-reveal" style="--cols:' + cols + ';--rows:' + rows + ';">' +
-                tiles +
-                '</div>'
-            );
+                var $wrap = $(this);
+                var src   = $wrap.find('img').attr('src');
+
+                if (!src) return;
+
+                var $grid = $('<div class="muia-img-grid-reveal"></div>')
+                    .css({ '--cols': cols, '--rows': rows });
+
+                for (var i = 0; i < cols * rows; i++) {
+                    $('<span></span>')
+                        .css({
+                            '--col-index':  i % cols,
+                            '--row-index':  Math.floor(i / cols),
+                            '--tile-index': i,
+                            'background-image': 'url("' + src.replace(/"/g, '\\"') + '")'
+                        })
+                        .appendTo($grid);
+                }
+
+                $wrap.append($grid);
+            });
         }
 
         muiaWatchElementWidth(wrap);
 
         muiaInView($scope, 'is-inview');
     }
-    function muiaWatchElementWidth($element) {
-        if (!$element || !$element.length) {
-            return;
-        }
-        function updateWidth() {  
-            const width = $element.innerWidth();
-            const height = $element.innerHeight();
-            $element.css('--elw', width+'px');
-            $element.css('--elh', height+'px');
-        }
-        // Initial call
-        updateWidth();
-        // Update on window resize (with debounce for better performance)
-        let resizeTimer;
-        $(window).on('resize.muia', function () {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(updateWidth, 100);
+    
+    var muiaWidthFallback = [];
+    var muiaWidthFallbackBound = false;
+
+    function muiaUpdateElementSize(el) {
+        var $el = $(el);
+        $el.css({
+            '--elw': $el.innerWidth() + 'px',
+            '--elh': $el.innerHeight() + 'px'
         });
-        // Optional: Also update when Elementor frontend is ready
-        $(window).on('elementor/frontend/init', updateWidth);
+    }
+
+    function muiaWatchElementWidth($element) {
+        if (!$element || !$element.length) return;
+
+        $element.each(function () {
+            var el = this;
+
+            // Already watched: just refresh, do not subscribe twice.
+            if (el._muiaSizeWatched) {
+                muiaUpdateElementSize(el);
+                return;
+            }
+            el._muiaSizeWatched = true;
+
+            if (typeof ResizeObserver !== 'undefined') {
+                new ResizeObserver(function () {
+                    muiaUpdateElementSize(el);
+                }).observe(el);
+            } else {
+                muiaWidthFallback.push(el);
+                muiaBindWidthFallback();
+            }
+
+            muiaUpdateElementSize(el);
+        });
+    }
+
+    function muiaBindWidthFallback() {
+        if (muiaWidthFallbackBound) return;
+        muiaWidthFallbackBound = true;
+
+        var timer;
+        $(window).on('resize.muiaSize', function () {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                // Drop anything Elementor has since re-rendered away.
+                muiaWidthFallback = muiaWidthFallback.filter(function (el) {
+                    return el.isConnected;
+                });
+                muiaWidthFallback.forEach(muiaUpdateElementSize);
+            }, 100);
+        });
     }
     
 
