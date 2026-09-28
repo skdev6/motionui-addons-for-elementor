@@ -25,13 +25,19 @@ class Text_Animation{
 				'default'            => '',
 				'frontend_available' => true,
 				'prefix_class'       => 'has-muia-text-animation visibility__hidden muia-text-',
-				'options'            => array(
-					''           => esc_html__( 'None', 'motionui-addons-for-elementor' ),
-					'fade'    => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
-					'reveal'     => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
-					'wave'       => muia_has_pro() ? esc_html__( 'Wave', 'motionui-addons-for-elementor' ) : esc_html__( 'Wave (Pro ✦)', 'motionui-addons-for-elementor' ),
-					'scramble'   => muia_has_pro() ? esc_html__( 'Scramble', 'motionui-addons-for-elementor' ) : esc_html__( 'Scramble (Pro ✦)', 'motionui-addons-for-elementor' ),
-					'text-auto-scroll'   => muia_has_pro() ? esc_html__( 'Auto Scroll', 'motionui-addons-for-elementor' ) : esc_html__( 'Auto Scroll (Pro ✦)', 'motionui-addons-for-elementor' ),
+				// How the editor finds the Pro choices below.
+				'classes'            => muia_pro_select_class(),
+				'options'            => muia_pro_options(
+					array(
+						''       => esc_html__( 'None', 'motionui-addons-for-elementor' ),
+						'fade'   => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
+					),
+					array(
+						'wave'             => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
+						'scramble'         => esc_html__( 'Scramble', 'motionui-addons-for-elementor' ),
+						'text-auto-scroll' => esc_html__( 'Auto Scroll', 'motionui-addons-for-elementor' ),
+					)
 				),
 			)
 		);

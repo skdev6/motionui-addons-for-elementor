@@ -1,5 +1,18 @@
+/**
+ * Selects whose Pro-only options are disabled without Pro.
+ *
+ * Matched on the setting name's ending, not the whole name: the button trait
+ * registers "<prefix>_btn_effect" and every widget picks its own prefix, so
+ * muia_btn_btn_effect, pss_button_btn_effect, filter_btn_btn_effect and any
+ * future one are all covered without listing them.
+ */
+const pro_select_suffixes = [
+    '_btn_effect',
+];
+
+/** Selects matched by their exact name. */
 const pro_select_fields = [
-    'muia_btn_btn_effect', 'muia_text_ani'
+    'muia_text_ani',
 ];
 
 (function ($) {
@@ -25,17 +38,23 @@ const pro_select_fields = [
       }, true);
 
   });
-  function disableOptions(){
+  function disableOptions(){  
+      // Pro is active: every option is available, so there is nothing to do.
+      if ( window.MotionUIEditor && MotionUIEditor.hasPro ) return;
+
       var currentView = elementor.getPanelView().getCurrentPageView();
       if ( ! currentView || ! currentView.$el ) return; // safety check
-      pro_select_fields.forEach(function (field) {
-          var $field = currentView.$el.find('[data-setting="' + field + '"]');
-          if ( $field.length ) {
-              $field.find('option').each(function () {
-                  if ( jQuery(this).text().includes('Pro') ) {
-                      jQuery(this).prop('disabled', true);
-                  }
-              });
+
+      var selector = pro_select_fields
+          .map(function (field) { return '[data-setting="' + field + '"]'; })
+          .concat(pro_select_suffixes.map(function (suffix) {
+              return '[data-setting$="' + suffix + '"]';
+          }))
+          .join(',');
+
+      currentView.$el.find(selector).find('option').each(function () {
+          if ( jQuery(this).text().includes('Pro') ) {
+              jQuery(this).prop('disabled', true);
           }
       });
   }

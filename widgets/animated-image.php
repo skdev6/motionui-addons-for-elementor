@@ -23,12 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class animated_image extends Muia_Base {
 
-    /**
-     * Retrieve widget keywords.
-     */
-    public function get_keywords() {
-        return [ 'image' ];
-    }
 	/**
 	 * Requires css files.
 	 *

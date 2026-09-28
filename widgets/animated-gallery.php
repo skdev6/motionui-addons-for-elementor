@@ -20,9 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Animated_Gallery extends Muia_Base {
 
-    public function get_keywords() {
-        return [ 'gallery', 'slide', 'banner', 'image', 'motionui' ];
-    }
 	/**
 	 * Register the widget controls.
 	 *

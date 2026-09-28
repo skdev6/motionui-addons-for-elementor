@@ -25,12 +25,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Animated_Slider extends Muia_Base {
 
-    /**
-     * Retrieve widget keywords.
-     */
-    public function get_keywords() {
-        return [ 'slider', 'slide', 'animated slider', 'hero', 'banner', 'slideshow', 'motionui' ];
-    }
 
     public function get_style_depends() {
         return [ 'swiper' ];

@@ -32,6 +32,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 trait Button_Controls {
 
 	use Custom_Control;
+
+	/**
+	 * Effect value that swaps in the spotlight markup.
+	 *
+	 * The markup lives here so any widget using this trait can offer the
+	 * button; the animation and the stylesheet ship with Pro, as the
+	 * `muia-spotlight-button` module. Chosen without Pro the button still
+	 * renders — it simply sits there unstyled — which is why the editor
+	 * disables the option (see elementor-editor.js).
+	 *
+	 * A static property rather than a constant: the plugin supports PHP 7.4,
+	 * and constants in traits are 8.2 and later.
+	 */
+	private static $muia_spotlight_effect = 'muia-Spotlight-btn';
 	/**
 	 * Normalize and prepare CSS selectors.
 	 *
@@ -460,14 +474,22 @@ trait Button_Controls {
 				'label'   => esc_html__( 'Effect', 'motionui-addons-for-elementor' ),
 				'type'    => Controls_Manager::SELECT,
 				'default' => $args['default_btn_effect'],
-				'options' => array(
-					'muia-btn-default'       => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
-					'muia-btn-wave'          => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
-					'muia-btn-reveal'        => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
-					'muia-Spotlight-btn' => esc_html__( 'Spotlight  (Pro ✦)', 'motionui-addons-for-elementor' ),
+				// How the editor finds the Pro choices below.
+				'classes' => muia_pro_select_class(),
+				'options' => muia_pro_options(
+					array(
+						'muia-btn-default' => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
+						'muia-btn-wave'    => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
+						'muia-btn-reveal'  => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
+					),
+					array(
+						self::$muia_spotlight_effect => esc_html__( 'Spotlight', 'motionui-addons-for-elementor' ),
+					)
 				),
 			)
 		);
+
+		$this->_muia_spotlight_controls( $id_prefix, $control_manager );
 
 		if ( Motionui::is_active_pro() ) {
 			$control_manager->add_control(
@@ -723,6 +745,60 @@ trait Button_Controls {
 			$this->muia_get_btn_output($id_prefix, $settings, $args);
 		}
 	}
+	/**
+	 * The handful of options only the spotlight button has.
+	 *
+	 * Carried over from the Spotlight Button widget this replaced, so nothing
+	 * it could do was lost when it became an effect. Colour, radius, padding
+	 * and typography are not here: those come from the shared Button Style
+	 * section, which the spotlight stylesheet reads.
+	 *
+	 * @since  1.0.0
+	 * @param  string $id_prefix       Control ID prefix.
+	 * @param  object $control_manager Widget or repeater to add the controls to.
+	 * @return void
+	 */
+	protected function _muia_spotlight_controls( $id_prefix, $control_manager ) {  
+
+		$only_spotlight = array( "{$id_prefix}_btn_effect" => self::$muia_spotlight_effect );
+
+		$control_manager->add_control(
+			"{$id_prefix}_spotlight_text_reveal",
+			array(
+				'label'        => esc_html__( 'Text Reveal', 'motionui-addons-for-elementor' ),
+				'description'  => esc_html__( 'Rolls the label up on hover.', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'condition'    => $only_spotlight,
+			)
+		);
+
+		$control_manager->add_control(
+			"{$id_prefix}_spotlight_zoom",
+			array(
+				'label'        => esc_html__( 'Zoom On Hover', 'motionui-addons-for-elementor' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'condition'    => $only_spotlight,
+			)
+		);
+	}
+
+	/**
+	 * Is this button set to the spotlight effect?
+	 *
+	 * @param  string $id_prefix Control ID prefix.
+	 * @param  array  $settings  Widget settings.
+	 * @return bool
+	 */
+	protected function muia_is_spotlight_btn( $id_prefix, $settings ) {
+
+		return isset( $settings[ "{$id_prefix}_btn_effect" ] )
+			&& self::$muia_spotlight_effect === $settings[ "{$id_prefix}_btn_effect" ];
+	}
+
 	public function muia_get_btn_output($id_prefix, $settings, $args = array()){
 
 		$btn_type = ! empty( $settings[ "{$id_prefix}_btn_type" ] )
@@ -732,6 +808,16 @@ trait Button_Controls {
 		$btn_effect = ! empty( $settings[ "{$id_prefix}_btn_effect" ] )
 			? $settings[ "{$id_prefix}_btn_effect" ]
 			: 'muia-btn-reveal';
+
+		// A site that saved a Pro effect and then lost Pro keeps the value in
+		// the database — Elementor builds one control stack per widget type, so
+		// the select cannot offer it back for that one element — but there is
+		// no stylesheet to render it with any more. Fall back here rather than
+		// output markup nothing styles; the saved value is untouched and
+		// returns with Pro.
+		if ( self::$muia_spotlight_effect === $btn_effect && ! muia_has_pro() ) {
+			$btn_effect = 'muia-btn-default';
+		}
 
 		$magnetic_effect = ( isset( $settings[ "{$id_prefix}_muia_magnetic_effect" ] )
 			&& 'yes' === $settings[ "{$id_prefix}_muia_magnetic_effect" ] )
@@ -803,7 +889,25 @@ trait Button_Controls {
 		$is_nothing = empty( $icon['value'] ) && empty( $args['title'] ) && empty( $args['url'] );
 
 		if($is_nothing) return;
-		
+
+		// The spotlight button is a different shape of markup, not a modifier
+		// class on this one, so it takes over from here. Normalised above, so
+		// reaching this means Pro is present to style it.
+		if ( self::$muia_spotlight_effect === $btn_effect ) {
+			$this->muia_get_spotlight_btn_output(
+				$id_prefix,
+				$settings,
+				$args,
+				array(
+					'icon'          => $icon,
+					'icon_position' => $icon_position,
+					'magnetic'      => $magnetic_effect,
+				)
+			);
+
+			return;
+		}
+
 		echo $magnetic_effect !=='' ? '<div class="muia-btn-wrap">' : '';
 		?>
 		<a
@@ -848,6 +952,135 @@ trait Button_Controls {
 		<?php
 		echo $magnetic_effect !=='' ? '</div>' : '';  
 	}
+	/**
+	 * Render the spotlight button.
+	 *
+	 * Markup moved here from the Spotlight Button widget so every widget using
+	 * this trait can offer it. The animation and the stylesheet stay in Pro as
+	 * the `muia-spotlight-button` module, enqueued below only when one of these
+	 * is actually on the page — a page with no spotlight button loads neither.
+	 *
+	 * Two classes matter. `themeic-{$id_prefix}` is what the shared Button
+	 * Style controls write their custom properties to, and
+	 * `themeic-spotlight-btn` is what the Pro stylesheet and script look for.
+	 * `muia-btn` is deliberately absent: the generic button styles would fight
+	 * the spotlight ones.
+	 *
+	 * @since  1.0.0
+	 * @param  string $id_prefix Control ID prefix.
+	 * @param  array  $settings  Widget settings.
+	 * @param  array  $args      Resolved title/url/target/rel/class/tag.
+	 * @param  array  $parts     icon, icon_position and magnetic, already read.
+	 * @return void
+	 */
+	protected function muia_get_spotlight_btn_output( $id_prefix, $settings, $args, $parts = array() ) {
+
+		$parts = wp_parse_args(
+			$parts,
+			array(
+				'icon'          => array(),
+				'icon_position' => 'left',
+				'magnetic'      => '',
+			)
+		);
+
+		$this->muia_enqueue_spotlight_assets();
+
+		$round = ! empty( $settings[ "{$id_prefix}_spotlight_round" ] )
+			? $settings[ "{$id_prefix}_spotlight_round" ]
+			: 'round-pill';
+
+		$reveal = ! isset( $settings[ "{$id_prefix}_spotlight_text_reveal" ] )
+			|| 'yes' === $settings[ "{$id_prefix}_spotlight_text_reveal" ];
+
+		$zoom = ! isset( $settings[ "{$id_prefix}_spotlight_zoom" ] )
+			|| 'yes' === $settings[ "{$id_prefix}_spotlight_zoom" ];
+
+		$title    = isset( $args['title'] ) ? $args['title'] : '';
+		$url      = isset( $args['url'] ) ? $args['url'] : '';
+		$has_icon = ! empty( $parts['icon']['value'] );
+
+		// A link renders as <a>, otherwise as a real <button>.
+		$tag = '' !== $url ? 'a' : 'button';
+
+		$classes = implode(
+			' ',
+			array_filter(
+				array(
+					"themeic-{$id_prefix}",
+					'themeic-spotlight-btn',
+					$round,
+					$zoom ? '' : 'btn-no-zoom',
+					$parts['magnetic'],
+					isset( $args['class'] ) ? $args['class'] : '',
+				)
+			)
+		);
+		?>
+		<div class="themeic-spotlight-btn-wrap">
+			<<?php echo esc_html( $tag ); ?>
+				<?php if ( 'a' === $tag ) : ?>
+					href="<?php echo esc_url( $url ); ?>"
+					target="<?php echo esc_attr( isset( $args['url_target'] ) ? $args['url_target'] : '_self' ); ?>"
+					rel="<?php echo esc_attr( isset( $args['url_rel'] ) ? $args['url_rel'] : '' ); ?>"
+				<?php else : ?>
+					type="button"
+				<?php endif; ?>
+				class="<?php echo esc_attr( $classes ); ?>"
+			>
+
+				<?php if ( $has_icon && 'left' === $parts['icon_position'] ) : ?>
+					<span class="btn-icon">
+						<?php Icons_Manager::render_icon( $parts['icon'], array( 'aria-hidden' => 'true' ) ); ?>
+					</span>
+				<?php endif; ?>
+
+				<?php if ( '' !== $title ) : ?>
+					<span class="btn-text"<?php echo $reveal ? ' data-text="' . esc_attr( $title ) . '"' : ''; ?>><?php echo esc_html( $title ); ?></span>
+				<?php endif; ?>
+
+				<?php if ( $has_icon && 'right' === $parts['icon_position'] ) : ?>
+					<span class="btn-icon">
+						<?php Icons_Manager::render_icon( $parts['icon'], array( 'aria-hidden' => 'true' ) ); ?>
+					</span>
+				<?php endif; ?>
+
+			</<?php echo esc_html( $tag ); ?>>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Bring in the Pro module this button needs, once per request.
+	 *
+	 * Registered by Pro as `muia-spotlight-button`; absent when Pro is not
+	 * installed, which is why nothing is assumed. Enqueueing at render time
+	 * rather than through get_script_depends() is what keeps it off pages that
+	 * have no spotlight button: the effect is chosen per button, and
+	 * get_script_depends() can only answer per widget type.
+	 *
+	 * @since  1.0.0
+	 * @return void
+	 */
+	protected function muia_enqueue_spotlight_assets() {
+
+		static $done = false;
+
+		if ( $done ) {
+			return;
+		}
+
+		$done = true;
+
+		if ( wp_style_is( 'muia-spotlight-button', 'registered' ) ) {
+			wp_enqueue_style( 'muia-spotlight-button' );
+		}
+
+		if ( wp_script_is( 'muia-spotlight-button', 'registered' ) ) {
+			wp_enqueue_script( 'muia-spotlight-button' );
+		}
+	}
+
 	protected function muia_get_widget_settings( int $page_id, string $widget_id ): ?array {
 		if ( ! $page_id || ! $widget_id ) {
 			return null;

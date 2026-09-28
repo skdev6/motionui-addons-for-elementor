@@ -23,13 +23,9 @@ class Animated_Button extends Muia_Base{
 
     use Button_Controls;
 
-    /**
-     * Retrieve widget keywords (optional but recommended for search)
-     */
-    public function get_keywords() {
-        return [ 'button', 'animate button', 'hover button', 'reveal button', 'motionui', 'animation' ];
-    }
-
+    // Scripts and styles come from this widget's `js` and `css` in
+    // widgets-map.php, resolved by Muia_Base. Overriding them here would shadow
+    // that, so the entry is the one place to edit.
     /**
      * Register widget controls.
      *

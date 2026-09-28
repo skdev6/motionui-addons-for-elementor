@@ -26,12 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Burger_Button extends Muia_Base {
 
-    /**
-     * Retrieve widget keywords.
-     */
-    public function get_keywords() {
-        return [ 'burger', 'hamburger', 'menu', 'toggle', 'nav', 'navigation', 'motionui', 'animation' ];
-    }
 
     /**
      * Register widget controls.

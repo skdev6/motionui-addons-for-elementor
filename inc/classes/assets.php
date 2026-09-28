@@ -80,6 +80,10 @@ class Assets {
 		$localize_data = [
 			'placeholder_widgets' => Widgets_Manager::get_pro_widgets(),
 			'hasPro'                  => Motionui::is_active_pro(),
+			// Values, not labels — see muia_pro_option_values(). The editor
+			// disables these inside any control carrying proSelectClass.
+			'proOptions'              => muia_pro_option_values(),
+			'proSelectClass'          => muia_pro_select_class(),
 			'editor_nonce'            => wp_create_nonce('muid_editor_nonce'),
 			'upgradeUrl'=>'https://motionuiaddons.com/',
 			'btnText'=>'Get Pro Feature',
