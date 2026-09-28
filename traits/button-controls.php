@@ -464,10 +464,7 @@ trait Button_Controls {
 					'muia-btn-default'       => esc_html__( 'Normal', 'motionui-addons-for-elementor' ),
 					'muia-btn-wave'          => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
 					'muia-btn-reveal'        => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
-					// Each branch has to be its own literal call: the string
-					// extractor reads the source, so a variable or a ternary
-					// inside __() leaves the label untranslatable.
-					'muia-btn-reveal-random' => esc_html__( 'Reveal Random', 'motionui-addons-for-elementor' ),
+					'muia-Spotlight-btn' => esc_html__( 'Spotlight  (Pro ✦)', 'motionui-addons-for-elementor' ),
 				),
 			)
 		);
