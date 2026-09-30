@@ -345,10 +345,6 @@ window.muia = window.muia || {};
     }
     window.muia.initElementorFrontend = initElementorFrontend;
     initElementorFrontend({
-        extensions: {
-            'has-muia-img-ani': muia.imageAni,
-            'has-muia-text-animation': muia.textAni
-        },
         init() {
             initBurgerToggle();
         },

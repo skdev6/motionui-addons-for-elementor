@@ -8,29 +8,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Assets {
 
     public static function register_scripts() {
-		wp_register_script( 'isotope', THEMEIC_MUIA_ASSETS . 'vendor/isotope/isotope.pkgd.min.js', [], '3.0.6', true );
+		wp_register_script( 'isotope', THEMEIC_MUIA_ASSETS . 'vendor/isotope/isotope.pkgd.min.js', [], THEMEIC_MUIA_VERSION, true );
         // plugin script
-        wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], '0.3.4', true );
-        wp_register_script( 'scroll-magic', THEMEIC_MUIA_ASSETS . 'vendor/ScrollMagic/ScrollMagic.min.js', [], '2.0.7', true );
-        wp_register_script( 'scroll-magic-addIndicators', THEMEIC_MUIA_ASSETS . 'vendor/ScrollMagic/debug.addIndicators.min.js', [], '2.0.7', true );
-        wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.js', [], '14.2.0', true );
-        wp_register_script( 'muia-animated-slider', THEMEIC_MUIA_ASSETS . 'js/widgets/animated-slider.js', [], THEMEIC_MUIA_VERSION, true );
-        wp_register_script( 'muia-imga', THEMEIC_MUIA_ASSETS . 'js/widgets/imga.js', [], THEMEIC_MUIA_VERSION, true );
-        wp_register_script( 'muia-texta', THEMEIC_MUIA_ASSETS . 'js/widgets/texta.js', [], THEMEIC_MUIA_VERSION, true );
-        // muia-addons.js reads jQuery, SplitType, TWEEN and ScrollMagic at
-        // load time, so all four are declared rather than assumed to be first.  
-        wp_register_script(
-            'motionui-addons',
-            THEMEIC_MUIA_ASSETS . 'js/muia-addons.js',
-            [ 'jquery', 'split-type', 'scroll-magic', 'scroll-magic-addIndicators', 'muia-imga', 'muia-texta' ],
-            THEMEIC_MUIA_VERSION,
-            true
-        );
+        wp_register_script( 'gsap', THEMEIC_MUIA_ASSETS . 'vendor/gsap/gsap.min.js', [], THEMEIC_MUIA_VERSION, false );
+        wp_register_script( 'scroll-trigger', THEMEIC_MUIA_ASSETS . 'vendor/scroll-trigger/scroll-trigger.min.js', ['gsap'], THEMEIC_MUIA_VERSION, false );
+        wp_register_script( 'draw-svg', THEMEIC_MUIA_ASSETS . 'vendor/draw-svg/draw-svg.min.js', ['gsap'], THEMEIC_MUIA_VERSION, false );
+        wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.js', [], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'muia-animated-slider', THEMEIC_MUIA_ASSETS . 'js/widgets/animated-slider.js', ['muia'], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'muia-imga', THEMEIC_MUIA_ASSETS . 'js/widgets/imga.js', ['gsap', 'muia'], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'muia-texta', THEMEIC_MUIA_ASSETS . 'js/widgets/texta.js', ['gsap', 'muia'], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], THEMEIC_MUIA_VERSION, true );
+
     }
 
     public static function enqueue_scripts() {
-        wp_enqueue_script( 'motionui-addons' );
-    }
+        wp_enqueue_scripts(  
+            'muia',
+            THEMEIC_MUIA_ASSETS . 'js/muia-addons.js',
+            [ 'jquery', 'split-type' ],
+            THEMEIC_MUIA_VERSION,
+            true
+        );
+	}    
 
     public static function enqueue_styles() {
         wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.css', [], '14.2.0' );

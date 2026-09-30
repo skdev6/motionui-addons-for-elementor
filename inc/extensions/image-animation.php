@@ -14,6 +14,70 @@ class Image_Animation{
                 'label' => sprintf('<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>', __('Image Animations', 'motionui-addons-for-elementor')),
             ]
         );
+        $element->add_control(
+            'muia_img_enable',
+            [
+                'label'              => __( 'Enable', 'happy-elementor-addons' ),
+                'type'               => \Elementor\Controls_Manager::SWITCHER,
+                'prefix_class'       => 'muia-img-ani-',
+                'render_type'        => 'template',
+                'return_value'       => 'yes',
+                'style_transfer'     => false,
+                'frontend_available' => true,
+                'assets'             => [
+                    'scripts' => [
+                        [
+                            'name'       => 'elementor-frontend',
+                            'conditions' => [
+                                'terms' => [
+                                    [
+                                        'name'     => 'muia_img_enable',
+                                        'operator' => '===',
+                                        'value'    => 'yes'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            'name'       => 'gsap',
+                            'conditions' => [
+                                'terms' => [
+                                    [
+                                        'name'     => 'muia_img_enable',
+                                        'operator' => '===',
+                                        'value'    => 'yes'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            'name'       => 'scroll-trigger',
+                            'conditions' => [
+                                'terms' => [
+                                    [
+                                        'name'     => 'muia_img_enable',
+                                        'operator' => '===',
+                                        'value'    => 'yes'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            'name'       => 'muia-imga',
+                            'conditions' => [
+                                'terms' => [
+                                    [
+                                        'name'     => 'muia_img_enable',
+                                        'operator' => '===',
+                                        'value'    => 'yes'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        );
 		$element->add_control(   
 			'muia_img_ani_type',
 			[
@@ -21,7 +85,7 @@ class Image_Animation{
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => '',
 				'frontend_available' => true,  
-				'prefix_class' => 'has-muia-img-ani visibility__hidden muia-img-',
+				'prefix_class' => 'visibility__hidden muia-img-',
 				'options' => [
 					'' => esc_html__( 'None', 'motionui-addons-for-elementor' ),
 					'image-reveal' => esc_html__( 'Image Reveal', 'motionui-addons-for-elementor' ),

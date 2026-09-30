@@ -67,16 +67,11 @@ class Motion {
 				'label'              => esc_html__( 'Duration (s)', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::NUMBER,
 				'condition'          => $duration_condition,
-				'size_units'         => array( 'px' ),
 				'separator'          => $args['separator'],
 				'default'            => 0.7,
-				'range'              => array( 
-					'px' => array(
-						'min'  => 0,
-						'max'  => 10,
-						'step' => 0.1,
-					),
-				),
+				'min'  => 0,
+				'max'  => 10,
+				'step' => 0.1,
 				'frontend_available' => true,
 			)
 		);
@@ -88,15 +83,10 @@ class Motion {
 				'label'              => esc_html__( 'Delay (s)', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::NUMBER,
 				'condition'          => $delay_condition,
-				'size_units'         => array( 'px' ),
 				'default'            => 0,
-				'range'              => array(
-					'px' => array(
-						'min'  => 0,
-						'max'  => 10,
-						'step' => 0.1,
-					),
-				),
+				'min'  => 0,
+				'max'  => 10,
+				'step' => 0.1,
 				'frontend_available' => true,
 			)
 		);
@@ -108,15 +98,10 @@ class Motion {
 					'label'              => esc_html__( 'Stagger', 'motionui-addons-for-elementor' ),
 					'type'               => Controls_Manager::NUMBER,
 					'condition'          => $stagger_condition,
-					'size_units'         => array( 'px' ),
 					'default'            => 0,
-					'range'              => array(
-						'px' => array(
-							'min'  => 0,
-							'max'  => 0.3,
-							'step' => 0.001,
-						),
-					),
+					'min'  => 0,
+					'max'  => 0.3,
+					'step' => 0.001,
 					'frontend_available' => true,
 				)
 			);
