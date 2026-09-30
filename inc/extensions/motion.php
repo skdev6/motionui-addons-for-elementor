@@ -378,6 +378,7 @@ class Motion {
 				'frontend_available' => true,
 				'options'            => $options,
 				'condition'          => $args['condition'],
+				'prefix_class' => 'muia-direction-',
 			)
 		);
 	}

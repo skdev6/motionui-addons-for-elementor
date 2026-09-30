@@ -97,7 +97,10 @@ window.muia = window.muia || {};
             );
             const muiaDirection = settings[`${prefix}muia_motion_direction`] || "none";
             const muiaTriggerPoint = settings[`${prefix}muia_motion_trigger_point`] || "custom";
-            const muiaTriggerPointCustom = settings[`${prefix}muia_motion_trigger_point_custom`] || "none";
+            // Falls back to the same default the PHP control ships with: an
+            // empty custom field would otherwise send the string "none", which
+            // parses as top/top and moves the trigger without saying so.
+            const muiaTriggerPointCustom = settings[`${prefix}muia_motion_trigger_point_custom`] || "top 80%";
             const muiaEnableOnMobile = settings[`${prefix}muia_motion_mobile`] || "no";
 
             const muiaDelay = getNumber(

@@ -309,15 +309,25 @@ window.muia = window.muia || {};
     window.muia.initScrollMagic = InitScrollMagic;
 
     function imageAni($scope, settings) {
+
         $scope.removeClass('visibility__hidden');
-        InitScrollMagic.create({
-            trigger:$scope,
-            start:settings.muiaTriggerPoint || 'top 50%',
-            markers:true,
-            onEnter(){
-                $scope.addClass('muia-sstart');   
+
+        var trigger = InitScrollMagic.create({
+            trigger: $scope,
+            start: settings.muiaTriggerPoint || 'top 80%',
+            markers: true,
+            onEnter: function () {
+                $scope.addClass('muia-start');
             }
         });
+
+        return function () {
+            $scope.removeClass('muia-start');
+
+            if (trigger) {
+                trigger.kill();
+            }
+        };
     }
 
     window.muia.imageAni = imageAni;
