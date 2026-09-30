@@ -98,7 +98,7 @@ class Image_Animation{
 			[
 				'label' => esc_html__( 'Animation', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
-				'default' => 'image-reveal',
+				'default' => 'reveal',
 				'frontend_available' => true,
 				'prefix_class' => 'visibility__hidden muia-img-',
 				'options' => [
@@ -117,43 +117,38 @@ class Image_Animation{
 			'condition' => array_merge(
 				$enabled,
 				array(
-					'muia_img_ani_type!' => '',
+					'muia_img_ani_type' => ['reveal', 'corner-reveal', 'zoom'],
 				)
 			),
 			'default'   => 'left',
 		) );
-		$element->add_control(
-			'muia_ani_image_space_from',
-			[
-				'label' => esc_html__( 'From', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'rem' ],
-				'range' => [
-					'px' => [
-						'min' => 0,
-						'max' => 1000,
-						'step' => 5,
-					],
-					'%' => [
-						'min' => 0,
-						'max' => 100,
-					],
-				],
-				'default' => [
-					'unit' => '%',
-					'size' => 100,
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--image-animation-space-form: {{SIZE}}{{UNIT}};',
-				],
-				'condition' => array_merge(
-					$enabled,
-					[
-						'muia_img_ani_type' => ['image-prallax'],
-					]
-				),
-			]
-		);
+		Motion::get_derection_control( $element, array(  
+			'name'      => 'img',
+			'remove'    => ['bottom', 'center', 'right'],
+			'left_title' => esc_html__( 'Horizontal', 'motionui-addons-for-elementor' ),
+			'top_title' => esc_html__( 'Vertical', 'motionui-addons-for-elementor' ),
+			'condition' => array_merge(
+				$enabled,
+				array(
+					'muia_img_ani_type' => ['prallax'],
+				)
+			),
+			'default'   => 'left',
+		) );  
+		Motion::fromTo_controls( $element, array(
+			'name'         => 'img',
+			'condition'    => array_merge(
+				$enabled,
+				array(
+					'muia_img_ani_type' => 'prallax',
+				)
+			),
+			'from_label'   => esc_html__( 'Travel From', 'motionui-addons-for-elementor' ),
+			'to_label'     => esc_html__( 'Travel To', 'motionui-addons-for-elementor' ),
+			'from_default' => array( 'unit' => '%', 'size' => -15 ),
+			'to_default'   => array( 'unit' => '%', 'size' => 15 ),
+		) );
+
 		// condition carries through to the stagger, trigger point and easing
 		// controls inside, so the switch reaches all of them.
 		Motion::add_motion_settings_controls($element, array(

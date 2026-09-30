@@ -310,8 +310,12 @@ class Motion {
 		$defaults = array(
 			'name'      => '',
 			'condition' => array(),
-			'remove'    => array(),
+			'remove'    => array('center'),
 			'default'   => '',
+			'title_left' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+			'title_right' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+			'title_top' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+			'title_bottom' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -323,20 +327,24 @@ class Motion {
 
 		$options = array(
 			'left'   => array(
-				'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+				'title' => $args['title_left'],
 				'icon'  => 'eicon-h-align-left',
 			),
 			'right'  => array(
-				'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
+				'title' => $args['title_left'],
 				'icon'  => 'eicon-h-align-right',
 			),
 			'top'    => array(
-				'title' => esc_html__( 'Top', 'motionui-addons-for-elementor' ),
+				'title' => $args['title_left'],
 				'icon'  => 'eicon-v-align-top',
 			),
 			'bottom' => array(
-				'title' => esc_html__( 'Bottom', 'motionui-addons-for-elementor' ),
+				'title' => $args['title_left'],
 				'icon'  => 'eicon-v-align-bottom',
+			),
+			'center' => array(
+				'title' => $args['title_left'],
+				'icon'  => 'eicon-v-align-center',
 			),
 		);
 
@@ -365,6 +373,64 @@ class Motion {
 				'condition'          => $args['condition'],
 				'prefix_class' => 'muia-direction-',
 				'toggle'             => false,  
+			)
+		);
+	}
+	
+	public static function fromTo_controls( $element, array $args = array() ) {
+
+		$defaults = array(
+			'name'         => '',
+			'condition'    => array(),
+			'from_label'   => esc_html__( 'From', 'motionui-addons-for-elementor' ),
+			'to_label'     => esc_html__( 'To', 'motionui-addons-for-elementor' ),
+			'from_var'     => '--muia-from',
+			'to_var'       => '--muia-to',
+			'size_units'   => array( 'px', '%', 'vh', 'vw' ),
+			'range'        => array(
+				'px' => array( 'min' => -500, 'max' => 500, 'step' => 1 ),
+				'%'  => array( 'min' => -100, 'max' => 100, 'step' => 1 ),
+				'vh' => array( 'min' => -100, 'max' => 100, 'step' => 1 ),
+				'vw' => array( 'min' => -100, 'max' => 100, 'step' => 1 ),
+			),
+			'from_default' => array( 'unit' => '%', 'size' => 0 ),
+			'to_default'   => array( 'unit' => '%', 'size' => 0 ),
+			'separator'    => 'before',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+		$name = sanitize_key( $args['name'] );
+
+		$element->add_responsive_control(
+			$name . 'muia_motion_from',
+			array(
+				'label'              => $args['from_label'],
+				'type'               => Controls_Manager::SLIDER,
+				'size_units'         => $args['size_units'],
+				'range'              => $args['range'],
+				'default'            => $args['from_default'],
+				'frontend_available' => true,
+				'condition'          => $args['condition'],
+				'separator'          => $args['separator'],
+				'selectors'          => array(
+					'{{WRAPPER}}' => $args['from_var'] . ': {{SIZE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$element->add_responsive_control(
+			$name . 'muia_motion_to',
+			array(
+				'label'              => $args['to_label'],
+				'type'               => Controls_Manager::SLIDER,
+				'size_units'         => $args['size_units'],
+				'range'              => $args['range'],
+				'default'            => $args['to_default'],
+				'frontend_available' => true,
+				'condition'          => $args['condition'],
+				'selectors'          => array(
+					'{{WRAPPER}}' => $args['to_var'] . ': {{SIZE}}{{UNIT}};',
+				),
 			)
 		);
 	}

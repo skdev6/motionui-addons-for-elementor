@@ -1,35 +1,54 @@
 ;(function ($) {
     'use strict';
 
-    function imageAni($scope, settings) {  
+    /**
+     * @param {jQuery} $scope   The widget wrapper.
+     * @param {Object} settings Element settings, plus the muia* values getAniSettings adds.
+     *
+     * `this` is the ExtensionHandler, so addTimeline / addScrollTrigger /
+     * addAnimation / addTeardown are available. Whatever is registered there is
+     * killed before the next build and on destroy.
+     */
+    function imageAni($scope, settings) {
 
-        const img = $scope.find('img');
+        $scope.removeClass('visibility__hidden');
 
-        if (settings.muia_img_ani_type === 'reveal') {  
+        const img      = $scope.find('img');
+        const duration = settings.muiaTl.duration;
 
-            gsap.set(img, { scale: 1.2, transition: 'none' });
+        if (settings.muia_img_ani_type === 'reveal') {
+            gsap.set(img, { scale: 1.2, transition: 'none', force3D: true });
             gsap.set($scope, { transition: 'none' });
 
             const tl = this.addTimeline(gsap.timeline({
-                defaults:{
+                defaults: {
                     ...settings.muiaTl,
-                    delay:0
+                    delay: 0
                 },
-                delay:settings.muiaTl.delay,
+                delay: settings.muiaTl.delay,
                 scrollTrigger: {
                     trigger: $scope,
                     ...settings.muiaTrigger,
-                    markers:true
+                    invalidateOnRefresh: true
+                },
+                onStart: function () {
+                    gsap.set($scope, { willChange: 'clip-path' });
+                    gsap.set(img, { willChange: 'transform' });
+                },
+                onComplete: function () {
+                    gsap.set([ $scope, img ], { willChange: 'auto' });
                 }
             }));
-
-            tl.to($scope, {
-                '--reveal-size': '0%'
-            })
-            .to(img, { scale: 1 }, '<');
-        } 
-
-        $scope.removeClass('visibility__hidden'); 
+            tl.fromTo($scope,
+                { '--reveal-size': '100%' },
+                { '--reveal-size': '0%' }
+            )
+            .to(img, {
+                scale: 1,
+                duration: duration * 1.25,
+                force3D: true
+            }, '<');
+        }
         return function () {
             gsap.set([ img, $scope ], { clearProps: 'all' });
         };
