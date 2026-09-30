@@ -2,7 +2,13 @@ window.muia = window.muia || {};
 ;(function($){
     'use strict';
 
+    // Each initElementorFrontend() call gets its own handler identity. See the
+    // getConstructorID override below for why a shared name is not usable.
+    let initSeq = 0;
+
     function initElementorFrontend(options = {}) {
+
+        const handlerID = 'MuiaExtensionHandler' + (initSeq += 1);
 
         const {
             widgets = {},
@@ -12,7 +18,7 @@ window.muia = window.muia || {};
             global = null,
             duration = 0.5,
             delay = 0,
-            stagger = 0.01,
+            stagger = 0,
             ease = 'expo.out'
         } = options;
 
@@ -131,11 +137,11 @@ window.muia = window.muia || {};
                 });
 
             }
-
             return {
-                prefix, muiaDuration, muiaDelay, muiaStagger, muiaEase, muiaDirection, muiaCSSEase,muiaTriggerPoint: muiaTriggerPoint === 'custom' ? muiaTriggerPointCustom : muiaTriggerPoint,muiaEnableOnMobile
+                muiaDirection, muiaCSSEase, muiaEnableOnMobile,
+                muiaTl:{ duration:muiaDuration, delay:muiaDelay, stagger:muiaStagger, ease:muiaEase },
+                muiaTrigger:{ start:muiaTriggerPoint === 'custom' ? muiaTriggerPointCustom : muiaTriggerPoint },
             };
-
         };
 
         $(window).on('elementor/frontend/init', function () {
@@ -160,7 +166,7 @@ window.muia = window.muia || {};
             const ExtensionHandler = elementorModules.frontend.handlers.Base.extend({
 
                 getConstructorID() {
-                    return 'MuiaExtensionHandler';
+                    return handlerID;
                 },
 
                 onInit() {

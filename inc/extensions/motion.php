@@ -364,6 +364,7 @@ class Motion {
 				'options'            => $options,
 				'condition'          => $args['condition'],
 				'prefix_class' => 'muia-direction-',
+				'toggle'             => false,  
 			)
 		);
 	}

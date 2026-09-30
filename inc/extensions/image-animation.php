@@ -8,10 +8,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Image_Animation{
 
-	public static function init(){
-		add_action( 'elementor/preview/enqueue_scripts', [self, 'enqueue_preview_scripts'] );
+	/**
+	 * Wiring that only applies while this extension is switched on.
+	 *
+	 * Called from Extensions_Manager::init() behind $is_image_active, so a
+	 * disabled extension registers nothing and enqueues nothing.
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		add_action( 'elementor/preview/enqueue_scripts', array( self::class, 'enqueue_preview_scripts' ) );
 	}
-
     public static function register_controls($element){
         $element->start_controls_section(
             'muia_addons_text_animation',
@@ -95,10 +102,10 @@ class Image_Animation{
 				'frontend_available' => true,
 				'prefix_class' => 'visibility__hidden muia-img-',
 				'options' => [
-					'image-reveal' => esc_html__( 'Image Reveal', 'motionui-addons-for-elementor' ),
+					'reveal' => esc_html__( 'Image Reveal', 'motionui-addons-for-elementor' ),
 					'corner-reveal' => esc_html__( 'Corner Reveal', 'motionui-addons-for-elementor' ),
 					'zoom' => esc_html__( 'Zoom', 'motionui-addons-for-elementor' ),
-					'image-prallax' => esc_html__( 'Image Prallax', 'motionui-addons-for-elementor' ),
+					'prallax' => esc_html__( 'Image Prallax', 'motionui-addons-for-elementor' ),
 				],
 				'condition' => $enabled,
 			]
@@ -152,6 +159,7 @@ class Image_Animation{
 		Motion::add_motion_settings_controls($element, array(
 			'prefix'=>'img',
 			'with_scroll'=> true,
+	
 			'stagger'=> true,
 			'stagger_condition'=>[
 				'muia_img_ani_type'=>['grid-reveal', 'column-reveal']
@@ -175,10 +183,9 @@ class Image_Animation{
 		}
         $element->end_controls_section();
     }
-
-	public static function enqueue_preview_scripts(){
-        wp_enqueue_script( 'gsap' );
-        wp_enqueue_script( 'scroll-trigger' );
-        wp_enqueue_script( 'muia-imga' );   
+	public static function enqueue_preview_scripts() {
+		wp_enqueue_script( 'gsap' );
+		wp_enqueue_script( 'scroll-trigger' );
+		wp_enqueue_script( 'muia-imga' );
 	}
 }

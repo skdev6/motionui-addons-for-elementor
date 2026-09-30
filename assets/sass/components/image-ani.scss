@@ -158,45 +158,23 @@
     --cr2: 0%;
     --ct2: 100%;
 }
-.has-muia-img-ani{
-    -webkit-transition-delay: var(--muia-delay, 0);
-            transition-delay: var(--muia-delay, 0);  
-    img{
-       -webkit-transition-delay: var(--muia-delay, 0);
-               transition-delay: var(--muia-delay, 0);    
-    }
-    &.muia-img-image-reveal{
-        -webkit-transition: clip-path var(--muia-duration) var(--muia-ease);
-        transition: clip-path var(--muia-duration) var(--muia-ease);
-        img{
-            -webkit-transform: scale(1.2);
-                -ms-transform: scale(1.2);
-                    transform: scale(1.2);
-            -webkit-transition: -webkit-transform var(--muia-duration) var(--muia-ease);
-            transition: -webkit-transform var(--muia-duration) var(--muia-ease);
-            transition: transform var(--muia-duration) var(--muia-ease);
-            transition: transform var(--muia-duration) var(--muia-ease), -webkit-transform var(--muia-duration) var(--muia-ease);
-        }
-        clip-path: inset(0 100% 0 0);  
-        &.muia-direction-right{
-            clip-path: inset(0 0 0 100%);
+.muia-img-ani-yes{  
+    &.muia-img-reveal{
+        --reveal-size:100%;
+        &.muia-direction-left{
+            clip-path: inset(0 var(--reveal-size) 0 0);
         }
         &.muia-direction-right{
-            clip-path: inset(0 0 0 100%);
+            clip-path: inset(0 0 0 var(--reveal-size));
+        }
+        &.muia-direction-right{
+            clip-path: inset(0 0 0 var(--reveal-size));
         }
         &.muia-direction-bottom{
-            clip-path: inset(100% 0 0 0);
+            clip-path: inset(var(--reveal-size) 0 0 0);
         }
         &.muia-direction-top{
-            clip-path: inset(0 0 100% 0);
-        }
-        &.muia-start{
-            clip-path: inset(0 0 0 0);
-            img{
-                -webkit-transform: scale(1);
-                    -ms-transform: scale(1);
-                        transform: scale(1);   
-            }
+            clip-path: inset(0 0 var(--reveal-size) 0);
         }
     }
 }
