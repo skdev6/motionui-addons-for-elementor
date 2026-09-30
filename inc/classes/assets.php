@@ -15,19 +15,20 @@ class Assets {
         wp_register_script( 'ScrollMagic-addIndicators', THEMEIC_MUIA_ASSETS . 'vendor/ScrollMagic/debug.addIndicators.min.js', [], '2.0.7', true );
         wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.js', [], '14.2.0', true );
         wp_register_script( 'muia-animated-slider', THEMEIC_MUIA_ASSETS . 'js/widgets/animated-slider.js', [], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'muia-imga', THEMEIC_MUIA_ASSETS . 'js/widgets/imga.js', [], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'muia-texta', THEMEIC_MUIA_ASSETS . 'js/widgets/texta.js', [], THEMEIC_MUIA_VERSION, true );
         // muia-addons.js reads jQuery, SplitType, TWEEN and ScrollMagic at
         // load time, so all four are declared rather than assumed to be first.  
         wp_register_script(
             'motionui-addons',
             THEMEIC_MUIA_ASSETS . 'js/muia-addons.js',
-            [ 'jquery', 'split-type', 'ScrollMagic' ],
+            [ 'jquery', 'split-type', 'ScrollMagic', 'muia-imga', 'muia-texta' ],
             THEMEIC_MUIA_VERSION,
             true
         );
     }
 
     public static function enqueue_scripts() {
-        // The three libraries come along as declared dependencies.
         wp_enqueue_script( 'motionui-addons' );
     }
 

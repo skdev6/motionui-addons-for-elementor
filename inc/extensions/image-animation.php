@@ -24,9 +24,10 @@ class Image_Animation{
 				'prefix_class' => 'has-muia-img-ani visibility__hidden muia-img-',
 				'options' => [
 					'' => esc_html__( 'None', 'motionui-addons-for-elementor' ),
-					'grid-reveal' => esc_html__( 'Grid Reveal', 'motionui-addons-for-elementor' ),
-					'column-reveal' => esc_html__( 'Column Reveal', 'motionui-addons-for-elementor' ),
-					'reveal' => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
+					'image-reveal' => esc_html__( 'Image Reveal', 'motionui-addons-for-elementor' ),
+					'corner-reveal' => esc_html__( 'Corner Reveal', 'motionui-addons-for-elementor' ),
+					'zoom' => esc_html__( 'Zoom', 'motionui-addons-for-elementor' ),
+					'image-prallax' => esc_html__( 'Image Prallax', 'motionui-addons-for-elementor' ),
 				],
 			]
 		);
@@ -38,13 +39,42 @@ class Image_Animation{
 				'default' => 'ltr',
 				'frontend_available' => true,  
 				'options' => [
-					'ltr' => esc_html__( 'Left -> Right', 'motionui-addons-for-elementor' ),
-					'rtl' => esc_html__( 'Right -> Left', 'motionui-addons-for-elementor' ),
-					'btt' => esc_html__( 'Bottom -> Top', 'motionui-addons-for-elementor' ),
-					'ttb' => esc_html__( 'Top -> Bottom', 'motionui-addons-for-elementor' ),
+					'ltr' => esc_html__( 'Left to Right', 'motionui-addons-for-elementor' ),
+					'rtl' => esc_html__( 'Right to Left', 'motionui-addons-for-elementor' ),
+					'btt' => esc_html__( 'Bottom to Top', 'motionui-addons-for-elementor' ),
+					'ttb' => esc_html__( 'Top to Bottom', 'motionui-addons-for-elementor' ),
 				],
 				'condition' => [
 					'muia_img_ani_type!' => '',
+				],
+			]
+		);
+		$element->add_control(  
+			'muia_ani_image_space_from',
+			[
+				'label' => esc_html__( 'From', 'textdomain' ),
+				'type' => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'rem' ],
+				'range' => [
+					'px' => [
+						'min' => 0,
+						'max' => 1000,
+						'step' => 5,
+					],
+					'%' => [
+						'min' => 0,
+						'max' => 100,
+					],
+				],
+				'default' => [
+					'unit' => '%',
+					'size' => 100,
+				],
+				'selectors' => [
+					'{{WRAPPER}}' => '--image-animation-space-form: {{SIZE}}{{UNIT}};',
+				],
+				'condition' => [
+					'muia_img_ani_type' => ['image-prallax'],
 				],
 			]
 		);
