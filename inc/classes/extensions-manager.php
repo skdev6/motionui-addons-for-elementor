@@ -52,6 +52,9 @@ class Extensions_Manager {
 
 		// Text Animation extension.
 		if ( $is_text_active ) {
+
+			Extensions\Text_Animation::init();
+
 			foreach ( self::get_text_widgets() as $widget ) {
 				if ( empty( $widget['name'] ) || empty( $widget['section'] ) ) {
 					continue;
