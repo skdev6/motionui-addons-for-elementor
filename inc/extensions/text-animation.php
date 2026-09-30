@@ -42,9 +42,22 @@ class Text_Animation{
 			)
 		);
 		if(muia_has_pro()){
-			Motion::get_derection_control($element, 'muia_text_scroll_direction', ['muia_text_ani' => ['text-auto-scroll']], ['btt', 'ttb']);  
-			
-			Motion::get_derection_control($element, 'muia_text_direction', ['muia_text_ani!' => ['', 'scramble', 'text-auto-scroll']]);  
+			// Two direction controls on one element, so they need distinct
+			// prefixes — both resolve to {prefix}muia_motion_direction, and a
+			// shared prefix would collide. Auto scroll is horizontal only,
+			// hence the removals.
+			Motion::get_derection_control( $element, array(
+				'name'      => 'text_scroll',
+				'condition' => array( 'muia_text_ani' => array( 'text-auto-scroll' ) ),
+				'remove'    => array( 'top', 'bottom' ),
+				'default'   => 'right',
+			) );
+
+			Motion::get_derection_control( $element, array(
+				'name'      => 'text',
+				'condition' => array( 'muia_text_ani!' => array( '', 'scramble', 'text-auto-scroll' ) ),
+				'default'   => 'bottom',
+			) );
 		}
 		$element->add_control(
 			'muia_text_ani_by',

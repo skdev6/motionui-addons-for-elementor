@@ -669,13 +669,14 @@ class Motion_Effects{
 				]
 			)
 		);
-		Motion::get_derection_control($element, 'muia_motion_direction',
-			array_merge(
+		Motion::get_derection_control( $element, array(
+			'name'      => 'motion_effect',
+			'condition' => array_merge(
 				$condition,
-				[
-					'muia_motion_effects_name!' => ['', 'zoom-center'],
-				]
-			)
-		);
+				array(
+					'muia_motion_effects_name!' => array( '', 'zoom-center' ),
+				)
+			),
+		) );
 	}
-}  
+}

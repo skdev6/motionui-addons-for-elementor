@@ -31,24 +31,15 @@ class Image_Animation{
 				],
 			]
 		);
-		$element->add_control(
-			'muia_ani_direction',
-			[
-				'label' => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
-				'type' => \Elementor\Controls_Manager::SELECT,
-				'default' => 'ltr',
-				'frontend_available' => true,  
-				'options' => [
-					'ltr' => esc_html__( 'Left to Right', 'motionui-addons-for-elementor' ),
-					'rtl' => esc_html__( 'Right to Left', 'motionui-addons-for-elementor' ),
-					'btt' => esc_html__( 'Bottom to Top', 'motionui-addons-for-elementor' ),
-					'ttb' => esc_html__( 'Top to Bottom', 'motionui-addons-for-elementor' ),
-				],
-				'condition' => [
-					'muia_img_ani_type!' => '',
-				],
-			]
-		);
+		// The shared picker from motion.php, under the muia_ani_direction name
+		// the image script reads.
+		Motion::get_derection_control( $element, array(
+			'name'      => 'img',
+			'condition' => array(
+				'muia_img_ani_type!' => '',
+			),
+			'default'   => 'left',
+		) );
 		$element->add_control(  
 			'muia_ani_image_space_from',
 			[

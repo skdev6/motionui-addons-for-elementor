@@ -95,6 +95,10 @@ window.muia = window.muia || {};
                 settings[`${prefix}muia_motion_duration`],
                 duration
             );
+            const muiaDirection = settings[`${prefix}muia_motion_direction`] || "none";
+            const muiaTriggerPoint = settings[`${prefix}muia_motion_trigger_point`] || "custom";
+            const muiaTriggerPointCustom = settings[`${prefix}muia_motion_trigger_point_custom`] || "none";
+            const muiaEnableOnMobile = settings[`${prefix}muia_motion_mobile`] || "no";
 
             const muiaDelay = getNumber(
                 settings[`${prefix}muia_motion_delay`],
@@ -126,12 +130,7 @@ window.muia = window.muia || {};
             }
 
             return {
-                prefix,
-                muiaDuration,
-                muiaDelay,
-                muiaStagger,
-                muiaEase,
-                muiaCSSEase
+                prefix, muiaDuration, muiaDelay, muiaStagger, muiaEase, muiaDirection, muiaCSSEase,muiaTriggerPoint,muiaTriggerPointCustom,muiaEnableOnMobile
             };
 
         };

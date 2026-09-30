@@ -29,6 +29,7 @@ class Motion {
 	 *     @type string $prefix      Control key prefix. Default ''.
 	 *     @type array  $condition   Elementor condition array. Default ['muia_scroll_ani_enable' => 'yes'].
 	 *     @type bool   $stagger     Whether to show the stagger control. Default false.
+	 *     @type array  $trigger_condition Condition for the trigger point controls. Default $condition.
 	 *     @type bool   $ani_class   Whether to show trigger/child selector controls. Default false.
 	 *     @type bool   $with_scroll Whether to show the animate-with-scroll switcher. Default false.
 	 *     @type string $separator   Separator before first control. Default 'before'.
@@ -44,6 +45,7 @@ class Motion {
 			'delay_condition'  => array(), 
 			'duration_condition'  => array(), 
 			'ease_condition'  => array(), 
+			'trigger_condition'  => array(), 
 			'ani_class'          => false,
 			'with_scroll'        => false,
 			'reverse_ani'        => true,
@@ -57,15 +59,17 @@ class Motion {
 		$duration_condition = ! empty( $args['duration_condition'] ) ? array_merge( $condition, $args['duration_condition'] ) : $condition;
 		$delay_condition = ! empty( $args['delay_condition'] ) ? array_merge( $condition, $args['delay_condition'] ) : $condition;
 		$ease_condition = ! empty( $args['ease_condition'] ) ? array_merge( $condition, $args['ease_condition'] ) : $condition;
+		$trigger_condition = ! empty( $args['trigger_condition'] ) ? array_merge( $condition, $args['trigger_condition'] ) : $condition;
 		// Duration.
 		$element->add_control(
 			$prefix . 'muia_motion_duration',
 			array(
-				'label'              => esc_html__( 'Duration', 'motionui-addons-for-elementor' ),
-				'type'               => Controls_Manager::SLIDER,
+				'label'              => esc_html__( 'Duration (s)', 'motionui-addons-for-elementor' ),
+				'type'               => Controls_Manager::NUMBER,
 				'condition'          => $duration_condition,
 				'size_units'         => array( 'px' ),
 				'separator'          => $args['separator'],
+				'default'            => 0.7,
 				'range'              => array( 
 					'px' => array(
 						'min'  => 0,
@@ -81,10 +85,11 @@ class Motion {
 		$element->add_control(
 			$prefix . 'muia_motion_delay',
 			array(
-				'label'              => esc_html__( 'Delay', 'motionui-addons-for-elementor' ),
-				'type'               => Controls_Manager::SLIDER,
+				'label'              => esc_html__( 'Delay (s)', 'motionui-addons-for-elementor' ),
+				'type'               => Controls_Manager::NUMBER,
 				'condition'          => $delay_condition,
 				'size_units'         => array( 'px' ),
+				'default'            => 0,
 				'range'              => array(
 					'px' => array(
 						'min'  => 0,
@@ -101,9 +106,10 @@ class Motion {
 				$prefix . 'muia_motion_stagger',
 				array(
 					'label'              => esc_html__( 'Stagger', 'motionui-addons-for-elementor' ),
-					'type'               => Controls_Manager::SLIDER,
+					'type'               => Controls_Manager::NUMBER,
 					'condition'          => $stagger_condition,
 					'size_units'         => array( 'px' ),
+					'default'            => 0,
 					'range'              => array(
 						'px' => array(
 							'min'  => 0,
@@ -120,14 +126,46 @@ class Motion {
 			$prefix . 'muia_motion_ease',
 			array(
 				'label'              => esc_html__( 'Easing', 'motionui-addons-for-elementor' ),
-				'type'               => Controls_Manager::SELECT2,
+				'type'               => Controls_Manager::SELECT,
 				'condition'          => $ease_condition,
 				'default'            => 'expo.out',
 				'options'            => self::get_ease_options(),
 				'frontend_available' => true,
 			)
 		);
-		if(Motionui::is_active_pro()){  
+
+		// Trigger point. Both halves read "<element edge> <viewport position>",
+		// which is what ScrollTrigger's `start` takes, so the value goes
+		// straight through without translating. The fixed pairs cover the usual
+		// places; Custom opens the field below for anything else.
+		$element->add_control(
+			$prefix . 'muia_motion_trigger_point',
+			array(
+				'label'              => esc_html__( 'Trigger Point', 'motionui-addons-for-elementor' ),
+				'type'               => Controls_Manager::SELECT,
+				'condition'          => $trigger_condition,
+				'default'            => 'top 80%',
+				'options'            => self::get_trigger_point_options(),
+				'frontend_available' => true,
+			)
+		);
+
+		$element->add_control(
+			$prefix . 'muia_motion_trigger_point_custom',
+			array(
+				'label'              => esc_html__( 'Custom Trigger Point', 'motionui-addons-for-elementor' ),
+				'type'               => Controls_Manager::TEXT,
+				'description'        => esc_html__( 'The element edge first, then where it meets the viewport — "top 80%" starts the animation when the top of the element reaches 80% down the screen.', 'motionui-addons-for-elementor' ),
+				'placeholder'        => 'top 80%',
+				'default'            => 'top 80%',
+				'condition'          => array_merge(
+					$trigger_condition,
+					array( $prefix . 'muia_motion_trigger_point' => 'custom' )
+				),
+				'frontend_available' => true,
+			)
+		);
+		if(muia_has_pro()){  
 			// Animate with scroll (optional).
 			if ( $args['with_scroll'] ) {
 				$element->add_control(
@@ -144,21 +182,7 @@ class Motion {
 					)
 				);
 			}
-			if ( $args['reverse_ani'] ) {
-				$element->add_control(
-					$prefix . 'muia_motion_reverse',
-					array(
-						'label'              => esc_html__( 'Reverse and Replay', 'motionui-addons-for-elementor' ),
-						'type'               => Controls_Manager::SWITCHER,
-						'label_on'           => esc_html__( 'Yes', 'motionui-addons-for-elementor' ),
-						'label_off'          => esc_html__( 'No', 'motionui-addons-for-elementor' ),
-						'return_value'       => 'yes',
-						'default'            => 'no',
-						'frontend_available' => true,
-						'condition'          => array_merge( $condition, array( $prefix . 'muia_motion_with_scroll!' => 'yes' ) ),
-					)
-				);
-			}
+			
 		}
 		// Trigger class name and child selector (optional).
 		if ( $args['ani_class'] ) {
@@ -171,8 +195,7 @@ class Motion {
 					'placeholder'        => esc_html__( 'optional-example-trigger', 'motionui-addons-for-elementor' ),
 					'sanitize_callback'  => 'sanitize_html_class',
 					'frontend_available' => true,
-					'condition'          => $condition,
-					'separator'          => 'before',
+					'condition'          => $condition
 				)
 			);
 
@@ -189,6 +212,49 @@ class Motion {
 				)
 			);
 		}
+
+		// Mobile opt-out. frontend_available is what puts it in
+		// getElementSettings(), so without it the script cannot see the choice
+		// at all — see the control.frontend_available check in
+		// elementor/assets/js/frontend-modules.js.
+		$element->add_control(
+			$prefix . 'muia_motion_mobile',
+			array(
+				'label'              => esc_html__( 'Enable on mobile', 'motionui-addons-for-elementor' ),
+				'type'               => Controls_Manager::SWITCHER,
+				'label_on'           => esc_html__( 'Show', 'motionui-addons-for-elementor' ),
+				'label_off'          => esc_html__( 'Hide', 'motionui-addons-for-elementor' ),
+				'return_value'       => 'yes',
+				'default'            => 'yes',
+				'frontend_available' => true,
+				'condition'          => $condition
+			)
+		);
+	}
+
+	/**
+	 * Returns the list of scroll trigger points.
+	 *
+	 * Each value is "<element edge> <viewport position>", the form ScrollTrigger's
+	 * `start` expects, so it needs no translating on the way through. 'custom'
+	 * is the escape hatch and hands over to the text control beside it.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function get_trigger_point_options() {
+		return array(
+			'top 80%'       => esc_html__( 'Default', 'motionui-addons-for-elementor' ),
+			'top top'       => esc_html__( 'Top - Top', 'motionui-addons-for-elementor' ),
+			'top center'    => esc_html__( 'Top - Center', 'motionui-addons-for-elementor' ),
+			'top bottom'    => esc_html__( 'Top - Bottom', 'motionui-addons-for-elementor' ),
+			'center top'    => esc_html__( 'Center - Top', 'motionui-addons-for-elementor' ),
+			'center center' => esc_html__( 'Center - Center', 'motionui-addons-for-elementor' ),
+			'center bottom' => esc_html__( 'Center - Bottom', 'motionui-addons-for-elementor' ),
+			'bottom top'    => esc_html__( 'Bottom - Top', 'motionui-addons-for-elementor' ),
+			'bottom center' => esc_html__( 'Bottom - Center', 'motionui-addons-for-elementor' ),
+			'bottom bottom' => esc_html__( 'Bottom - Bottom', 'motionui-addons-for-elementor' ),
+			'custom'        => esc_html__( 'Custom', 'motionui-addons-for-elementor' ),
+		);
 	}
 
 	/**
@@ -240,38 +306,79 @@ class Motion {
 			'none' => esc_html__( 'Linear', 'motionui-addons-for-elementor' ),
 		);
 	}
-	public static function get_derection_control( $element, $prefix = '', $condition = [], $remove = array() ) {
-		$options =  [
-			'left' => [
-				'title' => esc_html__( 'Left', 'textdomain' ),
-				'icon' => 'eicon-h-align-left',
-			],
-			'right' => [
-				'title' => esc_html__( 'Center', 'textdomain' ),
-				'icon' => 'eicon-h-align-right',
-			],
-			'top' => [
-				'title' => esc_html__( 'Right', 'textdomain' ),
-				'icon' => 'eicon-v-align-top',
-			],
-			'bottom' => [
-				'title' => esc_html__( 'Right', 'textdomain' ),
-				'icon' => 'eicon-v-align-bottom',
-			],
-		];
+	/**
+	 * Register the shared direction picker for an Elementor element.
+	 *
+	 * @param \Elementor\Element_Base $element The Elementor element instance.
+	 * @param array                   $args {
+	 *     Optional. Configuration arguments.
+	 *
+	 *     @type string $name      Control key. Nothing is registered without one. Default ''.
+	 *     @type array  $condition Elementor condition array. Default array().
+	 *     @type array  $remove    Option keys to leave out, e.g. array( 'top', 'bottom' ). Default array().
+	 *     @type string $default   Preselected option. Default '', meaning none, so the
+	 *                             script's own fallback stays in charge.
+	 * }
+	 */
+	public static function get_derection_control( $element, array $args = array() ) {
 
-		$filtered_options = array_diff_key( $options, array_flip( $remove ) );
+		$defaults = array(
+			'name'      => '',
+			'condition' => array(),
+			'remove'    => array(),
+			'default'   => '',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+		$name = sanitize_key( $args['name'] );
+
+		if ( ! $name ) {
+			return;
+		}
+
+		$options = array(
+			'left'   => array(
+				'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+				'icon'  => 'eicon-h-align-left',
+			),
+			'right'  => array(
+				'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
+				'icon'  => 'eicon-h-align-right',
+			),
+			'top'    => array(
+				'title' => esc_html__( 'Top', 'motionui-addons-for-elementor' ),
+				'icon'  => 'eicon-v-align-top',
+			),
+			'bottom' => array(
+				'title' => esc_html__( 'Bottom', 'motionui-addons-for-elementor' ),
+				'icon'  => 'eicon-v-align-bottom',
+			),
+		);
+
+		$options = array_diff_key( $options, array_flip( (array) $args['remove'] ) );
+
+		if ( ! $options ) {
+			return;
+		}
+
+		$default = $args['default'];
+
+		// Never preselect something 'remove' just took away — Elementor would
+		// save a value the control cannot show.
+		if ( '' !== $default && ! isset( $options[ $default ] ) ) {
+			$default = key( $options );
+		}
 
 		$element->add_control(
-			$prefix,
-			[
+			$name.'muia_motion_direction',
+			array(
 				'label'              => esc_html__( 'Direction', 'motionui-addons-for-elementor' ),
-				'type'               => \Elementor\Controls_Manager::CHOOSE,
-				'default'            => 'rtl',
+				'type'               => Controls_Manager::CHOOSE,
+				'default'            => $default,
 				'frontend_available' => true,
-				'options'            => $filtered_options,
-				'condition'          => $condition,
-			]
+				'options'            => $options,
+				'condition'          => $args['condition'],
+			)
 		);
 	}
 }
