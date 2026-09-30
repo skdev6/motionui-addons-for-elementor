@@ -11,4 +11,7 @@
         }
     });
 
+    console.log("Loaded imga");
+    
+
 })(jQuery);

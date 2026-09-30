@@ -19,20 +19,21 @@ class Assets {
         wp_register_script( 'muia-texta', THEMEIC_MUIA_ASSETS . 'js/widgets/texta.js', ['gsap', 'muia'], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], THEMEIC_MUIA_VERSION, true );
 
-    }
-
-    public static function enqueue_scripts() {
-        wp_enqueue_scripts(  
+        wp_register_script(
             'muia',
             THEMEIC_MUIA_ASSETS . 'js/muia-addons.js',
             [ 'jquery', 'split-type' ],
             THEMEIC_MUIA_VERSION,
             true
         );
-	}    
+    }
+
+    public static function enqueue_scripts() {  
+        wp_enqueue_script( 'muia' );
+    }
 
     public static function enqueue_styles() {
-        wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.css', [], '14.2.0' );
+        wp_register_style( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.css', [], THEMEIC_MUIA_VERSION );
         wp_enqueue_style(
             'motionui-addons-widgets',
             THEMEIC_MUIA_ASSETS . 'css/widgets.css',

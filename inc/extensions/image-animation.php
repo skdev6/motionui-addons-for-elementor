@@ -7,6 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Image_Animation{
+
+	public static function init(){
+		add_action( 'elementor/preview/enqueue_scripts', [self, 'enqueue_preview_scripts'] );
+	}
+
     public static function register_controls($element){
         $element->start_controls_section(
             'muia_addons_text_animation',
@@ -78,36 +83,42 @@ class Image_Animation{
                 ]
             ]
         );
-		$element->add_control(   
+
+		$enabled = array( 'muia_img_enable' => 'yes' );
+
+		$element->add_control(  
 			'muia_img_ani_type',
 			[
 				'label' => esc_html__( 'Animation', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
-				'default' => '',
-				'frontend_available' => true,  
+				'default' => 'image-reveal',
+				'frontend_available' => true,
 				'prefix_class' => 'visibility__hidden muia-img-',
 				'options' => [
-					'' => esc_html__( 'None', 'motionui-addons-for-elementor' ),
 					'image-reveal' => esc_html__( 'Image Reveal', 'motionui-addons-for-elementor' ),
 					'corner-reveal' => esc_html__( 'Corner Reveal', 'motionui-addons-for-elementor' ),
 					'zoom' => esc_html__( 'Zoom', 'motionui-addons-for-elementor' ),
 					'image-prallax' => esc_html__( 'Image Prallax', 'motionui-addons-for-elementor' ),
 				],
+				'condition' => $enabled,
 			]
 		);
 		// The shared picker from motion.php, under the muia_ani_direction name
 		// the image script reads.
 		Motion::get_derection_control( $element, array(
 			'name'      => 'img',
-			'condition' => array(
-				'muia_img_ani_type!' => '',
+			'condition' => array_merge(
+				$enabled,
+				array(
+					'muia_img_ani_type!' => '',
+				)
 			),
 			'default'   => 'left',
 		) );
-		$element->add_control(  
+		$element->add_control(
 			'muia_ani_image_space_from',
 			[
-				'label' => esc_html__( 'From', 'textdomain' ),
+				'label' => esc_html__( 'From', 'motionui-addons-for-elementor' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%', 'rem' ],
 				'range' => [
@@ -128,31 +139,46 @@ class Image_Animation{
 				'selectors' => [
 					'{{WRAPPER}}' => '--image-animation-space-form: {{SIZE}}{{UNIT}};',
 				],
-				'condition' => [
-					'muia_img_ani_type' => ['image-prallax'],
-				],
+				'condition' => array_merge(
+					$enabled,
+					[
+						'muia_img_ani_type' => ['image-prallax'],
+					]
+				),
 			]
 		);
-		Motion::add_motion_settings_controls($element, array(  
+		// condition carries through to the stagger, trigger point and easing
+		// controls inside, so the switch reaches all of them.
+		Motion::add_motion_settings_controls($element, array(
 			'prefix'=>'img',
 			'with_scroll'=> true,
 			'stagger'=> true,
 			'stagger_condition'=>[
 				'muia_img_ani_type'=>['grid-reveal', 'column-reveal']
 			],
-			'condition'=>[
-				'muia_img_ani_type!' => '',
-			]
-		)); 
-		if(!muia_has_pro()){     
+			'condition'=> array_merge(
+				$enabled,
+				[
+					'muia_img_ani_type!' => '',
+				]
+			)
+		));
+		if(!muia_has_pro()){
 			$element->add_control(
 				'muia_pro_image_effect_notice',
 				array(
 					'type' => \Elementor\Controls_Manager::RAW_HTML,
 					'raw'  => muia_get_pronotice_html(),
+					'condition' => $enabled,
 				)
 			);
 		}
         $element->end_controls_section();
     }
+
+	public static function enqueue_preview_scripts(){
+        wp_enqueue_script( 'gsap' );
+        wp_enqueue_script( 'scroll-trigger' );
+        wp_enqueue_script( 'muia-imga' );   
+	}
 }

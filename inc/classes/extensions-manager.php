@@ -67,6 +67,9 @@ class Extensions_Manager {
 
 		// Image Animation extension.
 		if ( $is_image_active ) {
+			
+			Extensions\Image_Animation::init();
+
 			foreach ( self::get_img_widgets() as $widget ) {
 				if ( empty( $widget['name'] ) || empty( $widget['section'] ) ) {
 					continue;
