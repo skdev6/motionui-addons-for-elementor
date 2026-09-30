@@ -312,10 +312,11 @@ class Motion {
 			'condition' => array(),
 			'remove'    => array('center'),
 			'default'   => '',
-			'title_left' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
-			'title_right' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
-			'title_top' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
-			'title_bottom' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+			'title_left'   => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
+			'title_right'  => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
+			'title_top'    => esc_html__( 'Top', 'motionui-addons-for-elementor' ),
+			'title_bottom' => esc_html__( 'Bottom', 'motionui-addons-for-elementor' ),
+			'title_center' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -331,19 +332,19 @@ class Motion {
 				'icon'  => 'eicon-h-align-left',
 			),
 			'right'  => array(
-				'title' => $args['title_left'],
+				'title' => $args['title_right'],
 				'icon'  => 'eicon-h-align-right',
 			),
 			'top'    => array(
-				'title' => $args['title_left'],
+				'title' => $args['title_top'],
 				'icon'  => 'eicon-v-align-top',
 			),
 			'bottom' => array(
-				'title' => $args['title_left'],
+				'title' => $args['title_bottom'],
 				'icon'  => 'eicon-v-align-bottom',
 			),
 			'center' => array(
-				'title' => $args['title_left'],
+				'title' => $args['title_center'],
 				'icon'  => 'eicon-v-align-center',
 			),
 		);
