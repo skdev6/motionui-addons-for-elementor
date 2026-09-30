@@ -107,13 +107,13 @@ class Motion {
 			);
 		}
 		// Easing.
-		$element->add_control(
+		$element->add_control( 
 			$prefix . 'muia_motion_ease',
 			array(
 				'label'              => esc_html__( 'Easing', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SELECT,
 				'condition'          => $ease_condition,
-				'default'            => 'expo.out',
+				'default'            => 'power3.out',
 				'options'            => self::get_ease_options(),
 				'frontend_available' => true,
 			)
@@ -198,10 +198,6 @@ class Motion {
 			);
 		}
 
-		// Mobile opt-out. frontend_available is what puts it in
-		// getElementSettings(), so without it the script cannot see the choice
-		// at all — see the control.frontend_available check in
-		// elementor/assets/js/frontend-modules.js.
 		$element->add_control(
 			$prefix . 'muia_motion_mobile',
 			array(
@@ -211,6 +207,7 @@ class Motion {
 				'label_off'          => esc_html__( 'Hide', 'motionui-addons-for-elementor' ),
 				'return_value'       => 'yes',
 				'default'            => 'yes',
+				'prefix_class' => 'muia-mobile-',
 				'frontend_available' => true,
 				'condition'          => $condition
 			)

@@ -17,4 +17,55 @@
             clip-path: inset(0 0 var(--reveal-size) 0);
         }
     }
+
+    &.muia-img-corner-reveal{
+        --reveal-size: 100%;
+
+        // top-left
+        &.muia-direction-left{
+            clip-path: polygon(
+                0 0,
+                calc(200% - var(--reveal-size) * 2) 0,
+                0 calc(200% - var(--reveal-size) * 2),
+                0 0
+            );
+        }
+
+        // top-right
+        &.muia-direction-top{
+            clip-path: polygon(
+                100% 0,
+                calc(-100% + var(--reveal-size) * 2) 0,
+                100% calc(200% - var(--reveal-size) * 2),
+                100% 0
+            );
+        }
+
+        // bottom-right
+        &.muia-direction-right{
+            clip-path: polygon(
+                100% 100%,
+                calc(-100% + var(--reveal-size) * 2) 100%,
+                100% calc(-100% + var(--reveal-size) * 2),
+                100% 100%
+            );
+        }
+
+        // bottom-left
+        &.muia-direction-bottom{
+            clip-path: polygon(
+                0 100%,
+                calc(200% - var(--reveal-size) * 2) 100%,
+                0 calc(-100% + var(--reveal-size) * 2),
+                0 100%
+            );
+        }
+    }
+    &:not(.muia-mobile-yes){    
+        @media (max-width:767px){   
+            --reveal-size: 0%;
+             clip-path:none !important;
+             visibility: visible;
+        }
+    }
 }

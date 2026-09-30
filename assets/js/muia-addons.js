@@ -107,7 +107,7 @@ window.muia = window.muia || {};
             // empty custom field would otherwise send the string "none", which
             // parses as top/top and moves the trigger without saying so.
             const muiaTriggerPointCustom = settings[`${prefix}muia_motion_trigger_point_custom`] || "top 80%";
-            const muiaEnableOnMobile = settings[`${prefix}muia_motion_mobile`] || "no";
+            const isMobile = settings[`${prefix}muia_motion_mobile`] || "no";
 
             const muiaDelay = getNumber(
                 settings[`${prefix}muia_motion_delay`],
@@ -138,7 +138,7 @@ window.muia = window.muia || {};
 
             }
             return {
-                muiaDirection, muiaCSSEase, muiaEnableOnMobile,
+                muiaDirection, muiaCSSEase, isMobile:isMobile === 'yes',isDesktop:window.innerWidth > 991,
                 muiaTl:{ duration:muiaDuration, delay:muiaDelay, stagger:muiaStagger, ease:muiaEase },
                 muiaTrigger:{ start:muiaTriggerPoint === 'custom' ? muiaTriggerPointCustom : muiaTriggerPoint },
             };

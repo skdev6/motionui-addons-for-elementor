@@ -122,11 +122,7 @@ class Image_Animation{
 			),
 			'default'   => 'left',
 		) );
-		// A second picker, for the parallax axis only. It needs its own name:
-		// both resolve to {name}muia_motion_direction, and Elementor drops a
-		// control whose name is already taken (return false in
-		// Controls_Manager::add_control_to_stack), so sharing 'img' meant this
-		// one never existed and its condition looked broken.
+		
 		Motion::get_derection_control( $element, array(
 			'name'      => 'img_axis',
 			'remove'    => ['bottom', 'center', 'right'],
