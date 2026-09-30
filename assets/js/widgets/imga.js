@@ -64,6 +64,13 @@ window.muia = window.muia || {};
     function viewportPoint(placement, size) {
         return placement.vp.fraction * size.viewport + placement.vp.px;
     }
+
+    // Only a fractional element point (center, bottom, 40%) depends on the
+    // element's height; a pixel offset does not, and neither does 'top'.
+    function usesElementHeight(placement) {
+        return !!placement && placement.el.fraction !== 0;
+    }
+
     function resolveElement(trigger) {
         if (typeof trigger === 'string') {
             return document.querySelector(trigger);
@@ -180,7 +187,6 @@ window.muia = window.muia || {};
 
                 return api;
             },
-
             /** ScrollTrigger calls it kill; ScrollMagic calls it destroy. */
             kill: function (reset) {
                 var at = instances.indexOf(api);
@@ -189,11 +195,47 @@ window.muia = window.muia || {};
                     instances.splice(at, 1);
                 }
 
+                if (api.observer) {
+                    api.observer.disconnect();
+                    api.observer = null;
+                }
+
+                clearTimeout(sizeTimer);
                 scene.destroy(reset !== false);
 
                 return null;
             }
         };
+
+        // Any placement measured as a fraction of the element needs the
+        // element's height, and at element_ready an image has usually not
+        // loaded, so the wrapper still measures 0. ScrollMagic resolves the
+        // duration function once and caches the number, so without a re-measure
+        // an `end` of 'bottom top' stays where 'top top' would have been.
+        var sizeTimer;
+
+        function watchSize() {
+            if (!usesElementHeight(start) && !usesElementHeight(endPlacement)) {
+                return;
+            }
+
+            if (typeof ResizeObserver === 'undefined') {
+                // No observer: catch the common case, images finishing.
+                $(window).one('load.muiaScrollMagic', function () {
+                    api.refresh();
+                });
+                return;
+            }
+
+            api.observer = new ResizeObserver(function () {
+                clearTimeout(sizeTimer);
+                sizeTimer = setTimeout(function () {
+                    api.refresh();
+                }, 50);
+            });
+
+            api.observer.observe(element);
+        }
 
         function sync(event) {
             if (event && typeof event.progress === 'number') {
@@ -238,6 +280,7 @@ window.muia = window.muia || {};
 
         scene.addTo(controller);
         instances.push(api);
+        watchSize();
 
         return api;
     }
@@ -267,13 +310,14 @@ window.muia = window.muia || {};
 
     function imageAni($scope, settings) {
         $scope.removeClass('visibility__hidden');
-
         InitScrollMagic.create({
             trigger:$scope,
-            start:'50% 50%',
-            markers:true
-        })
-
+            start:settings.muiaTriggerPoint || 'top 50%',
+            markers:true,
+            onEnter(){
+                $scope.addClass('muia-sstart');   
+            }
+        });
     }
 
     window.muia.imageAni = imageAni;

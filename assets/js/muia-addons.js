@@ -130,7 +130,7 @@ window.muia = window.muia || {};
             }
 
             return {
-                prefix, muiaDuration, muiaDelay, muiaStagger, muiaEase, muiaDirection, muiaCSSEase,muiaTriggerPoint,muiaTriggerPointCustom,muiaEnableOnMobile
+                prefix, muiaDuration, muiaDelay, muiaStagger, muiaEase, muiaDirection, muiaCSSEase,muiaTriggerPoint: muiaTriggerPoint === 'custom' ? muiaTriggerPointCustom : muiaTriggerPoint,muiaEnableOnMobile
             };
 
         };
