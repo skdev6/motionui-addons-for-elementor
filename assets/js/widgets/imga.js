@@ -33,7 +33,7 @@ window.muia.initScrollMagic = InitScrollMagic;
 ;(function(){
 
     function imageAni($scope, settings){
-        console.log('imageAni', $scope, settings);
+        console.log('imageAni', $scope, settings, 'This', this);
         
     }
 

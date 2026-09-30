@@ -3,64 +3,92 @@ window.muia = window.muia || {};
     'use strict';
 
     function initElementorFrontend(options = {}) {
+
         const {
             widgets = {},
             extensions = {},
             debounceDelay = 40,
             init = null,
             global = null,
-            duration = .5,
+            duration = 0.5,
             delay = 0,
             stagger = 0.01,
             ease = 'expo.out'
         } = options;
-        const CSS_EASES = {
-            'none':                'linear',
-            'expo.out':            'cubic-bezier(0.19, 1, 0.22, 1)',
-            'expo.in':             'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
-            'expo.inOut':          'cubic-bezier(1, 0, 0, 1)',
-            'power1.out':          'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            'power1.in':           'cubic-bezier(0.55, 0.085, 0.68, 0.53)',
-            'power1.inOut':        'cubic-bezier(0.455, 0.03, 0.515, 0.955)',
-            'power2.out':          'cubic-bezier(0.215, 0.61, 0.355, 1)',
-            'power2.in':           'cubic-bezier(0.55, 0.055, 0.675, 0.19)',
-            'power2.inOut':        'cubic-bezier(0.645, 0.045, 0.355, 1)',
-            'power3.out':          'cubic-bezier(0.165, 0.84, 0.44, 1)',
-            'power3.in':           'cubic-bezier(0.895, 0.03, 0.685, 0.22)',
-            'power3.inOut':        'cubic-bezier(0.77, 0, 0.175, 1)',
-            'power4.out':          'cubic-bezier(0.23, 1, 0.32, 1)',
-            'power4.in':           'cubic-bezier(0.755, 0.05, 0.855, 0.06)',
-            'power4.inOut':        'cubic-bezier(0.86, 0, 0.07, 1)',
-            'back.out(1.7)':       'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            'back.in(1.7)':        'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
-            'back.inOut(1.7)':     'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-            'elastic.out(1, 0.3)': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            'elastic.in(1, 0.3)':  'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
-            'bounce.out':          'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            'bounce.in':           'cubic-bezier(0.6, -0.28, 0.735, 0.045)'
-        };
-        const debounce = (fn, wait = 50) => {
-            let timeout;
 
-            return function (...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => fn.apply(this, args), wait);
-            };
+        const CSS_EASES = {
+            'none': 'linear',
+            'expo.out': 'cubic-bezier(0.19, 1, 0.22, 1)',
+            'expo.in': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
+            'expo.inOut': 'cubic-bezier(1, 0, 0, 1)',
+            'power1.out': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            'power1.in': 'cubic-bezier(0.55, 0.085, 0.68, 0.53)',
+            'power1.inOut': 'cubic-bezier(0.455, 0.03, 0.515, 0.955)',
+            'power2.out': 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+            'power2.in': 'cubic-bezier(0.55, 0.055, 0.675, 0.19)',
+            'power2.inOut': 'cubic-bezier(0.645, 0.045, 0.355, 1)',
+            'power3.out': 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+            'power3.in': 'cubic-bezier(0.895, 0.03, 0.685, 0.22)',
+            'power3.inOut': 'cubic-bezier(0.77, 0, 0.175, 1)',
+            'power4.out': 'cubic-bezier(0.23, 1, 0.32, 1)',
+            'power4.in': 'cubic-bezier(0.755, 0.05, 0.855, 0.06)',
+            'power4.inOut': 'cubic-bezier(0.86, 0, 0.07, 1)',
+            'back.out(1.7)': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            'back.in(1.7)': 'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
+            'back.inOut(1.7)': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+            'elastic.out(1, 0.3)': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            'elastic.in(1, 0.3)': 'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
+            'bounce.out': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            'bounce.in': 'cubic-bezier(0.6, -0.28, 0.735, 0.045)'
         };
-        const getAniSettings = ($scope, settings = {})=>{
+
+        const buildTimers = new Map();
+        let handlerSeq = 0;
+
+        const debounceFor = (key, fn, wait) => {
+            clearTimeout(buildTimers.get(key));
+
+            buildTimers.set(key, setTimeout(() => {
+                buildTimers.delete(key);
+                fn();
+            }, wait));
+        };
+
+        const cancelDebounceFor = (key) => {
+            clearTimeout(buildTimers.get(key));
+            buildTimers.delete(key);
+        };
+
+        const killAnimation = (thing) => {
+
+            if (!thing) {
+                return;
+            }
+
+            if (typeof thing.kill === 'function') {
+                thing.kill();
+                return;
+            }
+
+            if (typeof thing.destroy === 'function') {
+                thing.destroy(true);
+            }
+
+        };
+
+        const getAniSettings = ($scope, settings = {}) => {
 
             const getNumber = (value, fallback) => {
                 const number = parseFloat(value?.size ?? value);
                 return isNaN(number) ? fallback : number;
             };
 
-            // Detect prefix automatically
-            const durationKey = Object.keys(settings).find(key =>
-                key.endsWith('muia_motion_duration')
+            const prefixKey = Object.keys(settings).find(key =>
+                key.includes('muia_motion_')
             );
 
-            const prefix = durationKey
-                ? durationKey.replace('muia_motion_duration', '')
+            const prefix = prefixKey
+                ? prefixKey.split('muia_motion_')[0]
                 : '';
 
             const muiaDuration = getNumber(
@@ -96,56 +124,21 @@ window.muia = window.muia || {};
                 });
 
             }
+
             return {
+                prefix,
                 muiaDuration,
                 muiaDelay,
                 muiaStagger,
                 muiaEase,
                 muiaCSSEase
             };
-        }
-        const initExtensions = ($element, settings = {}) => {
-
-            $.each(extensions, function (className, callback) {
-
-                if (!$element.hasClass(className)) {
-                    return;
-                }
-
-                callback($element, {...getAniSettings($element, settings), ...settings});
-
-            });
 
         };
 
-        $(window).on('elementor/frontend/init', function () {  
+        $(window).on('elementor/frontend/init', function () {
 
             init?.();
-
-            const ExtensionHandler = elementorModules.frontend.handlers.Base.extend({
-
-                onInit() {
-                    this.run();
-                },
-
-                onElementChange() {
-                    this.run();
-                },
-
-                run: debounce(function () {
-
-                    if (typeof themeicMotionUiPro !== 'undefined') {
-                        return;
-                    }
-
-                    initExtensions(
-                        this.$element,
-                        this.getElementSettings()
-                    );
-
-                }, debounceDelay)
-
-            });
 
             /**
              * Widgets
@@ -160,6 +153,165 @@ window.muia = window.muia || {};
             });
 
             /**
+             * Extension Handler
+             */
+            const ExtensionHandler = elementorModules.frontend.handlers.Base.extend({
+
+                getConstructorID() {
+                    return 'MuiaExtensionHandler';
+                },
+
+                onInit() {
+
+                    elementorModules.frontend.handlers.Base.prototype.onInit.apply(
+                        this,
+                        arguments
+                    );
+
+                    this.scrollTriggers = [];
+                    this.timelines = [];
+                    this.animations = [];
+                    this.teardowns = [];
+
+                    this.muiaKey = this.$element.data('model-cid')
+                        || this.$element.data('id')
+                        || this.$element[0]
+                        || ('muia-handler-' + (handlerSeq += 1));
+
+                    this.buildDebounced();
+
+                },
+
+                onElementChange() {
+
+                    this.destroyAnimation();
+                    this.buildDebounced();
+
+                },
+
+                onDestroy() {
+
+                    cancelDebounceFor(this.muiaKey);
+
+                    this.destroyAnimation();
+
+                    elementorModules.frontend.handlers.Base.prototype.onDestroy.apply(
+                        this,
+                        arguments
+                    );
+
+                },
+
+                buildDebounced() {
+
+                    debounceFor(this.muiaKey, () => this.build(), debounceDelay);
+
+                },
+
+                destroyAnimation() {
+
+                    this.scrollTriggers.forEach(killAnimation);
+                    this.timelines.forEach(killAnimation);
+                    this.animations.forEach(killAnimation);
+
+                    this.teardowns.forEach(fn => {
+                        try {
+                            fn(this.$element);
+                        } catch (e) {
+                            // One extension's cleanup must not stop the rest.
+                        }
+                    });
+
+                    this.scrollTriggers = [];
+                    this.timelines = [];
+                    this.animations = [];
+                    this.teardowns = [];
+
+                },
+
+                build() {
+
+                    if (typeof themeicMotionUiPro !== 'undefined') {
+                        return;
+                    }
+
+                    const settings = this.getElementSettings();
+                    const $scope = this.$element;
+
+                    $.each(extensions, (className, callback) => {
+
+                        if (!$scope.hasClass(className) || typeof callback !== 'function') {
+                            return;
+                        }
+
+                        const teardown = callback.call(this, $scope, {
+                            ...settings,
+                            ...getAniSettings($scope, settings)
+                        });
+
+                        // An extension may just return its own cleanup instead
+                        // of calling addTeardown().
+                        this.addTeardown(teardown);
+
+                    });
+
+                },
+
+                addTimeline(tl) {
+
+                    if (!tl) {
+                        return tl;
+                    }
+
+                    this.timelines.push(tl);
+
+                    if (tl.scrollTrigger) {
+                        this.scrollTriggers.push(tl.scrollTrigger);
+                    }
+
+                    return tl;
+
+                },
+
+                addScrollTrigger(st) {
+
+                    if (!st) {
+                        return st;
+                    }
+
+                    this.scrollTriggers.push(st);
+
+                    return st;
+
+                },
+
+                addAnimation(anim) {
+
+                    if (!anim) {
+                        return anim;
+                    }
+
+                    this.animations.push(anim);
+
+                    return anim;
+
+                },
+
+                addTeardown(fn) {
+
+                    if (typeof fn !== 'function') {
+                        return fn;
+                    }
+
+                    this.teardowns.push(fn);
+
+                    return fn;
+
+                }
+
+            });
+
+            /**
              * Global Elements
              */
             elementorFrontend.hooks.addAction(
@@ -170,7 +322,7 @@ window.muia = window.muia || {};
                         $scope.hasClass(className)
                     );
 
-                    if (hasExtension) {
+                    if (hasExtension || elementorFrontend.isEditMode()) {
 
                         elementorFrontend.elementsHandler.addHandler(
                             ExtensionHandler,
