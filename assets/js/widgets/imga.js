@@ -160,8 +160,8 @@
         'circle-reveal':   buildMask,
         'tiles-reveal':   buildTiles,
         'zoom':          buildZoom,
-        'prallax':       buildParallax
-    };
+        'parallax':       buildParallax
+    }; 
 
     function imageAni($scope, settings) {    
         $scope.removeClass('visibility__hidden');

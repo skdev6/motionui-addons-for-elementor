@@ -143,8 +143,15 @@ class Text_Animation{
 				'classes'            => muia_pro_select_class(),
 				'options'            => muia_pro_options(
 					array(
-						'fade'   => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Reveal', 'motionui-addons-for-elementor' ),
+						'fade'   => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Alternative Reveal', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Text Reveal', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Smoky Reveal', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Popup Reveal', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Mixing Reveal', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Scale', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Scale', 'motionui-addons-for-elementor' ),
+						'reveal' => esc_html__( 'Text Flip', 'motionui-addons-for-elementor' ),
 					),
 					array(
 						'wave'             => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),

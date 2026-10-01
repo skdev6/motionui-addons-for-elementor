@@ -108,7 +108,7 @@ class Image_Animation{
 					'circle-reveal' => esc_html__( 'Circle Reveal', 'motionui-addons-for-elementor' ),
 					'tiles-reveal' => esc_html__( 'Tiles Reveal', 'motionui-addons-for-elementor' ),
 					'zoom' => esc_html__( 'Zoom', 'motionui-addons-for-elementor' ),
-					'prallax' => esc_html__( 'Image Prallax', 'motionui-addons-for-elementor' ),
+					'parallax' => esc_html__( 'Image Parallax', 'motionui-addons-for-elementor' ),
 				],
 				'condition' => $enabled,
 			]
@@ -165,7 +165,7 @@ class Image_Animation{
 			'condition' => array_merge(
 				$enabled,
 				array(
-					'muia_img_ani_type' => ['prallax'],
+					'muia_img_ani_type' => ['parallax'],
 				)
 			),
 			'default'   => 'left',
@@ -175,7 +175,7 @@ class Image_Animation{
 			'condition'    => array_merge(
 				$enabled,
 				array(
-					'muia_img_ani_type' => 'prallax',
+					'muia_img_ani_type' => 'parallax',
 				)
 			),
 			'from_label'   => esc_html__( 'Travel From', 'motionui-addons-for-elementor' ),
