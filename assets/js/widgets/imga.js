@@ -86,6 +86,7 @@
     const BUILDERS = {
         'reveal':        buildMask,
         'corner-reveal': buildMask,
+        'poly-reveal':   buildMask,
         'zoom':          buildZoom,
         'prallax':       buildParallax
     };

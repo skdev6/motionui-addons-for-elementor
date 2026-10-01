@@ -16,11 +16,12 @@
         &.muia-direction-top{
             clip-path: inset(0 0 var(--reveal-size) 0);
         }
+        &.muia-direction-center-h{  
+            clip-path: inset(0 var(--reveal-size) 0 var(--reveal-size));
+        }
     }
-
-    &.muia-img-corner-reveal{
+    &.muia-img-poly-reveal{
         --reveal-size: 100%;
-
         // top-left
         &.muia-direction-left{
             clip-path: polygon(
@@ -60,6 +61,35 @@
                 0 100%
             );
         }
+        &.muia-direction-center-h {  
+            
+        }
+    }
+    &.muia-img-corner-reveal{
+        --reveal-size: 100%;
+
+        // top-left
+        &.muia-direction-left{
+            clip-path: inset(var(--reveal-size) var(--reveal-size) 0 0);
+        }
+
+        // top-right
+        &.muia-direction-top{
+            clip-path: inset(0 var(--reveal-size) var(--reveal-size) 0);
+        }
+
+        // bottom-right
+        &.muia-direction-right{
+            clip-path: inset(0 0 var(--reveal-size) var(--reveal-size));
+        }
+
+        // bottom-left
+        &.muia-direction-bottom{
+            clip-path: inset(var(--reveal-size) 0 0 var(--reveal-size));
+        }   
+        &.muia-direction-center-h {   
+            clip-path: inset(var(--reveal-size) var(--reveal-size) var(--reveal-size) var(--reveal-size));
+        }   
     }
     &:not(.muia-mobile-yes){    
         @media (max-width:767px){   

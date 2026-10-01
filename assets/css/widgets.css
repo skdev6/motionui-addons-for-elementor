@@ -634,20 +634,41 @@ body:not(.elementor-editor-active) .visibility__hidden {
 .muia-img-ani-yes.muia-img-reveal.muia-direction-top {
   clip-path: inset(0 0 var(--reveal-size) 0);
 }
+.muia-img-ani-yes.muia-img-reveal.muia-direction-center-h {
+  clip-path: inset(0 var(--reveal-size) 0 var(--reveal-size));
+}
+.muia-img-ani-yes.muia-img-poly-reveal {
+  --reveal-size: 100%;
+}
+.muia-img-ani-yes.muia-img-poly-reveal.muia-direction-left {
+  clip-path: polygon(0 0, calc(200% - var(--reveal-size) * 2) 0, 0 calc(200% - var(--reveal-size) * 2), 0 0);
+}
+.muia-img-ani-yes.muia-img-poly-reveal.muia-direction-top {
+  clip-path: polygon(100% 0, calc(-100% + var(--reveal-size) * 2) 0, 100% calc(200% - var(--reveal-size) * 2), 100% 0);
+}
+.muia-img-ani-yes.muia-img-poly-reveal.muia-direction-right {
+  clip-path: polygon(100% 100%, calc(-100% + var(--reveal-size) * 2) 100%, 100% calc(-100% + var(--reveal-size) * 2), 100% 100%);
+}
+.muia-img-ani-yes.muia-img-poly-reveal.muia-direction-bottom {
+  clip-path: polygon(0 100%, calc(200% - var(--reveal-size) * 2) 100%, 0 calc(-100% + var(--reveal-size) * 2), 0 100%);
+}
 .muia-img-ani-yes.muia-img-corner-reveal {
   --reveal-size: 100%;
 }
 .muia-img-ani-yes.muia-img-corner-reveal.muia-direction-left {
-  clip-path: polygon(0 0, calc(200% - var(--reveal-size) * 2) 0, 0 calc(200% - var(--reveal-size) * 2), 0 0);
+  clip-path: inset(var(--reveal-size) var(--reveal-size) 0 0);
 }
 .muia-img-ani-yes.muia-img-corner-reveal.muia-direction-top {
-  clip-path: polygon(100% 0, calc(-100% + var(--reveal-size) * 2) 0, 100% calc(200% - var(--reveal-size) * 2), 100% 0);
+  clip-path: inset(0 var(--reveal-size) var(--reveal-size) 0);
 }
 .muia-img-ani-yes.muia-img-corner-reveal.muia-direction-right {
-  clip-path: polygon(100% 100%, calc(-100% + var(--reveal-size) * 2) 100%, 100% calc(-100% + var(--reveal-size) * 2), 100% 100%);
+  clip-path: inset(0 0 var(--reveal-size) var(--reveal-size));
 }
 .muia-img-ani-yes.muia-img-corner-reveal.muia-direction-bottom {
-  clip-path: polygon(0 100%, calc(200% - var(--reveal-size) * 2) 100%, 0 calc(-100% + var(--reveal-size) * 2), 0 100%);
+  clip-path: inset(var(--reveal-size) 0 0 var(--reveal-size));
+}
+.muia-img-ani-yes.muia-img-corner-reveal.muia-direction-center-h {
+  clip-path: inset(var(--reveal-size) var(--reveal-size) var(--reveal-size) var(--reveal-size));
 }
 @media (max-width: 767px) {
   .muia-img-ani-yes:not(.muia-mobile-yes) {

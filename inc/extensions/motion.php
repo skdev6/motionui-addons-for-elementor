@@ -68,7 +68,7 @@ class Motion {
 				'type'               => Controls_Manager::NUMBER,
 				'condition'          => $duration_condition,
 				'separator'          => $args['separator'],
-				'default'            => 0.7,
+				'default'            => 0.85,
 				'min'  => 0,
 				'max'  => 10,
 				'step' => 0.1,
@@ -307,13 +307,14 @@ class Motion {
 		$defaults = array(
 			'name'      => '',
 			'condition' => array(),
-			'remove'    => array('center'),
+			'remove'    => array('center-h', 'center-v'),
 			'default'   => '',
 			'title_left'   => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
 			'title_right'  => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
 			'title_top'    => esc_html__( 'Top', 'motionui-addons-for-elementor' ),
 			'title_bottom' => esc_html__( 'Bottom', 'motionui-addons-for-elementor' ),
-			'title_center' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
+			'title_h_center' => esc_html__( 'Horizontal Center', 'motionui-addons-for-elementor' ),
+			'title_v_center' => esc_html__( 'Vertical Center', 'motionui-addons-for-elementor' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -340,9 +341,13 @@ class Motion {
 				'title' => $args['title_bottom'],
 				'icon'  => 'eicon-v-align-bottom',
 			),
-			'center' => array(
-				'title' => $args['title_center'],
-				'icon'  => 'eicon-v-align-center',
+			'center-h' => array(
+				'title' => $args['title_h_center'],
+				'icon'  => 'eicon-h-align-stretch',
+			),
+			'center-v' => array(
+				'title' => $args['title_v_center'],
+				'icon'  => 'eicon-v-align-stretch',
 			),
 		);
 

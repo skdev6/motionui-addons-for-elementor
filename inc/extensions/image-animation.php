@@ -104,6 +104,8 @@ class Image_Animation{
 				'options' => [
 					'reveal' => esc_html__( 'Image Reveal', 'motionui-addons-for-elementor' ),
 					'corner-reveal' => esc_html__( 'Corner Reveal', 'motionui-addons-for-elementor' ),
+					'poly-reveal' => esc_html__( 'poly Reveal', 'motionui-addons-for-elementor' ),
+					'circle-reveal' => esc_html__( 'Circle Reveal', 'motionui-addons-for-elementor' ),
 					'zoom' => esc_html__( 'Zoom', 'motionui-addons-for-elementor' ),
 					'prallax' => esc_html__( 'Image Prallax', 'motionui-addons-for-elementor' ),
 				],
@@ -114,18 +116,20 @@ class Image_Animation{
 		// the image script reads.
 		Motion::get_derection_control( $element, array(
 			'name'      => 'img',
+			'remove' => array('center-v'),
+			'title_h_center' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
 			'condition' => array_merge(
 				$enabled,
 				array(
-					'muia_img_ani_type' => ['reveal', 'corner-reveal', 'zoom'],
+					'muia_img_ani_type' => ['reveal', 'corner-reveal', 'zoom', 'poly-reveal', 'circle-reveal'],
 				)
 			),
 			'default'   => 'left',
 		) );
 		
-		Motion::get_derection_control( $element, array(
+		Motion::get_derection_control( $element, array(  
 			'name'      => 'img_axis',
-			'remove'    => ['bottom', 'center', 'right'],
+			'remove'    => ['bottom', 'center-h', 'center-v', 'right'],
 			'title_left' => esc_html__( 'Horizontal', 'motionui-addons-for-elementor' ),
 			'title_top' => esc_html__( 'Vertical', 'motionui-addons-for-elementor' ),
 			'condition' => array_merge(
