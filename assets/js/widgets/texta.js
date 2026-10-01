@@ -77,16 +77,13 @@
     }
 
     /** Alternative Reveal — neighbouring pieces come in from opposite sides. */
-    function buildAlt(handler, $scope, settings, pieces) {
-
-        const unmask = maskLines($scope);
-
-        timeline(handler, $scope, settings).fromTo(pieces,
-            { yPercent: (i) => (i % 2 ? -100 : 100) },
-            { yPercent: 0, stagger: stagger(settings), force3D: true }
-        );
-
-        return unmask;
+    function buildAlt(handler, $scope, options) {
+        const { parts, settings, from, to } = options;
+        
+         parts.forEach((part) => {
+            
+         })
+        
     }
 
     /** Text Reveal — the classic masked rise, with its own orientation. */
@@ -102,10 +99,9 @@
         const spaceFrom = isMask ? '100%' : from;
         const spaceTo   = isMask ? '0%'   : to;
 
-        const magnitude = String(spaceFrom).trim().replace(/^-/, '');
-        const start     = (direction === 'left' || direction === 'top')
-            ? '-' + magnitude
-            : magnitude;
+        const start = (direction === 'left' || direction === 'bottom')
+            ? spaceFrom
+            : '-' + spaceFrom;
 
         parts.forEach((part) => {
 
@@ -143,7 +139,7 @@
             .to(texts, {
                 [ axis ]: spaceTo,
                 opacity: 1,
-                stagger: stagger(settings),
+                stagger: stagger(settings, direction === 'right' ? 'end' : 'start'),
                 force3D: true
             });
         });
@@ -289,7 +285,7 @@
         const from = $scope.css('--muia-from') || '50px';  
         const to   = $scope.css('--muia-to')   || '0px';  
 
-        const cleanup = build(this, $scope, {textType:textTypes.split(',')[0], parts, settings, from, to});  
+        const cleanup = build(this, $scope, {textType:textTypes.split(',')[0],textTypes, parts, settings, from, to});    
 
         return function () {   
             if (typeof cleanup === 'function') { cleanup(); }

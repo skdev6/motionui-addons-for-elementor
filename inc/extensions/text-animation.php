@@ -136,14 +136,13 @@ class Text_Animation{
 			array(
 				'label'              => esc_html__( 'Text Animation', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SELECT,
-				'default'            => 'slide',
+				'default'            => 'reveal-text',
 				'frontend_available' => true,
 				'prefix_class'       => 'visibility__hidden muia-text-',    
 				'options'            => muia_pro_options(  
 					array(
-						'slide'             => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
-						'reveal-alt'       => esc_html__( 'Alternative Reveal', 'motionui-addons-for-elementor' ),
 						'reveal-text'      => esc_html__( 'Text Reveal', 'motionui-addons-for-elementor' ),
+						'reveal-alt'       => esc_html__( 'Alternative Reveal', 'motionui-addons-for-elementor' ),
 						'reveal-smoky'     => esc_html__( 'Smoky Reveal', 'motionui-addons-for-elementor' ),
 						'reveal-popup'     => esc_html__( 'Popup Reveal', 'motionui-addons-for-elementor' ),
 						'reveal-mixing'    => esc_html__( 'Mixing Reveal', 'motionui-addons-for-elementor' ),
@@ -160,11 +159,11 @@ class Text_Animation{
 			)
 		);
 
-		Motion::get_derection_control( $element, array(
+		Motion::get_derection_control( $element, array( 
 			'name'      => 'text',
 			'condition' => array_merge(
 				$enabled,
-				array( 'muia_text_ani' => array( 'slide', 'reveal-text' ) )
+				array( 'muia_text_ani' => array( 'reveal-text' ) )
 			),
 			'remove'    => array( 'center-v', 'center-h' ),
 			'default'   => 'bottom',
@@ -183,16 +182,29 @@ class Text_Animation{
 				),
             ]
         );
-		Motion::fromTo_controls($element, [  
+		Motion::fromTo_controls($element, [
 			'condition' => array_merge(
 				$enabled,
-				array( 'muia_text_ani' => array( 'slide', 'reveal-text' ) ),
+				array( 'muia_text_ani' => array( 'reveal-text' ) ),
 				array( 'muia_text_mask!' => 'yes' ),
 			),
 			'from_label'   => esc_html__( 'Space From', 'motionui-addons-for-elementor' ),
-			'to_label'     => esc_html__( 'Space To', 'motionui-addons-for-elementor' ),
 			'from_default' => array( 'unit' => 'px', 'size' => 50 ),
-			'to_default'   => array( 'unit' => 'px', 'size' => 0 )
+			'is_to' => false, 
+			'range'        => array(
+				'px' => array( 'min' => 0, 'max' => 500, 'step' => 1 ),
+				'%'  => array( 'min' => 0, 'max' => 100, 'step' => 1 ),
+				'vh' => array( 'min' => 0, 'max' => 100, 'step' => 1 ),
+				'vw' => array( 'min' => 0, 'max' => 100, 'step' => 1 ),
+			),
+		]);
+		Motion::fromTo_controls($element, [
+			'condition' => array_merge(
+				$enabled,
+				array( 'muia_text_ani' => array( 'reveal-alt' ) ),
+			),
+			'from_label'   => esc_html__( 'Even Vertical Offset', 'motionui-addons-for-elementor' ),
+			'to_label'   => esc_html__( 'Odd Vertical Offset', 'motionui-addons-for-elementor' ),
 		]);
 
 		$element->add_control(
@@ -213,10 +225,13 @@ class Text_Animation{
 				),
 			]
 		);
-		Motion::add_motion_settings_controls($element, array(
+		Motion::add_motion_settings_controls($element, array( 
 			'prefix'=>'text',
 			'stagger'=> true,
 			'condition'=> $enabled,
+			'default_duration'=> 0.8,
+			'default_stagger'=> 0.04,
+			'default_ease' => 'power4.out'
 		));
 
 		if(!muia_has_pro()){

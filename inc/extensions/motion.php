@@ -50,6 +50,9 @@ class Motion {
 			'with_scroll'        => false,
 			'reverse_ani'        => true,
 			'separator'          => 'before',
+			'default_duration'   => 1,
+			'default_stagger'   => 0.07,
+			'default_ease'   => 'power4.inOut',
 		);
 
 		$args      = wp_parse_args( $args, $defaults );
@@ -68,7 +71,7 @@ class Motion {
 				'type'               => Controls_Manager::NUMBER,
 				'condition'          => $duration_condition,
 				'separator'          => $args['separator'],
-				'default'            => 1,
+				'default'            => $args['default_duration'],
 				'min'  => 0,
 				'max'  => 10,
 				'step' => 0.1,
@@ -98,9 +101,9 @@ class Motion {
 					'label'              => esc_html__( 'Stagger Delay (s)', 'motionui-addons-for-elementor' ),
 					'type'               => Controls_Manager::NUMBER,
 					'condition'          => $stagger_condition,
-					'default'            => 0.07,
+					'default'            => $args['default_stagger'],
 					'min'  => 0,
-					'max'  => 0.3,
+					'max'  => 1,
 					'step' => 0.001,
 					'frontend_available' => true,
 				)
@@ -113,7 +116,7 @@ class Motion {
 				'label'              => esc_html__( 'Easing', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SELECT,
 				'condition'          => $ease_condition,
-				'default'            => 'power4.inOut',
+				'default'            => $args['default_ease'],
 				'options'            => self::get_ease_options(),
 				'frontend_available' => true,
 			)
@@ -399,11 +402,14 @@ class Motion {
 			'from_default' => array( 'unit' => '%', 'size' => 0 ),
 			'to_default'   => array( 'unit' => '%', 'size' => 0 ),
 			'separator'    => 'before',
+			'is_form' => true,
+			'is_to' => true
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 		$name = sanitize_key( $args['name'] );
 
+		if($args['is_form']):
 		$element->add_responsive_control(
 			$name . 'muia_motion_from',
 			array(
@@ -420,7 +426,8 @@ class Motion {
 				),
 			)
 		);
-
+		endif;
+		if($args['is_to']):
 		$element->add_responsive_control(
 			$name . 'muia_motion_to',
 			array(
@@ -436,5 +443,6 @@ class Motion {
 				),
 			)
 		);
+		endif;
 	}
 }
