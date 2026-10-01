@@ -697,8 +697,28 @@ body:not(.elementor-editor-active) .visibility__hidden {
   --reveal-x: 50%;
   --reveal-y: 50%;
 }
+.muia-img-ani-yes.muia-img-tiles-reveal {
+  position: relative;
+}
 .muia-img-ani-yes.muia-img-tiles-reveal .muia-img-tiles-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: grid;
+  overflow: hidden;
+  pointer-events: none;
+}
+.muia-img-ani-yes.muia-img-tiles-reveal.muia-direction-left .muia-img-tiles-wrap, .muia-img-ani-yes.muia-img-tiles-reveal.muia-direction-right .muia-img-tiles-wrap, .muia-img-ani-yes.muia-img-tiles-reveal.muia-direction-center-h .muia-img-tiles-wrap {
+  grid-template-rows: repeat(var(--ts, 5), 1fr);
+}
+.muia-img-ani-yes.muia-img-tiles-reveal.muia-direction-top .muia-img-tiles-wrap, .muia-img-ani-yes.muia-img-tiles-reveal.muia-direction-bottom .muia-img-tiles-wrap, .muia-img-ani-yes.muia-img-tiles-reveal.muia-direction-center-v .muia-img-tiles-wrap {
+  grid-template-columns: repeat(var(--ts, 5), 1fr);
+}
+.muia-img-ani-yes.muia-img-tiles-reveal .muia-img-tile {
+  background-size: 100% calc(var(--ts, 5) * 100%);
+  background-position: center calc(var(--p, 0) * 1%);
+  margin-right: 0;
+  margin-bottom: -0.5px;
 }
 @media (max-width: 767px) {
   .muia-img-ani-yes:not(.muia-mobile-yes) {

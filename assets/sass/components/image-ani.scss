@@ -139,10 +139,37 @@
             --reveal-y: 50%; 
         }
     }
-    &.muia-img-tiles-reveal{  
-       .muia-img-tiles-wrap{
+    // Tiles reveal. imga.js injects the wrapper and the tiles, sets --ts to
+    // the tile count and --p to each tile's share of the background, then
+    // staggers them in. Everything here is layout; the motion is the
+    // timeline in buildTiles.
+    &.muia-img-tiles-reveal{
+        position: relative;
+
+        .muia-img-tiles-wrap{
+            position: absolute;
+            top: 0;
+            left: 0;
             display: grid;
-       }
+            overflow: hidden;
+            pointer-events: none;
+        }  
+        &.muia-direction-left, &.muia-direction-right, &.muia-direction-center-h{
+            .muia-img-tiles-wrap{
+                grid-template-rows: repeat(var(--ts, 5), 1fr);
+            }
+        }
+        &.muia-direction-top, &.muia-direction-bottom, &.muia-direction-center-v{
+            .muia-img-tiles-wrap{
+                grid-template-columns: repeat(var(--ts, 5), 1fr);
+            }
+        }   
+        .muia-img-tile{
+            background-size: 100% calc(var(--ts, 5) * 100%);
+            background-position: center calc(var(--p, 0) * 1%);
+            margin-right: 0;
+            margin-bottom: -0.5px;
+        }
     }
     &:not(.muia-mobile-yes){    
         @media (max-width:767px){   

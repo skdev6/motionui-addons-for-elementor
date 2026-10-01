@@ -126,7 +126,7 @@ class Image_Animation{
 				),
 				'default'            => 5,
 				'min'  => 3,
-				'max'  => 20,
+				'max'  => 100,
 				'step' => 1,
 				'frontend_available' => true,
 			)
@@ -140,7 +140,18 @@ class Image_Animation{
 			'condition' => array_merge(
 				$enabled,
 				array(
-					'muia_img_ani_type' => ['reveal', 'corner-reveal', 'zoom', 'poly-reveal', 'circle-reveal', 'tiles-reveal'],
+					'muia_img_ani_type' => ['reveal', 'corner-reveal', 'zoom', 'poly-reveal', 'circle-reveal'],
+				)
+			),
+			'default'   => 'left',
+		) );
+		Motion::get_derection_control( $element, array(
+			'name'      => 'imgtiles',
+			'remove' => array(''),
+			'condition' => array_merge(
+				$enabled,
+				array(
+					'muia_img_ani_type' => ['tiles-reveal'],
 				)
 			),
 			'default'   => 'left',
