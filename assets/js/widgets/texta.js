@@ -76,16 +76,49 @@
 
     }
 
-    /** Alternative Reveal — neighbouring pieces come in from opposite sides. */
+    /**
+     * Alternative Reveal — even and odd pieces drop in from opposite offsets.
+     *
+     * Vertical only, and no mask: the two offsets are the whole effect. They are
+     * used exactly as the panel gives them, signs included, so Even 50px against
+     * Odd -50px has alternate pieces rising and falling into the same line.
+     */
     function buildAlt(handler, $scope, options) {
-        const { parts, settings, from, to } = options;
-        
-         parts.forEach((part) => {
-            
-         })
-        
-    }
 
+        const {  parts, settings, from, to } = options;
+
+        parts.forEach((part) => {
+
+            const wrap  = part.elements[0];
+            const texts = wrap.querySelectorAll('.muia-text-char'); 
+
+            if (!texts || !texts.length) {
+                return;
+            }
+
+            // Index 0 counts as even, so the first piece takes the Even offset.
+            gsap.set(texts, {
+                y: (i) => (i % 2 === 0 ? from : to),
+                opacity: 0
+            });
+
+            handler.addTimeline(gsap.timeline({
+                defaults: { ...settings.muiaTl, delay: 0 },
+                delay: settings.muiaTl.delay,
+                scrollTrigger: {
+                    trigger: wrap,
+                    ...settings.muiaTrigger,
+                    invalidateOnRefresh: true
+                }
+            }))
+            .to(texts, {
+                y: 0,
+                opacity: 1,
+                stagger: stagger(settings),
+                force3D: true
+            });
+        });
+    }
     /** Text Reveal — the classic masked rise, with its own orientation. */
     function buildReveal(handler, $scope, options) {
 

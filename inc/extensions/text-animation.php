@@ -198,13 +198,16 @@ class Text_Animation{
 				'vw' => array( 'min' => 0, 'max' => 100, 'step' => 1 ),
 			),
 		]);
-		Motion::fromTo_controls($element, [
+		Motion::fromTo_controls($element, [ 
+			'name' => 'text_offset',
 			'condition' => array_merge(
 				$enabled,
 				array( 'muia_text_ani' => array( 'reveal-alt' ) ),
 			),
 			'from_label'   => esc_html__( 'Even Vertical Offset', 'motionui-addons-for-elementor' ),
 			'to_label'   => esc_html__( 'Odd Vertical Offset', 'motionui-addons-for-elementor' ),
+			'from_default' => array( 'unit' => 'px', 'size' => -20 ),
+			'to_default'   => array( 'unit' => 'px', 'size' => 80 ),
 		]);
 
 		$element->add_control(
