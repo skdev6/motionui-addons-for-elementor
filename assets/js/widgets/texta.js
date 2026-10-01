@@ -91,23 +91,45 @@
 
     /** Text Reveal — the classic masked rise, with its own orientation. */
     function buildReveal(handler, $scope, options) {
-        const {textType, parts, settings, from, to} = options;
-        const isMask = settings.muia_text_mask === 'yes';
-        
-        parts.forEach(part=>{   
-            let texts = part[textType];
-            let wrap = part.elements[0];
-            let spaceFrom = isMask ? '100%' : from;
-            let spaceTo = isMask ? '100%' : to;
-            isMask && $(texts).wrapAll('<div class="muia-text-mask"></div>');
 
-            gsap.set(texts, muiaDirection === 'left' || muiaDirection === 'right' ? {  
-                x:muiaDirection === 'left' ? '-'+spaceFrom : muiaDirection === 'right' ? '-'+spaceFrom : 0, 
-                opacity:isMask ? 1 : 0
-            } : {
-                y:muiaDirection === 'top' ? '-'+spaceFrom : muiaDirection === 'bottom' ? spaceFrom : 0, 
-                opacity:isMask ? 1 : 0
-            });  
+        const { textType, parts, settings, from, to } = options;
+
+        const direction  = dirOf(settings, 'bottom');
+        const isMask     = settings.muia_text_mask === 'yes';
+        const horizontal = direction === 'left' || direction === 'right';
+        const axis       = horizontal ? 'x' : 'y';
+
+        const spaceFrom = isMask ? '100%' : from;
+        const spaceTo   = isMask ? '0%'   : to;
+
+        const magnitude = String(spaceFrom).trim().replace(/^-/, '');
+        const start     = (direction === 'left' || direction === 'top')
+            ? '-' + magnitude
+            : magnitude;
+
+        parts.forEach((part) => {
+
+            const texts = part[ textType ];
+            const wrap  = part.elements[0];
+
+            if (!texts || !texts.length) {
+                return;
+            }
+
+            if (isMask) {
+                $(texts).wrap('<span class="muia-text-mask"></span>');
+
+                gsap.set($(wrap).find('.muia-text-mask').toArray(), {
+                    display: 'inline-block',
+                    overflow: 'hidden',
+                    verticalAlign: 'top'
+                });
+            }
+
+            gsap.set(texts, {
+                [ axis ]: start,
+                opacity: isMask ? 1 : 0
+            });
 
             handler.addTimeline(gsap.timeline({
                 defaults: { ...settings.muiaTl, delay: 0 },
@@ -116,21 +138,16 @@
                     trigger: wrap,
                     ...settings.muiaTrigger,
                     invalidateOnRefresh: true
-                },
-                onStart: function () {  },
-                onComplete: function () {  }
+                }
             }))
-            .to(texts, {  
-                x:spaceTo, 
-                y:spaceTo, 
-                opacity:1,
+            .to(texts, {
+                [ axis ]: spaceTo,
+                opacity: 1,
                 stagger: stagger(settings),
                 force3D: true
             });
         });
-        
     }
-
     /** Smoky Reveal — the pieces resolve out of a blur as they drift up. */
     function buildSmoky(handler, $scope, settings, pieces) {
 
