@@ -76,10 +76,10 @@
                 invalidateOnRefresh: true
             }
         }))
-        .to($tiles,{    
+        .to($tiles.toArray(), {
             '--reveal-size': '0%',
             stagger:{
-                amount: settings.muiaTl.stagger,
+                each: settings.muiaTl.stagger,
                 from: (direction === 'center-v' || direction === 'center-h') ? 'center' : 'start'
             },
             onComplete(){
