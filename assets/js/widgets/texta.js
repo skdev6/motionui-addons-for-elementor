@@ -178,66 +178,24 @@
         });
     }
     /** Smoky Reveal — the pieces resolve out of a blur as they drift up. */
-    function buildSmoky(handler, $scope, settings, pieces) {
+    function buildSmoky(handler, $scope, options) {
 
-        timeline(handler, $scope, settings).fromTo(pieces,
-            { autoAlpha: 0, yPercent: 40, filter: 'blur(12px)' },
-            {
-                autoAlpha: 1,
-                yPercent: 0,
-                filter: 'blur(0px)',
-                stagger: stagger(settings),
-                force3D: true
-            }
-        );
+        
     }
-
     /** Popup Reveal — each piece springs up off its own baseline. */
-    function buildPopup(handler, $scope, settings, pieces) {
+    function buildPopup(handler, $scope, options) {
 
-        gsap.set(pieces, { transformOrigin: '50% 100%' });
-
-        timeline(handler, $scope, settings).fromTo(pieces,
-            { autoAlpha: 0, scale: 0, yPercent: 30 },
-            {
-                autoAlpha: 1,
-                scale: 1,
-                yPercent: 0,
-                // Overshoot regardless of the chosen easing: a popup without one
-                // is just a fade.
-                ease: 'back.out(2)',
-                stagger: stagger(settings),
-                force3D: true
-            }
-        );
     }
 
     /** Mixing Reveal — the pieces scatter in from everywhere and settle. */
-    function buildMixing(handler, $scope, settings, pieces) {
-
-        const random = gsap.utils.random;
-
-        timeline(handler, $scope, settings).fromTo(pieces,
-            {
-                autoAlpha: 0,
-                // Seeded per piece, so no two runs land the same way.
-                xPercent: () => random(-150, 150),
-                yPercent: () => random(-150, 150),
-                rotation: () => random(-60, 60)
-            },
-            {
-                autoAlpha: 1,
-                xPercent: 0,
-                yPercent: 0,
-                rotation: 0,
-                stagger: stagger(settings, 'random'),
-                force3D: true
-            }
-        );
+    function buildMixing(handler, $scope, options) {
+        
     }
 
     /** Scale — the pieces settle down out of being oversized. */
-    function buildScale(handler, $scope, settings, pieces) {
+    function buildScale(handler, $scope, options) {
+
+        const { settings, pieces } = options;
 
         gsap.set(pieces, { transformOrigin: '50% 50%' });
 
@@ -248,23 +206,8 @@
     }
 
     /** Text Flip — the pieces swing down into place on their top edge. */
-    function buildFlip(handler, $scope, settings, pieces) {
-
-        const lines = $scope.find('.muia-text-line').toArray();
-
-        // The perspective belongs to the parent, or every piece gets its own
-        // vanishing point and the row reads as flat.
-        gsap.set(lines, { perspective: 600 });
-        gsap.set(pieces, { transformOrigin: '50% 0%', transformStyle: 'preserve-3d' });
-
-        timeline(handler, $scope, settings).fromTo(pieces,
-            { autoAlpha: 0, rotationX: -90 },
-            { autoAlpha: 1, rotationX: 0, stagger: stagger(settings), force3D: true }
-        );
-
-        return function () {
-            gsap.set(lines, { clearProps: 'perspective' });
-        };
+    function buildFlip(handler, $scope, options) {
+                
     }
 
     const BUILDERS = {
