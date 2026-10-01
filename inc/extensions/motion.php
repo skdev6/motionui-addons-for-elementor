@@ -61,14 +61,14 @@ class Motion {
 		$ease_condition = ! empty( $args['ease_condition'] ) ? array_merge( $condition, $args['ease_condition'] ) : $condition;
 		$trigger_condition = ! empty( $args['trigger_condition'] ) ? array_merge( $condition, $args['trigger_condition'] ) : $condition;
 		// Duration.
-		$element->add_control(
+		$element->add_control(   
 			$prefix . 'muia_motion_duration',
 			array(
 				'label'              => esc_html__( 'Duration (s)', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::NUMBER,
 				'condition'          => $duration_condition,
 				'separator'          => $args['separator'],
-				'default'            => 0.85,
+				'default'            => 1,
 				'min'  => 0,
 				'max'  => 10,
 				'step' => 0.1,
@@ -113,7 +113,7 @@ class Motion {
 				'label'              => esc_html__( 'Easing', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SELECT,
 				'condition'          => $ease_condition,
-				'default'            => 'power3.out',
+				'default'            => 'power4.inOut',
 				'options'            => self::get_ease_options(),
 				'frontend_available' => true,
 			)

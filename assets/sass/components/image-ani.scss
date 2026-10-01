@@ -61,8 +61,21 @@
                 0 100%
             );
         }
-        &.muia-direction-center-h {  
-            
+        &.muia-direction-center-h {
+            // A diamond opening out of the middle, to keep the diagonal
+            // character the corners above have. The half-diagonal runs to
+            // 200% so every corner is comfortably inside it once open: a
+            // corner sits 50% + 50% from the centre, well under 200%.
+            //
+            //   --reveal-size 100%  ->  200% - 200% = 0, every point lands
+            //                           on 50% 50% and nothing shows
+            //               0%  ->  200%, the diamond covers the box
+            clip-path: polygon(
+                50% calc(50% - (200% - var(--reveal-size) * 2)),
+                calc(50% + (200% - var(--reveal-size) * 2)) 50%,
+                50% calc(50% + (200% - var(--reveal-size) * 2)),
+                calc(50% - (200% - var(--reveal-size) * 2)) 50%
+            );
         }
     }
     &.muia-img-corner-reveal{
@@ -90,6 +103,46 @@
         &.muia-direction-center-h {   
             clip-path: inset(var(--reveal-size) var(--reveal-size) var(--reveal-size) var(--reveal-size));
         }   
+    }
+    
+    &.muia-img-circle-reveal{  
+        --reveal-size: 100%;
+        clip-path: circle(calc(100% - var(--reveal-size)) at var(--reveal-x) var(--reveal-y));
+        
+        // Bottom-Left (0% 100%)
+        &.muia-direction-left { 
+            --reveal-x: calc(50% - (var(--reveal-size) * 0.5)); 
+            --reveal-y: calc(50% + (var(--reveal-size) * 0.5)); 
+        }
+
+        // Top-Center (50% 0%)
+        &.muia-direction-top { 
+            --reveal-x: 50%; 
+            --reveal-y: calc(50% - (var(--reveal-size) * 0.5)); 
+        }
+
+        // Bottom-Right (100% 100%)
+        &.muia-direction-right { 
+            --reveal-x: calc(50% + (var(--reveal-size) * 0.5)); 
+            --reveal-y: calc(50% + (var(--reveal-size) * 0.5)); 
+        }
+
+        // Bottom-Center (50% 100%)
+        &.muia-direction-bottom { 
+            --reveal-x: 50%; 
+            --reveal-y: calc(50% + (var(--reveal-size) * 0.5)); 
+        }
+
+        // Pure Center (50% 50% - stays locked in the middle)
+        &.muia-direction-center-h { 
+            --reveal-x: 50%; 
+            --reveal-y: 50%; 
+        }
+    }
+    &.muia-img-tiles-reveal{  
+       .muia-img-tiles-wrap{
+            display: grid;
+       }
     }
     &:not(.muia-mobile-yes){    
         @media (max-width:767px){   

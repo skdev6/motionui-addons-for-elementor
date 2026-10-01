@@ -15,13 +15,13 @@
                 invalidateOnRefresh: true
             },
             onStart: function () {
-                gsap.set($scope, { willChange: 'clip-path' });
+                gsap.set($scope, { willChange: 'clip-path', overflow: 'hidden' });
                 gsap.set(img, { willChange: 'transform' });
             },
             onComplete: function () {
-                gsap.set([ $scope, img ], { willChange: 'auto' });
+                gsap.set([ $scope, img ], { willChange: 'auto', overflow: '' });
             }
-        }));
+        }));    
 
         // fromTo, not to: on a rebuild the start would otherwise be read from
         // computed style, which mid-animation is whatever the last frame wrote.
@@ -35,7 +35,44 @@
             force3D: true
         }, '<');
     }
+    function buildTiles(handler, $scope, img, settings) {
+        
+        let tiles = settings.img_muia_num_of_tiles || 5;
+        let direction = settings.muiaDirection || 'top';
+            direction = direction === "center-v" || direction === "center-h" ? "center" : direction;
 
+        $scope.append('<div class="muia-img-tiles-wrap" style="--ts: ' + tiles + ';></div>');
+
+        for (let i = 0; i < tiles; i++) {   
+            $scope.find('.muia-img-tiles-wrap').append(`
+                <div class="muia-img-tile" style="background-image:url(${img.attr('src')});"></div>
+            `);
+        }
+
+        handler.addTimeline(gsap.timeline({
+            defaults: { ...settings.muiaTl, delay: 0 },
+            delay: settings.muiaTl.delay,
+            scrollTrigger: {
+                trigger: $scope,
+                ...settings.muiaTrigger,
+                invalidateOnRefresh: true
+            },
+            onStart: function () {  },
+            onComplete: function () {  }
+        }))
+
+        function adjustDimansions() {
+            let tileWrap = $scope.find('.muia-img-tiles-wrap');
+            tileWrap.css('width', img.width() + 'px');
+            tileWrap.css('height', img.height() + 'px');
+        }
+        adjustDimansions();
+        $(window).on('resize', adjustDimansions);
+
+        return ()=>{
+            $(window).off('resize', adjustDimansions);
+        }
+    }
     function buildZoom(handler, $scope, img, settings) {  
 
         gsap.set(img, { transition: 'none', force3D: true });
@@ -51,8 +88,8 @@
             onStart: function () { gsap.set(img, { willChange: 'transform' }); },
             onComplete: function () { gsap.set(img, { willChange: 'auto' }); }
         })).fromTo(img,
-            { scale: .3, transformOrigin:settings.muiaDirection, opacity:0 },
-            { scale: 1, force3D: true, opacity:1 }
+            { scale: 0, transformOrigin:settings.muiaDirection === "center-v" || settings.muiaDirection === "center-h" ? "center" : settings.muiaDirection },
+            { scale: 1, force3D: true }
         );
     }
 
@@ -87,6 +124,8 @@
         'reveal':        buildMask,
         'corner-reveal': buildMask,
         'poly-reveal':   buildMask,
+        'circle-reveal':   buildMask,
+        'tiles-reveal':   buildTiles,
         'zoom':          buildZoom,
         'prallax':       buildParallax
     };

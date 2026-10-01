@@ -53,8 +53,8 @@ return [
 		'demo'        => get_muia_demo_url( '/element/burger-button/' ),
 		'tutorial'    => get_muia_tuto_url( '' ),
 	],
-	'animated-slider' => [
-		'title'       => __( 'Animated Slider', 'motionui-addons-for-elementor' ),
+	'animated-slider' => [   
+		'title'       => __( 'Animated Slide', 'motionui-addons-for-elementor' ),
 		'category'    => [ 'image' ],
 		'is_active'   => true,
 		'is_pro'      => false,

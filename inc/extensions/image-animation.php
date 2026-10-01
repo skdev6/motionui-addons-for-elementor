@@ -106,11 +106,30 @@ class Image_Animation{
 					'corner-reveal' => esc_html__( 'Corner Reveal', 'motionui-addons-for-elementor' ),
 					'poly-reveal' => esc_html__( 'poly Reveal', 'motionui-addons-for-elementor' ),
 					'circle-reveal' => esc_html__( 'Circle Reveal', 'motionui-addons-for-elementor' ),
+					'tiles-reveal' => esc_html__( 'Tiles Reveal', 'motionui-addons-for-elementor' ),
 					'zoom' => esc_html__( 'Zoom', 'motionui-addons-for-elementor' ),
 					'prallax' => esc_html__( 'Image Prallax', 'motionui-addons-for-elementor' ),
 				],
 				'condition' => $enabled,
 			]
+		);
+		$element->add_control(
+			'img_muia_num_of_tiles',
+			array(
+				'label'              => esc_html__( 'Number of Tiles', 'motionui-addons-for-elementor' ),
+				'type'               => \Elementor\Controls_Manager::NUMBER,
+				'condition'          => array_merge(
+					$enabled,
+					array(
+						'muia_img_ani_type' => 'tiles-reveal',
+					)
+				),
+				'default'            => 5,
+				'min'  => 3,
+				'max'  => 20,
+				'step' => 1,
+				'frontend_available' => true,
+			)
 		);
 		// The shared picker from motion.php, under the muia_ani_direction name
 		// the image script reads.
@@ -121,12 +140,12 @@ class Image_Animation{
 			'condition' => array_merge(
 				$enabled,
 				array(
-					'muia_img_ani_type' => ['reveal', 'corner-reveal', 'zoom', 'poly-reveal', 'circle-reveal'],
+					'muia_img_ani_type' => ['reveal', 'corner-reveal', 'zoom', 'poly-reveal', 'circle-reveal', 'tiles-reveal'],
 				)
 			),
 			'default'   => 'left',
 		) );
-		
+
 		Motion::get_derection_control( $element, array(  
 			'name'      => 'img_axis',
 			'remove'    => ['bottom', 'center-h', 'center-v', 'right'],
@@ -162,7 +181,7 @@ class Image_Animation{
 	
 			'stagger'=> true,
 			'stagger_condition'=>[
-				'muia_img_ani_type'=>['grid-reveal', 'column-reveal']
+				'muia_img_ani_type'=>['tiles-reveal']
 			],
 			'condition'=> array_merge(
 				$enabled,
