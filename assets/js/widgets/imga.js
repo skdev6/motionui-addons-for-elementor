@@ -47,9 +47,6 @@
 
         let direction = settings.muiaDirection || 'top'; 
         let tiles     = Math.max(2, parseInt(settings.img_muia_num_of_tiles, 10) || 5);
-        // left, right and center-h cut into columns; the rest cut into rows.
-        const horizontal = direction === 'left' || direction === 'right' || direction === 'center-h';
-
 
         const $wrap = $('<div class="muia-img-tiles-wrap"></div>').css('--ts', tiles);
         const src   = img.attr('src');
@@ -68,29 +65,10 @@
 
         const $tiles = $wrap.find('.muia-img-tile');
 
-        // The tiles carry the picture now, so the image underneath only has to
-        // hold the box open. Set from here rather than the stylesheet, so a
-        // widget whose script never runs still shows its image.
         gsap.set(img, { autoAlpha: 0 });
 
-        const origin = {
-            'left':     'left center',
-            'right':    'right center',
-            'top':      'center top',
-            'bottom':   'center bottom',
-            'center-h': 'center center',
-            'center-v': 'center center'
-        }[ direction ] || 'center center';
-
-        // Which end the stagger starts from, so the tiles sweep the same way
-        // the direction reads.
-        const from = (direction === 'right' || direction === 'bottom') ? 'end'
-            : (direction === 'center') ? 'center'
-            : 'start';
-
-        const axis = horizontal ? 'scaleX' : 'scaleY';
-
-        gsap.set($tiles.toArray(), { transformOrigin: origin, force3D: true });
+        console.log(settings);
+        
 
         handler.addTimeline(gsap.timeline({
             defaults: { ...settings.muiaTl, delay: 0 },
@@ -100,25 +78,23 @@
                 ...settings.muiaTrigger,
                 invalidateOnRefresh: true
             }
-        })).fromTo($tiles.toArray(),
-            { [ axis ]: 0 },
-            {
-                [ axis ]: 1,
-                force3D: true,
-                stagger: { each: settings.muiaTl.stagger, from: from }
+        }))
+        .to($tiles,{ 
+            '--reveal-size': '0%',
+            stagger:settings.muiaTl.stagger,
+            onComplete(){
+                // $wrap.remove();
+                // gsap.set(img, { clearProps: 'all' });
             }
-        );
+        });  
 
         // The wrapper is positioned, not laid out, so it has no size of its
         // own — it takes the image's.
         function adjustDimansions() {    
             $wrap.css({ width: img.width() + 'px', height: img.height() + 'px' });
         }
-
         adjustDimansions();
         $(window).on('resize.muiaTiles', adjustDimansions);
-
-        // The image may still be loading, in which case width() was 0 above.
         img.one('load', adjustDimansions);
 
         return () => {

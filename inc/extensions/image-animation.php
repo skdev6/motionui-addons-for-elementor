@@ -189,7 +189,6 @@ class Image_Animation{
 		Motion::add_motion_settings_controls($element, array(
 			'prefix'=>'img',
 			'with_scroll'=> true,
-	
 			'stagger'=> true,
 			'stagger_condition'=>[
 				'muia_img_ani_type'=>['tiles-reveal']

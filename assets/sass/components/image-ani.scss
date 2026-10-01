@@ -139,13 +139,12 @@
             --reveal-y: 50%; 
         }
     }
-    // Tiles reveal. imga.js injects the wrapper and the tiles, sets --ts to
-    // the tile count and --p to each tile's share of the background, then
-    // staggers them in. Everything here is layout; the motion is the
-    // timeline in buildTiles.
+    
     &.muia-img-tiles-reveal{
         position: relative;
-
+        .muia-img-tile{
+            --reveal-size: 100%;
+        }
         .muia-img-tiles-wrap{
             position: absolute;
             top: 0;
@@ -158,18 +157,28 @@
             .muia-img-tiles-wrap{
                 grid-template-rows: repeat(var(--ts, 5), 1fr);
             }
+            .muia-img-tile{
+                background-size: 100% calc(var(--ts, 5) * 100%);
+                background-position: center calc(var(--index, 0) / max(var(--ts, 5) - 1, 1) * 100%);
+                margin-bottom: -0.5px;
+            }
         }
         &.muia-direction-top, &.muia-direction-bottom, &.muia-direction-center-v{
             .muia-img-tiles-wrap{
                 grid-template-columns: repeat(var(--ts, 5), 1fr);
             }
+            .muia-img-tile{
+                background-size: calc(var(--ts, 5) * 100%) 100%;
+                background-position: calc(var(--index, 0) / max(var(--ts, 5) - 1, 1) * 100%) center;
+                margin-right: -0.5px;
+            }
         }   
-        .muia-img-tile{
-            background-size: 100% calc(var(--ts, 5) * 100%);
-            background-position: center calc(var(--p, 0) * 1%);
-            margin-right: 0;
-            margin-bottom: -0.5px;
-        }
+        &.muia-direction-left .muia-img-tile{ clip-path: inset(0 var(--reveal-size) 0 0); }
+        &.muia-direction-right .muia-img-tile{ clip-path: inset(0 0 0 var(--reveal-size)); }
+        &.muia-direction-top .muia-img-tile{ clip-path: inset(0 0 var(--reveal-size) 0); }
+        &.muia-direction-bottom .muia-img-tile{ clip-path: inset(var(--reveal-size) 0 0 0); }
+        &.muia-direction-center-h .muia-img-tile{ clip-path: inset(0 var(--reveal-size) 0 var(--reveal-size)); }
+        &.muia-direction-center-v .muia-img-tile{ clip-path: inset(var(--reveal-size) 0 var(--reveal-size) 0); } 
     }
     &:not(.muia-mobile-yes){    
         @media (max-width:767px){   

@@ -61,8 +61,15 @@ window.muia = window.muia || {};
         const getAniSettings = ($scope, settings = {}) => {
 
             const getNumber = (value, fallback) => {
-                const number = parseFloat(value?.size ?? value);
-                return isNaN(number) ? fallback : number;
+                const rawValue = (value && typeof value === 'object' && 'size' in value) 
+                    ? value.size 
+                    : value;
+
+                const num = Number(rawValue);
+                if (Number.isNaN(num) || rawValue === null || rawValue === '') {
+                    return fallback;
+                }
+                return num;
             };
 
             const prefixKey = Object.keys(settings).find(key =>

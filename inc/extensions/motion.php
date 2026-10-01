@@ -98,7 +98,7 @@ class Motion {
 					'label'              => esc_html__( 'Stagger', 'motionui-addons-for-elementor' ),
 					'type'               => Controls_Manager::NUMBER,
 					'condition'          => $stagger_condition,
-					'default'            => 0,
+					'default'            => 0.04,
 					'min'  => 0,
 					'max'  => 0.3,
 					'step' => 0.001,
