@@ -166,8 +166,6 @@
     function imageAni($scope, settings) {    
         $scope.removeClass('visibility__hidden');
 
-        console.log(settings);
-        
 
         if(!settings.isDesktop && !settings.isMobile) return; 
         

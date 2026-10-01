@@ -136,22 +136,19 @@ class Text_Animation{
 			array(
 				'label'              => esc_html__( 'Text Animation', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SELECT,
-				'default'            => 'fade',
+				'default'            => 'slide',
 				'frontend_available' => true,
-				'prefix_class'       => 'visibility__hidden muia-text-',
-				// How the editor finds the Pro choices below.
-				'classes'            => muia_pro_select_class(),
-				'options'            => muia_pro_options(
+				'prefix_class'       => 'visibility__hidden muia-text-',    
+				'options'            => muia_pro_options(  
 					array(
-						'fade'   => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Alternative Reveal', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Text Reveal', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Smoky Reveal', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Popup Reveal', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Mixing Reveal', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Scale', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Scale', 'motionui-addons-for-elementor' ),
-						'reveal' => esc_html__( 'Text Flip', 'motionui-addons-for-elementor' ),
+						'slide'             => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
+						'reveal-alt'       => esc_html__( 'Alternative Reveal', 'motionui-addons-for-elementor' ),
+						'reveal-text'      => esc_html__( 'Text Reveal', 'motionui-addons-for-elementor' ),
+						'reveal-smoky'     => esc_html__( 'Smoky Reveal', 'motionui-addons-for-elementor' ),
+						'reveal-popup'     => esc_html__( 'Popup Reveal', 'motionui-addons-for-elementor' ),
+						'reveal-mixing'    => esc_html__( 'Mixing Reveal', 'motionui-addons-for-elementor' ),
+						'reveal-scale'   => esc_html__( 'Scale', 'motionui-addons-for-elementor' ),
+						'reveal-flip'      => esc_html__( 'Text Flip', 'motionui-addons-for-elementor' ),
 					),
 					array(
 						'wave'             => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
@@ -163,31 +160,40 @@ class Text_Animation{
 			)
 		);
 
-		if(muia_has_pro()){
-			// Two direction pickers on one element, so they need distinct
-			// prefixes: both resolve to {prefix}muia_motion_direction, and
-			// Elementor drops a control whose name is already taken. Auto
-			// scroll is horizontal only, hence the removals.
-			Motion::get_derection_control( $element, array(
-				'name'      => 'text_scroll',
-				'condition' => array_merge(
-					$enabled,
-					array( 'muia_text_ani' => array( 'text-auto-scroll' ) )
-				),
-				'remove'    => array( 'top', 'bottom', 'center' ),
-				'default'   => 'right',
-			) );
-		}
-
 		Motion::get_derection_control( $element, array(
 			'name'      => 'text',
 			'condition' => array_merge(
 				$enabled,
-				array( 'muia_text_ani!' => array( 'scramble', 'text-auto-scroll' ) )
+				array( 'muia_text_ani' => array( 'slide', 'reveal-text' ) )
 			),
-			'remove'    => array( 'center' ),
+			'remove'    => array( 'center-v', 'center-h' ),
 			'default'   => 'bottom',
 		) );
+
+        $element->add_control(   
+            'muia_text_mask',
+            [
+                'label'              => __( 'Mask', 'motionui-addons-for-elementor' ),
+                'type'               => Controls_Manager::SWITCHER,
+                'return_value'       => 'yes',
+                'frontend_available' => true,
+				'condition' => array_merge(
+					$enabled,
+					array( 'muia_text_ani' => array( 'reveal-text' ) )
+				),
+            ]
+        );
+		Motion::fromTo_controls($element, [  
+			'condition' => array_merge(
+				$enabled,
+				array( 'muia_text_ani' => array( 'slide', 'reveal-text' ) ),
+				array( 'muia_text_mask!' => 'yes' ),
+			),
+			'from_label'   => esc_html__( 'Space From', 'motionui-addons-for-elementor' ),
+			'to_label'     => esc_html__( 'Space To', 'motionui-addons-for-elementor' ),
+			'from_default' => array( 'unit' => 'px', 'size' => 50 ),
+			'to_default'   => array( 'unit' => 'px', 'size' => 0 )
+		]);
 
 		$element->add_control(
 			'muia_text_ani_by',
@@ -203,29 +209,13 @@ class Text_Animation{
 				],
 				'condition' => array_merge(
 					$enabled,
-					array( 'muia_text_ani!' => array( 'scramble', 'text-auto-scroll' ) )
+					array( 'muia_text_ani' => array( 'reveal-text' ) )
 				),
 			]
 		);
-
-		// condition carries through to the stagger, trigger point, easing and
-		// mobile controls inside, so the switch reaches all of them.
 		Motion::add_motion_settings_controls($element, array(
 			'prefix'=>'text',
-			'with_scroll'=> true,
 			'stagger'=> true,
-			'stagger_condition'=>[
-				'muia_text_ani!' => ['scramble'],
-			],
-			'delay_condition'=>[
-				'muia_text_ani!' => ['scramble'],
-			],
-			'duration_condition'=>[
-				'muia_text_ani!' => ['scramble'],
-			],
-			'ease_condition'=>[
-				'muia_text_ani!' => ['scramble'],
-			],
 			'condition'=> $enabled,
 		));
 

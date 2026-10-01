@@ -1,53 +1,53 @@
 ;(function ($) {
     'use strict';
 
-    // SplitType puts every piece inside a .line-text, so masking the line is
-    // enough for a reveal — no extra wrapper per word or character.
     const PIECE = {
-        lines: '.line-text',
-        words: '.word-text',
-        chars: '.char-text'
+        lines: '.muia-text-line',
+        words: '.muia-text-word',
+        chars: '.muia-text-char'
     };
 
     /**
-     * Split the widget text and hand back the pieces to animate.
+     * The direction for this animation.
      *
-     * Always splits lines as well, whatever the Animate By setting, because the
-     * line is what a reveal clips against.
+     * getAniSettings resolves muiaDirection against the `text` prefix, so the
+     * Slide picker arrives there. Text Reveal registers its own under
+     * `orientation`, which that scope cannot see, so it is read by name.
      */
-    function split($scope, by) {
+    function dirOf(settings, fallback) {
 
-        const targets = $scope.find('h1, h2, h3, h4, h5, h6, p, .elementor-heading-title');
-
-        if (!targets.length) {
-            return null;
+        if (settings.muiaDirection && settings.muiaDirection !== 'none') {
+            return settings.muiaDirection;
         }
 
-        const instance = new SplitType(targets.toArray(), {
-            types: 'lines, words, chars',
-            lineClass: 'line-text',
-            wordClass: 'word-text',
-            charClass: 'char-text'
-        });
-
-        const pieces = $scope.find(PIECE[ by ] || PIECE.words);
-
-        return pieces.length ? { instance: instance, pieces: pieces } : null;
+        return settings.orientationmuia_motion_direction || fallback;
     }
 
     /**
-     * Which axis a direction moves on, and from how far.
+     * The elements to animate, from the Animate By setting.
      *
-     * Percentages of the piece itself, so a reveal always travels exactly its
-     * own height or width no matter the font size.
+     * Everything is always split into lines, words and chars, whatever is being
+     * animated — the line is what the masked effects clip against, and without
+     * it there is nothing to hide the travel behind.
      */
-    function offset(direction) {
-        switch (direction) {
-            case 'top':   return { yPercent: -100 };
-            case 'left':  return { xPercent: -100 };
-            case 'right': return { xPercent: 100 };
-            default:      return { yPercent: 100 };   // bottom
-        }
+    function piecesOf($scope, by) {
+        return $scope.find(PIECE[ by ] || PIECE.words).toArray();
+    }
+
+    /**
+     * Clip each line, so a piece travelling its own height disappears behind it.
+     * Inline rather than in the stylesheet, so the teardown can lift it and the
+     * text reflows normally.
+     */
+    function maskLines($scope) {
+
+        const lines = $scope.find('.muia-text-line').toArray();
+
+        gsap.set(lines, { overflow: 'hidden', display: 'block' });
+
+        return function () {
+            gsap.set(lines, { clearProps: 'overflow,display' });
+        };
     }
 
     function timeline(handler, $scope, settings) {
@@ -62,55 +62,174 @@
         }));
     }
 
-    /**
-     * Fade — the pieces drift in and up, staggered.
-     */
-    function buildFade(handler, $scope, settings, parts) {
+    function stagger(settings, from) {
+        return { each: settings.muiaTl.stagger, from: from || 'start' };
+    }
 
-        const from = offset(settings.textmuia_motion_direction);
+    /* ------------------------------------------------------------------
+     * The animations. Each takes the handler, the scope, the settings and the
+     * pieces, and may return cleanup of its own.
+     * ---------------------------------------------------------------- */
 
-        // A fade travels a short way, not the piece's full size.
-        Object.keys(from).forEach(function (key) { from[ key ] = from[ key ] * 0.4; });
+    /** Slide — the pieces travel in from one edge, masked by their line. */
+    function buildSlide(handler, $scope, settings, pieces) {
 
-        timeline(handler, $scope, settings).fromTo(parts.pieces.toArray(),
-            { ...from, autoAlpha: 0 },
+    }
+
+    /** Alternative Reveal — neighbouring pieces come in from opposite sides. */
+    function buildAlt(handler, $scope, settings, pieces) {
+
+        const unmask = maskLines($scope);
+
+        timeline(handler, $scope, settings).fromTo(pieces,
+            { yPercent: (i) => (i % 2 ? -100 : 100) },
+            { yPercent: 0, stagger: stagger(settings), force3D: true }
+        );
+
+        return unmask;
+    }
+
+    /** Text Reveal — the classic masked rise, with its own orientation. */
+    function buildReveal(handler, $scope, options) {
+        const {textType, parts, settings, from, to} = options;
+        const isMask = settings.muia_text_mask === 'yes';
+        
+        parts.forEach(part=>{   
+            let texts = part[textType];
+            let wrap = part.elements[0];
+            let spaceFrom = isMask ? '100%' : from;
+            let spaceTo = isMask ? '100%' : to;
+            isMask && $(texts).wrapAll('<div class="muia-text-mask"></div>');
+
+            gsap.set(texts, muiaDirection === 'left' || muiaDirection === 'right' ? {  
+                x:muiaDirection === 'left' ? '-'+spaceFrom : muiaDirection === 'right' ? '-'+spaceFrom : 0, 
+                opacity:isMask ? 1 : 0
+            } : {
+                y:muiaDirection === 'top' ? '-'+spaceFrom : muiaDirection === 'bottom' ? spaceFrom : 0, 
+                opacity:isMask ? 1 : 0
+            });  
+
+            handler.addTimeline(gsap.timeline({
+                defaults: { ...settings.muiaTl, delay: 0 },
+                delay: settings.muiaTl.delay,
+                scrollTrigger: {
+                    trigger: wrap,
+                    ...settings.muiaTrigger,
+                    invalidateOnRefresh: true
+                },
+                onStart: function () {  },
+                onComplete: function () {  }
+            }))
+            .to(texts, {  
+                x:spaceTo, 
+                y:spaceTo, 
+                opacity:1,
+                stagger: stagger(settings),
+                force3D: true
+            });
+        });
+        
+    }
+
+    /** Smoky Reveal — the pieces resolve out of a blur as they drift up. */
+    function buildSmoky(handler, $scope, settings, pieces) {
+
+        timeline(handler, $scope, settings).fromTo(pieces,
+            { autoAlpha: 0, yPercent: 40, filter: 'blur(12px)' },
             {
-                xPercent: 0,
-                yPercent: 0,
                 autoAlpha: 1,
-                stagger: settings.muiaTl.stagger,
+                yPercent: 0,
+                filter: 'blur(0px)',
+                stagger: stagger(settings),
                 force3D: true
             }
         );
     }
 
-    /**
-     * Reveal — the pieces slide out from behind their own line.
-     */
-    function buildReveal(handler, $scope, settings, parts) {
+    /** Popup Reveal — each piece springs up off its own baseline. */
+    function buildPopup(handler, $scope, settings, pieces) {
 
-        // The mask. Inline rather than in the stylesheet, so the teardown can
-        // clear it and the text reflows normally when the effect is switched
-        // off or the widget is rebuilt.
-        gsap.set($scope.find('.line-text'), { overflow: 'hidden', display: 'block' });
+        gsap.set(pieces, { transformOrigin: '50% 100%' });
 
-        timeline(handler, $scope, settings).fromTo(parts.pieces.toArray(),
-            offset(settings.textmuia_motion_direction),
+        timeline(handler, $scope, settings).fromTo(pieces,
+            { autoAlpha: 0, scale: 0, yPercent: 30 },
             {
+                autoAlpha: 1,
+                scale: 1,
+                yPercent: 0,
+                // Overshoot regardless of the chosen easing: a popup without one
+                // is just a fade.
+                ease: 'back.out(2)',
+                stagger: stagger(settings),
+                force3D: true
+            }
+        );
+    }
+
+    /** Mixing Reveal — the pieces scatter in from everywhere and settle. */
+    function buildMixing(handler, $scope, settings, pieces) {
+
+        const random = gsap.utils.random;
+
+        timeline(handler, $scope, settings).fromTo(pieces,
+            {
+                autoAlpha: 0,
+                // Seeded per piece, so no two runs land the same way.
+                xPercent: () => random(-150, 150),
+                yPercent: () => random(-150, 150),
+                rotation: () => random(-60, 60)
+            },
+            {
+                autoAlpha: 1,
                 xPercent: 0,
                 yPercent: 0,
-                stagger: settings.muiaTl.stagger,
+                rotation: 0,
+                stagger: stagger(settings, 'random'),
                 force3D: true
             }
         );
     }
 
-    // One entry per animation type, keyed by the muia_text_ani value. The Pro
-    // types are absent on purpose: build() bails when Pro is present and Pro
-    // registers its own handlers for them.
+    /** Scale — the pieces settle down out of being oversized. */
+    function buildScale(handler, $scope, settings, pieces) {
+
+        gsap.set(pieces, { transformOrigin: '50% 50%' });
+
+        timeline(handler, $scope, settings).fromTo(pieces,
+            { autoAlpha: 0, scale: 1.8 },
+            { autoAlpha: 1, scale: 1, stagger: stagger(settings), force3D: true }
+        );
+    }
+
+    /** Text Flip — the pieces swing down into place on their top edge. */
+    function buildFlip(handler, $scope, settings, pieces) {
+
+        const lines = $scope.find('.muia-text-line').toArray();
+
+        // The perspective belongs to the parent, or every piece gets its own
+        // vanishing point and the row reads as flat.
+        gsap.set(lines, { perspective: 600 });
+        gsap.set(pieces, { transformOrigin: '50% 0%', transformStyle: 'preserve-3d' });
+
+        timeline(handler, $scope, settings).fromTo(pieces,
+            { autoAlpha: 0, rotationX: -90 },
+            { autoAlpha: 1, rotationX: 0, stagger: stagger(settings), force3D: true }
+        );
+
+        return function () {
+            gsap.set(lines, { clearProps: 'perspective' });
+        };
+    }
+
     const BUILDERS = {
-        'fade':   buildFade,
-        'reveal': buildReveal
+        'slide':          buildSlide,
+        'reveal-alt':     buildAlt,
+        'reveal-text':    buildReveal,
+        'reveal-smoky':   buildSmoky,
+        'reveal-popup':   buildPopup,
+        'reveal-mixing':  buildMixing,
+        'reveal-scale':   buildScale,
+        'reveal-flip':    buildFlip
     };
 
     /**
@@ -131,21 +250,34 @@
             return null;
         }
 
-        const parts = split($scope, settings.muia_text_ani_by);
+        const textElements = $scope.find('h1, h2, h3, h4, h5, h6, p').toArray();
 
-        if (!parts) {
+        if (!textElements.length) {
             return null;
         }
 
-        build(this, $scope, settings, parts);
+        let textTypes = 'words, lines, chars';
 
-        // revert() puts the original markup back. Without it every rebuild —
-        // and the editor rebuilds on every slider step — splits the already
-        // split text again, nesting spans until the markup is unusable.
-        return function () {
-            gsap.set(parts.pieces.toArray(), { clearProps: 'all' });
-            gsap.set($scope.find('.line-text'), { clearProps: 'all' });
-            parts.instance.revert();
+        if(settings.muia_text_ani === 'reveal-text') textTypes = settings.muia_text_ani_by || textTypes;
+
+        const parts = textElements.map((el) => new SplitType(el, {
+            types: textTypes,
+            lineClass: 'muia-text-line',
+            wordClass: 'muia-text-word',
+            charClass: 'muia-text-char'
+        }));
+        
+        console.log(settings, parts);
+
+        const from = $scope.css('--muia-from') || '50px';  
+        const to   = $scope.css('--muia-to')   || '0px';  
+
+        const cleanup = build(this, $scope, {textType:textTypes.split(',')[0], parts, settings, from, to});  
+
+        return function () {   
+            if (typeof cleanup === 'function') { cleanup(); }
+
+            parts.forEach((part) => part.revert());
         };
     }
 
