@@ -91,14 +91,14 @@ class Motion {
 			)
 		);
 		// Stagger (optional).
-		if ( $args['stagger'] ) {
+		if ( $args['stagger'] ) {  
 			$element->add_control(
 				$prefix . 'muia_motion_stagger',
 				array(
-					'label'              => esc_html__( 'Stagger', 'motionui-addons-for-elementor' ),
+					'label'              => esc_html__( 'Stagger Delay (s)', 'motionui-addons-for-elementor' ),
 					'type'               => Controls_Manager::NUMBER,
 					'condition'          => $stagger_condition,
-					'default'            => 0.04,
+					'default'            => 0.07,
 					'min'  => 0,
 					'max'  => 0.3,
 					'step' => 0.001,

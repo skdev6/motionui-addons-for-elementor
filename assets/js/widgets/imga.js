@@ -67,9 +67,6 @@
 
         gsap.set(img, { autoAlpha: 0 });
 
-        console.log(settings);
-        
-
         handler.addTimeline(gsap.timeline({
             defaults: { ...settings.muiaTl, delay: 0 },
             delay: settings.muiaTl.delay,
@@ -79,12 +76,15 @@
                 invalidateOnRefresh: true
             }
         }))
-        .to($tiles,{ 
+        .to($tiles,{    
             '--reveal-size': '0%',
-            stagger:settings.muiaTl.stagger,
+            stagger:{
+                amount: settings.muiaTl.stagger,
+                from: (direction === 'center-v' || direction === 'center-h') ? 'center' : 'start'
+            },
             onComplete(){
-                // $wrap.remove();
-                // gsap.set(img, { clearProps: 'all' });
+                $wrap.remove();
+                gsap.set(img, { clearProps: 'all' });
             }
         });  
 
@@ -165,6 +165,9 @@
 
     function imageAni($scope, settings) {    
         $scope.removeClass('visibility__hidden');
+
+        console.log(settings);
+        
 
         if(!settings.isDesktop && !settings.isMobile) return; 
         
