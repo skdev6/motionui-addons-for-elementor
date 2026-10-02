@@ -137,7 +137,25 @@ class Motion {
 				'frontend_available' => true,
 			)
 		);
-
+		$element->add_control(
+			$prefix . 'muia_motion_trigger_mode',
+			array(
+				'label'              => esc_html__( 'Trigger Mode', 'motionui-addons-for-elementor' ),
+				'type'               => Controls_Manager::SELECT,
+				'condition'          => $trigger_condition,
+				'default'            => 'appearance', 
+				'options'            => muia_pro_options(  
+					[
+						'appearance' => esc_html__( 'On Appearance', 'motionui-addons-for-elementor' ),
+					],
+					[
+						'reverse' => esc_html__( 'On Reverse', 'motionui-addons-for-elementor' ),
+						'scroll'     => esc_html__( 'On Scroll', 'motionui-addons-for-elementor' ),
+					]
+				),
+				'frontend_available' => true,
+			)
+		);
 		$element->add_control(
 			$prefix . 'muia_motion_trigger_point_custom',
 			array(

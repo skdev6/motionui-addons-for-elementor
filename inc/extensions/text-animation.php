@@ -196,7 +196,7 @@ class Text_Animation{
 				'label' => esc_html__( 'Blur', 'motionui-addons-for-elementor' ),
 				'frontend_available' => true,
 				'type' => Controls_Manager::NUMBER,
-				'min' => 5,
+				'min' => 0,
 				'max' => 100,
 				'step' => 1,
 				'default' => 70,
