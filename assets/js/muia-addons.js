@@ -378,8 +378,6 @@ window.muia = window.muia || {};
             }
         });
     }
-
-    console.log(muiaLocal);
      
     
 })(jQuery);
