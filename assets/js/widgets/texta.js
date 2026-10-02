@@ -6,14 +6,6 @@
         words: '.muia-text-word',
         chars: '.muia-text-char'
     };
-
-    /**
-     * The direction for this animation.
-     *
-     * getAniSettings resolves muiaDirection against the `text` prefix, so the
-     * Slide picker arrives there. Text Reveal registers its own under
-     * `orientation`, which that scope cannot see, so it is read by name.
-     */
     function dirOf(settings, fallback) {
 
         if (settings.muiaDirection && settings.muiaDirection !== 'none') {
@@ -23,46 +15,6 @@
         return settings.orientationmuia_motion_direction || fallback;
     }
 
-    /**
-     * The elements to animate, from the Animate By setting.
-     *
-     * Everything is always split into lines, words and chars, whatever is being
-     * animated — the line is what the masked effects clip against, and without
-     * it there is nothing to hide the travel behind.
-     */
-    function piecesOf($scope, by) {
-        return $scope.find(PIECE[ by ] || PIECE.words).toArray();
-    }
-
-    /**
-     * Clip each line, so a piece travelling its own height disappears behind it.
-     * Inline rather than in the stylesheet, so the teardown can lift it and the
-     * text reflows normally.
-     */
-    function maskLines($scope) {
-
-        const lines = $scope.find('.muia-text-line').toArray();
-
-        gsap.set(lines, { overflow: 'hidden', display: 'block' });
-
-        return function () {
-            gsap.set(lines, { clearProps: 'overflow,display' });
-        };
-    }
-
-    function timeline(handler, $scope, settings) {
-        return handler.addTimeline(gsap.timeline({
-            defaults: { ...settings.muiaTl, delay: 0 },
-            delay: settings.muiaTl.delay,
-            scrollTrigger: {
-                trigger: $scope,
-                ...settings.muiaTrigger,
-                invalidateOnRefresh: true
-            }
-        }));
-    }
-
-    /** A NUMBER control value, falling back when it is empty or unset. */
     function num(value, fallback) {
         const n = parseFloat(value);
         return Number.isNaN(n) ? fallback : n;
@@ -72,23 +24,6 @@
         return { each: settings.muiaTl.stagger, from: from || 'start' };
     }
 
-    /* ------------------------------------------------------------------
-     * The animations. Each takes the handler, the scope, the settings and the
-     * pieces, and may return cleanup of its own.
-     * ---------------------------------------------------------------- */
-
-    /** Slide — the pieces travel in from one edge, masked by their line. */
-    function buildSlide(handler, $scope, settings, pieces) {
-
-    }
-
-    /**
-     * Alternative Reveal — even and odd pieces drop in from opposite offsets.
-     *
-     * Vertical only, and no mask: the two offsets are the whole effect. They are
-     * used exactly as the panel gives them, signs included, so Even 50px against
-     * Odd -50px has alternate pieces rising and falling into the same line.
-     */
     function buildAlt(handler, $scope, options) {
 
         const {  parts, settings, from, to } = options;
@@ -183,13 +118,7 @@
             });
         });
     }
-    /**
-     * Smoky Reveal — the pieces resolve out of a blur as they rise and settle.
-     *
-     * Driven entirely by its own four controls: Vertical Offset, Scale From,
-     * Blur and Stagger From. No mask and no direction picker — the offset is
-     * vertical and its sign decides which way the pieces come from.
-     */
+    
     function buildSmoky(handler, $scope, options) {
 
         const { textType, parts, settings } = options;
@@ -255,53 +184,13 @@
             });
         };
     }
-    /** Popup Reveal — each piece springs up off its own baseline. */
-    function buildPopup(handler, $scope, options) {
-
-    }
-
-    /** Mixing Reveal — the pieces scatter in from everywhere and settle. */
-    function buildMixing(handler, $scope, options) {
-        
-    }
-
-    /** Scale — the pieces settle down out of being oversized. */
-    function buildScale(handler, $scope, options) {
-
-        const { settings, pieces } = options;
-
-        gsap.set(pieces, { transformOrigin: '50% 50%' });
-
-        timeline(handler, $scope, settings).fromTo(pieces,
-            { autoAlpha: 0, scale: 1.8 },
-            { autoAlpha: 1, scale: 1, stagger: stagger(settings), force3D: true }
-        );
-    }
-
-    /** Text Flip — the pieces swing down into place on their top edge. */
-    function buildFlip(handler, $scope, options) {
-        const { textType, parts, settings, from, to } = options;
-    }
 
     const BUILDERS = {
-        'slide':          buildSlide,
         'reveal-alt':     buildAlt,
         'reveal-text':    buildReveal,
-        'reveal-smoky':   buildSmoky,
-        'reveal-popup':   buildPopup,
-        'reveal-mixing':  buildMixing,
-        'reveal-scale':   buildScale,
-        'reveal-flip':    buildFlip
+        'reveal-smoky':   buildSmoky
     };
 
-    /**
-     * @param {jQuery} $scope   The widget wrapper.
-     * @param {Object} settings Element settings, plus the muia* values getAniSettings adds.
-     *
-     * `this` is the ExtensionHandler, so addTimeline / addScrollTrigger /
-     * addAnimation / addTeardown are available. Whatever is registered there is
-     * killed before the next build and on destroy.
-     */
     function textAni($scope, settings) {
 
         $scope.removeClass('visibility__hidden');
@@ -329,8 +218,6 @@
             wordClass: 'muia-text-word',
             charClass: 'muia-text-char'
         }));
-        
-        console.log(settings, parts);
 
         const from = $scope.css('--muia-from') || '50px';  
         const to   = $scope.css('--muia-to')   || '0px';  
