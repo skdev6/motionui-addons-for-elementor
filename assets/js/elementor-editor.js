@@ -8,6 +8,10 @@
  */
 const pro_select_suffixes = [
     '_btn_effect',
+    // Registered as <prefix>muia_motion_trigger_mode, and every extension
+    // picks its own prefix — img, text, effect_ — so the ending is what
+    // catches all of them.
+    'muia_motion_trigger_mode',
 ];
 
 /** Selects matched by their exact name. */

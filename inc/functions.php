@@ -40,40 +40,6 @@ if ( ! function_exists( 'muia_pro_select_class' ) ) {
 	}
 }
 
-if ( ! function_exists( 'muia_pro_option_values' ) ) {
-	/**
-	 * Every control choice that needs Pro, by value.
-	 *
-	 * Handed to the editor so it can disable them. Values rather than labels:
-	 * a label is translated and a marker in it is a guess, while a value is a
-	 * code identifier that reads the same in every locale.
-	 *
-	 * Anything passed to muia_pro_options() as a Pro choice belongs here.
-	 *
-	 * @since  1.0.0
-	 * @return string[]
-	 */
-	function muia_pro_option_values() {
-
-		/**
-		 * Filter the Pro-only choices.
-		 *
-		 * @param string[] $values Option values needing Pro.
-		 */
-		return apply_filters(
-			'muia_pro_option_values',
-			array(
-				// Button effect.
-				'muia-Spotlight-btn',
-				// Text animation.
-				'wave',
-				'scramble',
-				'text-auto-scroll',
-			)
-		);
-	}
-}
-
 if ( ! function_exists( 'muia_pro_title' ) ) {
 	/**
 	 * A choice's label, marked when it needs Pro.
@@ -107,8 +73,10 @@ if ( ! function_exists( 'muia_pro_options' ) ) {
 	 *
 	 * They are always listed — hiding them would hide the feature, and the
 	 * point of showing them is that somebody sees what Pro adds. Without Pro
-	 * they carry the marker and the editor disables them, matched by value
-	 * against muia_pro_option_values().
+	 * they carry the marker, and the editor disables any option whose label
+	 * carries it — see disableOptions() in assets/js/elementor-editor.js, which
+	 * finds the control by name through pro_select_fields and
+	 * pro_select_suffixes.
 	 *
 	 *     'classes' => muia_pro_select_class(),
 	 *     'options' => muia_pro_options(
@@ -116,8 +84,10 @@ if ( ! function_exists( 'muia_pro_options' ) ) {
 	 *         array( 'wave' => esc_html__( 'Wave', 'motionui-addons-for-elementor' ) )
 	 *     ),
 	 *
-	 * The `classes` argument is not optional: it is how the editor finds the
-	 * control, and without it the choices stay selectable.
+	 * For the choices to actually be disabled, the control's name has to be
+	 * listed in elementor-editor.js — exactly in pro_select_fields, or by its
+	 * ending in pro_select_suffixes. Without that the marker shows but the
+	 * option stays selectable.
 	 *
 	 * @since  1.0.0
 	 * @param  array $options     Free choices, in the order they should appear.
@@ -131,23 +101,6 @@ if ( ! function_exists( 'muia_pro_options' ) ) {
 		foreach ( $pro_options as $value => $label ) {
 
 			$options[ $value ] = $has_pro ? $label : muia_pro_title( $label );
-
-			// Catches a Pro choice that was never added to the list, which
-			// would leave it selectable without Pro. Debug builds only.
-			if ( ! $has_pro
-				&& defined( 'WP_DEBUG' ) && WP_DEBUG
-				&& ! in_array( $value, muia_pro_option_values(), true )
-			) {
-				_doing_it_wrong(
-					__FUNCTION__,
-					esc_html( sprintf(
-						/* translators: %s: option value. */
-						'"%s" is offered as a Pro choice but is missing from muia_pro_option_values(), so the editor cannot disable it.',
-						$value
-					) ),
-					'1.0.0'
-				);
-			}
 		}
 
 		return $options;

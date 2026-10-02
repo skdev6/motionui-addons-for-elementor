@@ -30,7 +30,19 @@ class Assets {
 
     public static function enqueue_scripts() {  
         wp_enqueue_script( 'muia' );
-    }
+
+		$localize_data = [
+			'hasPro'  => Motionui::is_active_pro(),
+			'i18n' => [],
+		];
+
+		wp_add_inline_script(
+			'muia',
+			'var muiaLocal = ' . wp_json_encode( $localize_data ) . ';',
+			'before'
+		);
+
+    } 
 
     public static function enqueue_styles() {
         wp_register_style( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.css', [], THEMEIC_MUIA_VERSION );
@@ -81,9 +93,6 @@ class Assets {
 		$localize_data = [
 			'placeholder_widgets' => Widgets_Manager::get_pro_widgets(),
 			'hasPro'                  => Motionui::is_active_pro(),
-			// Values, not labels — see muia_pro_option_values(). The editor
-			// disables these inside any control carrying proSelectClass.
-			'proOptions'              => muia_pro_option_values(),
 			'proSelectClass'          => muia_pro_select_class(),
 			'editor_nonce'            => wp_create_nonce('muid_editor_nonce'),
 			'upgradeUrl'=>'https://motionuiaddons.com/',
