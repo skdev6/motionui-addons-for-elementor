@@ -62,6 +62,12 @@
         }));
     }
 
+    /** A NUMBER control value, falling back when it is empty or unset. */
+    function num(value, fallback) {
+        const n = parseFloat(value);
+        return Number.isNaN(n) ? fallback : n;
+    }
+
     function stagger(settings, from) {
         return { each: settings.muiaTl.stagger, from: from || 'start' };
     }
@@ -177,10 +183,77 @@
             });
         });
     }
-    /** Smoky Reveal — the pieces resolve out of a blur as they drift up. */
+    /**
+     * Smoky Reveal — the pieces resolve out of a blur as they rise and settle.
+     *
+     * Driven entirely by its own four controls: Vertical Offset, Scale From,
+     * Blur and Stagger From. No mask and no direction picker — the offset is
+     * vertical and its sign decides which way the pieces come from.
+     */
     function buildSmoky(handler, $scope, options) {
 
-        
+        const { textType, parts, settings } = options;
+
+        const offset = num(settings.muia_text_v_offset, 70);
+        const blur   = num(settings.muia_text_blur, 70);
+
+        // The control reads as a percentage, 5 to 100, so 70 means 0.7.
+        const scale = settings.muia_text_scale_from;
+
+        // GSAP understands start, end, center, edges and random. Anything else
+        // would be read as an index, which is not what the panel is offering.
+        const FROM = ['start', 'end', 'center', 'edges', 'random'];
+        const staggerFrom = FROM.includes(settings.muia_text_stagger_from)
+            ? settings.muia_text_stagger_from
+            : 'start';
+
+        parts.forEach((part) => {
+
+            const texts = part[ textType ];
+            const wrap  = part.elements[0];
+
+            if (!texts || !texts.length) {
+                return;
+            }
+
+            gsap.set(texts, {
+                y: offset,
+                scale: scale,
+                autoAlpha: 0,
+                filter: 'blur(' + blur + 'px)',
+                transformOrigin: '50% 50%'
+            });
+
+            handler.addTimeline(gsap.timeline({
+                defaults: { ...settings.muiaTl, delay: 0 },
+                delay: settings.muiaTl.delay,
+                scrollTrigger: {
+                    trigger: wrap,
+                    ...settings.muiaTrigger,
+                    invalidateOnRefresh: true
+                }
+            }))
+            .to(texts, {
+                y: 0,
+                scale: 1,
+                autoAlpha: 1,
+                filter: 'blur(0px)',
+                stagger: stagger(settings, staggerFrom),
+                force3D: true
+            });
+        });
+
+        // filter is not in GSAP's transform set, so clearProps on the pieces
+        // does not take it off. Left behind, a stale blur(0px) keeps the text on
+        // its own compositing layer and softens the glyphs.
+        return function () {
+            parts.forEach((part) => {
+                const texts = part[ textType ];
+                if (texts && texts.length) {
+                    gsap.set(texts, { clearProps: 'filter' });
+                }
+            });
+        };
     }
     /** Popup Reveal — each piece springs up off its own baseline. */
     function buildPopup(handler, $scope, options) {
@@ -248,6 +321,7 @@
         let textTypes = 'words, lines, chars';
 
         if(settings.muia_text_ani === 'reveal-text') textTypes = settings.muia_text_ani_by || textTypes;
+        if(settings.muia_text_ani === 'reveal-smoky') textTypes = settings.muia_text_ani_by || textTypes;
 
         const parts = textElements.map((el) => new SplitType(el, {
             types: textTypes,

@@ -138,16 +138,16 @@ class Text_Animation{
 				'type'               => Controls_Manager::SELECT,
 				'default'            => 'reveal-text',
 				'frontend_available' => true,
-				'prefix_class'       => 'visibility__hidden muia-text-',    
+				'prefix_class'       => 'visibility__hidden muia-text-',  
 				'options'            => muia_pro_options(  
 					array(
 						'reveal-text'      => esc_html__( 'Text Reveal', 'motionui-addons-for-elementor' ),
 						'reveal-alt'       => esc_html__( 'Alternative Reveal', 'motionui-addons-for-elementor' ),
 						'reveal-smoky'     => esc_html__( 'Smoky Reveal', 'motionui-addons-for-elementor' ),
-						'reveal-popup'     => esc_html__( 'Popup Reveal', 'motionui-addons-for-elementor' ),
-						'reveal-mixing'    => esc_html__( 'Mixing Reveal', 'motionui-addons-for-elementor' ),
-						'reveal-scale'   => esc_html__( 'Scale', 'motionui-addons-for-elementor' ),
-						'reveal-flip'      => esc_html__( 'Text Flip', 'motionui-addons-for-elementor' ),
+						// 'reveal-popup'     => esc_html__( 'Popup Reveal', 'motionui-addons-for-elementor' ),
+						// 'reveal-mixing'    => esc_html__( 'Mixing Reveal', 'motionui-addons-for-elementor' ),
+						// 'reveal-scale'   => esc_html__( 'Scale', 'motionui-addons-for-elementor' ),
+						// 'reveal-flip'      => esc_html__( 'Text Flip', 'motionui-addons-for-elementor' ),
 					),
 					array(
 						'wave'             => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),
@@ -158,10 +158,11 @@ class Text_Animation{
 				'condition'          => $enabled,
 			)
 		);
-		$this->add_control(
+		$element->add_control(
 			'muia_text_v_offset',
 			[
-				'label' => esc_html__( 'Vertical Offset', 'textdomain' ),
+				'label' => esc_html__( 'Vertical Offset', 'motionui-addons-for-elementor' ),
+				'frontend_available' => true,
 				'type' => Controls_Manager::NUMBER,
 				'min' => 5,
 				'max' => 500,
@@ -173,25 +174,27 @@ class Text_Animation{
 				),
 			]
 		);
-		$this->add_control( 
+		$element->add_control(    
 			'muia_text_scale_from',
 			[
-				'label' => esc_html__( 'Scale From', 'textdomain' ),
+				'label' => esc_html__( 'Scale From', 'motionui-addons-for-elementor' ),
+				'frontend_available' => true,
 				'type' => Controls_Manager::NUMBER,
-				'min' => 5,
-				'max' => 100,
-				'step' => 0.1,
-				'default' => 70,
+				'min' => 0,
+				'max' => 10,
+				'step' => 0.01,
+				'default' => 2.1,
 				'condition' => array_merge(
 					$enabled,
 					array( 'muia_text_ani' => array( 'reveal-smoky' ) )
 				),
 			]
 		);
-		$this->add_control(
+		$element->add_control(
 			'muia_text_blur',
 			[
-				'label' => esc_html__( 'Blur', 'textdomain' ),
+				'label' => esc_html__( 'Blur', 'motionui-addons-for-elementor' ),
+				'frontend_available' => true,
 				'type' => Controls_Manager::NUMBER,
 				'min' => 5,
 				'max' => 100,
@@ -203,18 +206,21 @@ class Text_Animation{
 				),
 			]
 		);
-		$this->add_control(
+		$element->add_control(
 			'muia_text_stagger_from',
 			[
-				'label' => esc_html__( 'Stagger From', 'textdomain' ),
+				'label' => esc_html__( 'Stagger From', 'motionui-addons-for-elementor' ),
+				'frontend_available' => true,
 				'type' => \Elementor\Controls_Manager::SELECT,
-				'default' => 'solid',
+				// 'solid' is not one of the options below, so nothing was
+				// preselected and GSAP received a value it cannot read.
+				'default' => 'start',
 				'options' => [
-					'random' => esc_html__( 'Random', 'textdomain' ),
-					'start' => esc_html__( 'Start', 'textdomain' ),
-					'end'  => esc_html__( 'End', 'textdomain' ),
-					'center' => esc_html__( 'Center', 'textdomain' ),
-					'edges' => esc_html__( 'Edges', 'textdomain' ),
+					'random' => esc_html__( 'Random', 'motionui-addons-for-elementor' ),
+					'start' => esc_html__( 'Start', 'motionui-addons-for-elementor' ),
+					'end'  => esc_html__( 'End', 'motionui-addons-for-elementor' ),
+					'center' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
+					'edges' => esc_html__( 'Edges', 'motionui-addons-for-elementor' ),
 				],
 				'condition' => array_merge(
 					$enabled,
@@ -273,7 +279,7 @@ class Text_Animation{
 			'to_default'   => array( 'unit' => 'px', 'size' => 80 ),
 		]);
 
-		$element->add_control(
+		$element->add_control(  
 			'muia_text_ani_by',
 			[
 				'label' => esc_html__( 'Animate By', 'motionui-addons-for-elementor' ),
@@ -287,7 +293,7 @@ class Text_Animation{
 				],
 				'condition' => array_merge(
 					$enabled,
-					array( 'muia_text_ani' => array( 'reveal-text' ) )
+					array( 'muia_text_ani' => array( 'reveal-text', 'reveal-smoky' ) )
 				),
 			]
 		);
