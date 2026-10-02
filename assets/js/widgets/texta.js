@@ -280,7 +280,7 @@
 
     /** Text Flip — the pieces swing down into place on their top edge. */
     function buildFlip(handler, $scope, options) {
-                
+        const { textType, parts, settings, from, to } = options;
     }
 
     const BUILDERS = {

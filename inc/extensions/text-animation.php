@@ -144,10 +144,10 @@ class Text_Animation{
 						'reveal-text'      => esc_html__( 'Text Reveal', 'motionui-addons-for-elementor' ),
 						'reveal-alt'       => esc_html__( 'Alternative Reveal', 'motionui-addons-for-elementor' ),
 						'reveal-smoky'     => esc_html__( 'Smoky Reveal', 'motionui-addons-for-elementor' ),
+						// 'reveal-flip'      => esc_html__( 'Text Flip', 'motionui-addons-for-elementor' ),
 						// 'reveal-popup'     => esc_html__( 'Popup Reveal', 'motionui-addons-for-elementor' ),
 						// 'reveal-mixing'    => esc_html__( 'Mixing Reveal', 'motionui-addons-for-elementor' ),
 						// 'reveal-scale'   => esc_html__( 'Scale', 'motionui-addons-for-elementor' ),
-						// 'reveal-flip'      => esc_html__( 'Text Flip', 'motionui-addons-for-elementor' ),
 					),
 					array(
 						'wave'             => esc_html__( 'Wave', 'motionui-addons-for-elementor' ),

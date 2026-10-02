@@ -104,10 +104,10 @@ window.muia = window.muia || {};
                 settings[`${prefix}muia_motion_stagger`],
                 stagger
             );
-
+  
             const muiaEase =
                 settings[`${prefix}muia_motion_ease`] ||
-                ease;
+                ease, TM = settings[`${prefix}muia_motion_trigger_mode`] || '';
 
             const muiaCSSEase =
                 CSS_EASES[muiaEase] ||
@@ -123,10 +123,12 @@ window.muia = window.muia || {};
                 });
 
             }
-            return {
+            return {    
                 muiaDirection, muiaCSSEase, isMobile:isMobile === 'yes',isDesktop:window.innerWidth > 991,
                 muiaTl:{ duration:muiaDuration, delay:muiaDelay, stagger:muiaStagger, ease:muiaEase },
-                muiaTrigger:{ start:muiaTriggerPoint === 'custom' ? muiaTriggerPointCustom : muiaTriggerPoint },
+                muiaTrigger:{
+                    start: muiaTriggerPoint === 'custom' ? muiaTriggerPointCustom : muiaTriggerPoint, scrub: muiaLocal.hasPro ? TM === 'scroll' : false,  toggleActions: ( muiaLocal.hasPro && TM === 'reverse' ) ? 'play none none reverse' : 'play none none none'
+                },
             };
         };
 
