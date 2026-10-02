@@ -158,7 +158,70 @@ class Text_Animation{
 				'condition'          => $enabled,
 			)
 		);
-
+		$this->add_control(
+			'muia_text_v_offset',
+			[
+				'label' => esc_html__( 'Vertical Offset', 'textdomain' ),
+				'type' => Controls_Manager::NUMBER,
+				'min' => 5,
+				'max' => 500,
+				'step' => 1,
+				'default' => 70,
+				'condition' => array_merge(
+					$enabled,
+					array( 'muia_text_ani' => array( 'reveal-smoky' ) )
+				),
+			]
+		);
+		$this->add_control( 
+			'muia_text_scale_from',
+			[
+				'label' => esc_html__( 'Scale From', 'textdomain' ),
+				'type' => Controls_Manager::NUMBER,
+				'min' => 5,
+				'max' => 100,
+				'step' => 0.1,
+				'default' => 70,
+				'condition' => array_merge(
+					$enabled,
+					array( 'muia_text_ani' => array( 'reveal-smoky' ) )
+				),
+			]
+		);
+		$this->add_control(
+			'muia_text_blur',
+			[
+				'label' => esc_html__( 'Blur', 'textdomain' ),
+				'type' => Controls_Manager::NUMBER,
+				'min' => 5,
+				'max' => 100,
+				'step' => 1,
+				'default' => 70,
+				'condition' => array_merge(
+					$enabled,
+					array( 'muia_text_ani' => array( 'reveal-smoky' ) )
+				),
+			]
+		);
+		$this->add_control(
+			'muia_text_stagger_from',
+			[
+				'label' => esc_html__( 'Stagger From', 'textdomain' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'default' => 'solid',
+				'options' => [
+					'random' => esc_html__( 'Random', 'textdomain' ),
+					'start' => esc_html__( 'Start', 'textdomain' ),
+					'end'  => esc_html__( 'End', 'textdomain' ),
+					'center' => esc_html__( 'Center', 'textdomain' ),
+					'edges' => esc_html__( 'Edges', 'textdomain' ),
+				],
+				'condition' => array_merge(
+					$enabled,
+					array( 'muia_text_ani' => array( 'reveal-smoky' ) )
+				),
+			]
+		);
 		Motion::get_derection_control( $element, array( 
 			'name'      => 'text',
 			'condition' => array_merge(
