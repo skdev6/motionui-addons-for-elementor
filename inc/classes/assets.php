@@ -17,12 +17,14 @@ class Assets {
         wp_register_script( 'muia-animated-slider', THEMEIC_MUIA_ASSETS . 'js/widgets/animated-slider.js', ['muia'], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'muia-imga', THEMEIC_MUIA_ASSETS . 'js/widgets/imga.js', ['gsap', 'muia'], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'muia-texta', THEMEIC_MUIA_ASSETS . 'js/widgets/texta.js', ['gsap', 'muia'], THEMEIC_MUIA_VERSION, true );
+        wp_register_script( 'muia-testimonial', THEMEIC_MUIA_ASSETS . 'js/widgets/muia-testimonial.js', ['swiper', 'muia'], THEMEIC_MUIA_VERSION, true );
         // A jQuery plugin, so it cannot load before jQuery does.
         wp_register_script( 'animated-headline', THEMEIC_MUIA_ASSETS . 'vendor/animated-headline/jquery.animatedheadline.min.js', [ 'jquery' ], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], THEMEIC_MUIA_VERSION, true );
 
 		// CSS Register
-		wp_register_style( 'animated-headline', THEMEIC_MUIA_ASSETS . 'vendor/animated-headline/jquery.animatedheadline.css', [], THEMEIC_MUIA_VERSION ); 
+		wp_register_style( 'animated-headline', THEMEIC_MUIA_ASSETS . 'vendor/animated-headline/jquery.animatedheadline.css', [], THEMEIC_MUIA_VERSION );
+		wp_register_style( 'muia-testimonial', THEMEIC_MUIA_ASSETS . 'css/widgets/muia-testimonial.min.css', [], THEMEIC_MUIA_VERSION );
 
         wp_register_script(
             'muia',

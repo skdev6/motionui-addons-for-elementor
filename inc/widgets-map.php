@@ -77,6 +77,19 @@ return [
 		'css' => ['animated-headline'],
 		'js' => ['animated-headline']
 	],  
+	'testimonial' => [
+		'title'       => __( 'Testimonial', 'motionui-addons-for-elementor' ),
+		'category'    => [ 'testimonial' ],
+		'is_active'   => true,
+		'is_pro'      => false,
+		'is_upcoming' => false,
+		'icon'        => 'eicon-testimonial',
+		'keywords'    => [ 'testimonial', 'review', 'quote', 'feedback', 'slider', 'carousel', 'motionui' ],
+		'demo'        => get_muia_demo_url( '/element/testimonial/' ),
+		'tutorial'    => get_muia_tuto_url( '' ),
+		'css'         => [ 'muia-testimonial', 'swiper' ],
+		'js'          => [ 'muia-testimonial', 'swiper' ],
+	],
 	'animated-image' => [
 		'title'       => __( 'Image', 'motionui-addons-for-elementor' ),
 		'category'    => [ 'image' ],
