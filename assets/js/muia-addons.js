@@ -338,6 +338,9 @@ window.muia = window.muia || {};
     }
     window.muia.initElementorFrontend = initElementorFrontend;
     initElementorFrontend({
+        widgets:{
+            
+        },
         init() {
             initBurgerToggle();
         },
