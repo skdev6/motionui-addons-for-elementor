@@ -64,6 +64,19 @@ return [
 		'demo'        => get_muia_demo_url( '/element/animated-slider/' ),
 		'tutorial'    => get_muia_tuto_url( '' ),
 	],
+	'animated-typing-heading' => [    
+		'title'       => __( 'Animated Typing Heading', 'motionui-addons-for-elementor' ),
+		'category'    => [ 'Heading', 'Text' ],
+		'is_active'   => true,
+		'is_pro'      => false,
+		'is_upcoming' => false,
+		'icon'        => 'eicon-animation-text',
+		'keywords'    => [ 'heading', 'text', 'animated heading', 'typing', 'motionui', 'writing' ],  
+		'demo'        => get_muia_demo_url( '/element/animated-typing-heading/' ),
+		'tutorial'    => get_muia_tuto_url( '' ),
+		'css' => ['animated-headline'],
+		'js' => ['animated-headline']
+	],  
 	'animated-image' => [
 		'title'       => __( 'Image', 'motionui-addons-for-elementor' ),
 		'category'    => [ 'image' ],
