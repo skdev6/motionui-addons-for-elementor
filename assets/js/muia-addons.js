@@ -339,7 +339,7 @@ window.muia = window.muia || {};
     window.muia.initElementorFrontend = initElementorFrontend;
     initElementorFrontend({
         widgets:{
-            'themeic-animated-typing-heading.default':typingHeading
+            'themeic-typing-heading-motion.default':typingHeading
         },
         init() {
             initBurgerToggle();
@@ -380,45 +380,32 @@ window.muia = window.muia || {};
             }
         });
     }
-    function typingHeading($scope, settings){
-        $('.animate-rotate-1').animatedHeadline({
-            animationType: 'rotate-1'
-        });
+    
+    function typingHeading($scope){
 
-        $('.animate-type').animatedHeadline({
-            animationType: 'type'
-        });
+        if (typeof $.fn.animatedHeadline !== 'function') {
+            return;
+        }
 
-        $('.animate-rotate-2').animatedHeadline({
-            animationType: 'rotate-2'
-        });
+        $scope.find('[data-muia-headline]').each(function () {
 
-        $('.animate-loading-bar').animatedHeadline({
-            animationType: 'loading-bar'
-        });
+            var $wrap = $(this);
+            if ($wrap.data('muiaHeadlineReady')) {
+                return;
+            }
+            var options = $wrap.data('muiaHeadline');
 
-        $('.animate-slide').animatedHeadline({
-            animationType: 'slide'
-        });
+            if (!options || typeof options !== 'object') {
+                options = {};
+            }
 
-        $('.animate-clip').animatedHeadline({
-            animationType: 'clip'
-        });
+            if (options.animationType) {
+                $wrap.addClass(options.animationType);
+            }
 
-        $('.animate-zoom').animatedHeadline({
-            animationType: 'zoom'
-        });
+            $wrap.data('muiaHeadlineReady', true);
+            $wrap.animatedHeadline(options);
 
-        $('.animate-rotate-3').animatedHeadline({
-            animationType: 'rotate-3'
-        });
-
-        $('.animate-scale').animatedHeadline({
-            animationType: 'scale'
-        });
-
-        $('.animate-push').animatedHeadline({
-            animationType: 'push'
         });
     }
     

@@ -64,8 +64,8 @@ return [
 		'demo'        => get_muia_demo_url( '/element/animated-slider/' ),
 		'tutorial'    => get_muia_tuto_url( '' ),
 	],
-	'animated-typing-heading' => [    
-		'title'       => __( 'Animated Typing Heading', 'motionui-addons-for-elementor' ),
+	'typing-heading-motion' => [    
+		'title'       => __( 'Typing Heading Motion', 'motionui-addons-for-elementor' ),
 		'category'    => [ 'Heading', 'Text' ],
 		'is_active'   => true,
 		'is_pro'      => false,
