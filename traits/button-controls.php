@@ -567,18 +567,6 @@ trait Button_Controls {
 		);
 
 		$control_manager->add_control(
-			"{$id_prefix}_is_stroke_icon",
-			array(
-				'label'        => esc_html__( 'Is it a Stroke icon?', 'motionui-addons-for-elementor' ),
-				'label_block'  => false,
-				'type'         => Controls_Manager::SWITCHER,
-				'return_value' => 'yes',
-				'default'      => 'no',
-				'condition'    => array( "{$id_prefix}_icon[value]!" => '' ),
-			)
-		);
-
-		$control_manager->add_control(
 			"{$id_prefix}_icon_position_style",
 			array(
 				'label'       => esc_html__( 'Icon Position', 'motionui-addons-for-elementor' ),
