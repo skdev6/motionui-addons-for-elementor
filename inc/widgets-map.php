@@ -87,8 +87,8 @@ return [
 		'keywords'    => [ 'testimonial', 'review', 'quote', 'feedback', 'slider', 'carousel', 'motionui' ],
 		'demo'        => get_muia_demo_url( '/element/testimonial/' ),
 		'tutorial'    => get_muia_tuto_url( '' ),
-		'css'         => [ 'muia-testimonial', 'swiper' ],
-		'js'          => [ 'muia-testimonial', 'swiper' ],
+		'css'         => [ 'muia-testimonial', 'swiper', 'muia-slide' ],
+		'js'          => [ 'swiper', 'muia-slide' ],
 	],
 	'animated-image' => [
 		'title'       => __( 'Image', 'motionui-addons-for-elementor' ),

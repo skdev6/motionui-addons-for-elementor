@@ -8,7 +8,7 @@
  * @license     GPL-2.0-or-later
  */
 
-namespace CsfCore\Traits;
+namespace Themeic\MotionUI_Addons\Traits;
 
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Border;
@@ -21,26 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Trait Slide_Controls
- *
- * Reusable slider controls and markup for any widget built on
- * `ThemeicComponents.themeicSlide()`.
- *
- * The JS reads its configuration from three places, and every control here
- * feeds one of them:
- *
- * 1. CSS custom properties on `.themeic-slide-wrapper`, read through
- *    `readPx()` — `--slide-per-view`, `--slide-gap`, `--slide-speed`,
- *    `--thum-width-percent`, `--slide-h` and `--slide-loop-extra`. Elementor
- *    writes these through `selectors`, so they stay responsive for free.
- * 2. `data-slide-settings` on the wrapper: a JSON object of everything that
- *    cannot be a custom property — the effect, looping and autoplay. See
- *    `muia_slide_settings()`.
- * 3. The markup itself — the presence of the arrow buttons, and
- *    `data-pagination` on the pagination element.
- *
- * Anything the JS cannot act on is deliberately absent: there is no vertical
- * mode and no scroll-direction option.
- *
+
  * Usage:
  *
  *     use Slide_Controls;

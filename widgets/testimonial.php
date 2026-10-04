@@ -25,7 +25,6 @@ namespace Themeic\MotionUI_Addons\Widgets;
 
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
-use Elementor\Icons_Manager;
 use Elementor\Repeater;
 use Elementor\Utils;
 use Themeic\MotionUI_Addons\Traits\Slide_Controls;
@@ -154,12 +153,22 @@ class Testimonial extends Muia_Base {
 
         // From the trait, so the slide options match the other sliders. Only
         // shown once the view is set to Slide.
-        $this->muia_slide_settings_controls( 'muia_slide_', [
+        $this->muia_slide_controls( 'muia_slide', [
+            'condition'     => [ 'themeic_testimonial_view' => 'slide' ],
+            'wrapper'       => '{{WRAPPER}} .muia-testimonial-slider.themeic-slide-wrapper',
+            'height'        => false,
+            'thumb_width'   => false,
+            'gap_default'   => 24,
+            'speed_default' => 300,
+        ] );
+        $this->muia_slide_nav_controls( 'muia_slide', [
             'condition' => [ 'themeic_testimonial_view' => 'slide' ],
-            'speed'     => true,
         ] );
 
         $this->_register_muia_testimonial_style_controls();
+        $this->muia_slide_style_controls( 'muia_slide', [
+            'condition' => [ 'themeic_testimonial_view' => 'slide' ],
+        ] );
     }
 
     /**
@@ -384,35 +393,6 @@ class Testimonial extends Muia_Base {
             ]
         );
 
-        $this->add_responsive_control(
-            'themeic_testimonial_per_view',
-            [
-                'label'              => esc_html__( 'Slides Per View', 'motionui-addons-for-elementor' ),
-                'type'               => Controls_Manager::NUMBER,
-                'min'                => 1,
-                'max'                => 6,
-                'default'            => 3,
-                'tablet_default'     => 2,
-                'mobile_default'     => 1,
-                'frontend_available' => true,
-                'condition'          => [ 'themeic_testimonial_view' => 'slide' ],
-            ]
-        );
-
-        $this->add_control(
-            'themeic_testimonial_space',
-            [
-                'label'              => esc_html__( 'Space Between', 'motionui-addons-for-elementor' ),
-                'type'               => Controls_Manager::NUMBER,
-                'min'                => 0,
-                'max'                => 120,
-                'default'            => 24,
-                'description'        => esc_html__( 'Gap between slides, in pixels.', 'motionui-addons-for-elementor' ),
-                'frontend_available' => true,
-                'condition'          => [ 'themeic_testimonial_view' => 'slide' ],
-            ]
-        );
-
         $this->end_controls_section();
     }
 
@@ -612,89 +592,6 @@ class Testimonial extends Muia_Base {
 
         $this->end_controls_section();
 
-        /* -------------------------------------------------- Navigation */
-        $this->start_controls_section(
-            'themeic_section_testimonial_nav_style',
-            [
-                'label'     => esc_html__( 'Navigation', 'motionui-addons-for-elementor' ),
-                'tab'       => Controls_Manager::TAB_STYLE,
-                'condition' => [
-                    'themeic_testimonial_view' => 'slide',
-                    'muia_slide_navigation!'   => 'none',
-                ],
-            ]
-        );
-
-        // Declared here rather than in the stylesheet, for the same reason the
-        // grid is: the card CSS is generated from a separate source.
-        $this->add_control(
-            'themeic_testimonial_arrow_align',
-            [
-                'label'     => esc_html__( 'Arrow Alignment', 'motionui-addons-for-elementor' ),
-                'type'      => Controls_Manager::CHOOSE,
-                'default'   => 'center',
-                'options'   => [
-                    'flex-start' => [
-                        'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
-                        'icon'  => 'eicon-text-align-left',
-                    ],
-                    'center'     => [
-                        'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
-                        'icon'  => 'eicon-text-align-center',
-                    ],
-                    'flex-end'   => [
-                        'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
-                        'icon'  => 'eicon-text-align-right',
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .muia-testimonial-arrows' => 'display: flex; gap: 10px; margin-top: 24px; justify-content: {{VALUE}};',
-                ],
-                'condition' => [ 'muia_slide_navigation' => [ 'arrow', 'both' ] ],
-            ]
-        );
-
-        $this->add_responsive_control(
-            'themeic_testimonial_arrow_size',
-            [
-                'label'      => esc_html__( 'Arrow Size', 'motionui-addons-for-elementor' ),
-                'type'       => Controls_Manager::SLIDER,
-                'size_units' => [ 'px' ],
-                'range'      => [ 'px' => [ 'min' => 24, 'max' => 90 ] ],
-                'default'    => [ 'unit' => 'px', 'size' => 44 ],
-                'selectors'  => [
-                    '{{WRAPPER}} .muia-testimonial-arrow' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}}; display: inline-flex; align-items: center; justify-content: center; border: 1px solid currentColor; border-radius: 50%; background: none; cursor: pointer;',
-                ],
-                'condition'  => [ 'muia_slide_navigation' => [ 'arrow', 'both' ] ],
-            ]
-        );
-
-        $this->add_control(
-            'themeic_testimonial_arrow_color',
-            [
-                'label'     => esc_html__( 'Arrow Color', 'motionui-addons-for-elementor' ),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .muia-testimonial-arrow' => 'color: {{VALUE}};',
-                ],
-                'condition' => [ 'muia_slide_navigation' => [ 'arrow', 'both' ] ],
-            ]
-        );
-
-        $this->add_control(
-            'themeic_testimonial_dot_color',
-            [
-                'label'     => esc_html__( 'Dot Color', 'motionui-addons-for-elementor' ),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .muia-testimonial-pagination .swiper-pagination-bullet' => 'background-color: {{VALUE}};',
-                ],
-                'condition' => [ 'muia_slide_navigation' => [ 'dots', 'both' ] ],
-                'separator' => 'before',
-            ]
-        );
-
-        $this->end_controls_section();
     }
 
     /**
@@ -749,14 +646,10 @@ class Testimonial extends Muia_Base {
      * @return void
      */
     protected function render_muia_slider( $settings, $items, $style ) {
-
-        $navigation = isset( $settings['muia_slide_navigation'] ) ? $settings['muia_slide_navigation'] : 'arrow';
-        $has_arrows = in_array( $navigation, [ 'arrow', 'both' ], true );
-        $has_dots   = in_array( $navigation, [ 'dots', 'both' ], true );
         ?>
-        <div class="muia-testimonial-slider">
+        <div class="muia-testimonial-slider themeic-slide-wrapper" <?php $this->muia_slide_wrapper_attributes( 'muia_slide', $settings ); ?>>
 
-            <div class="swiper">
+            <div class="swiper <?php echo esc_attr( $this->muia_slide_track_classes( 'muia_slide', $settings ) ); ?>">
                 <div class="swiper-wrapper">
                     <?php foreach ( $items as $item ) : ?>
                         <div class="swiper-slide">
@@ -766,20 +659,7 @@ class Testimonial extends Muia_Base {
                 </div>
             </div>
 
-            <?php if ( $has_dots ) : ?>
-                <div class="muia-testimonial-pagination"></div>
-            <?php endif; ?>
-
-            <?php if ( $has_arrows ) : ?>
-                <div class="muia-testimonial-arrows">
-                    <button type="button" class="muia-testimonial-arrow muia-prev" aria-label="<?php esc_attr_e( 'Previous', 'motionui-addons-for-elementor' ); ?>">
-                        <?php Icons_Manager::render_icon( $settings['muia_slide_arrow_prev_icon'], [ 'aria-hidden' => 'true' ] ); ?>
-                    </button>
-                    <button type="button" class="muia-testimonial-arrow muia-next" aria-label="<?php esc_attr_e( 'Next', 'motionui-addons-for-elementor' ); ?>">
-                        <?php Icons_Manager::render_icon( $settings['muia_slide_arrow_next_icon'], [ 'aria-hidden' => 'true' ] ); ?>
-                    </button>
-                </div>
-            <?php endif; ?>
+            <?php $this->muia_render_slide_nav( 'muia_slide', $settings ); ?>
 
         </div>
         <?php
