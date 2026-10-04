@@ -1,0 +1,75 @@
+.themeic-arrow-circle-btn {
+  font-size: 1.2rem;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 3em;
+  min-width: 3em;
+  height: 3em;
+  border: 1px solid #12100f;
+  border-radius: 50%;
+  color: #12100f;  
+  text-decoration: none;
+  transition:all cubic-bezier(0.2, 0, 0, 1);
+} 
+.themeic-arrow-circle-btn svg {
+  height: auto;
+  width: 0.8em;
+}
+.themeic-arrow-circle-btn:hover, .themeic-arrow-circle-btn:focus-visible {
+  border-color: #12100f;
+  background-color: #12100f;
+  color: #fff;
+}  
+.themeic-slide-nav { 
+    display: flex;
+    align-items: center;
+    margin-top: 1.75rem;
+    gap: 0.75rem;
+}   
+.themeic-slide-nav .themeic-slide-btn.swiper-button-disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+.themeic-slide-nav .themeic-slide-pagination {
+  margin-inline-start: 0.5rem;
+  line-height: 1;
+}
+.themeic-slide-nav .themeic-slide-pagination:empty {
+  display: none;
+}
+.themeic-slide-nav .themeic-slide-pagination.swiper-pagination-bullets {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.themeic-slide-nav .themeic-slide-pagination .swiper-pagination-bullet {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin: 0;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.3;
+  cursor: pointer;
+  transition: opacity 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+.themeic-slide-nav .themeic-slide-pagination .swiper-pagination-bullet-active {
+  opacity: 1;
+}
+.themeic-slide-nav .themeic-slide-pagination.swiper-pagination-progressbar {
+  position: relative;
+  flex: 1;
+  height: 0.25rem;
+  border-radius: 99px;
+  background-color: rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+.themeic-slide-nav .themeic-slide-pagination .swiper-pagination-progressbar-fill {
+  border-radius: inherit;
+  background-color:#000000;
+}
+.themeic-slide-nav .themeic-slide-pagination.swiper-pagination-fraction {
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}  

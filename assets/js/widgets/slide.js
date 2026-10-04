@@ -1,18 +1,52 @@
+const SLIDE_EFFECTS = {
+    fade: {
+        effect: 'fade',
+        fadeEffect: { crossFade: true }
+    },
+    cube: {
+        effect: 'cube',
+        cubeEffect: { shadow: true, slideShadows: true, shadowOffset: 20, shadowScale: 0.94 }
+    },
+    coverflow: {
+        effect: 'coverflow',
+        coverflowEffect: { rotate: 30, stretch: 0, depth: 100, modifier: 1, slideShadows: true }
+    },
+    flip: {
+        effect: 'flip',
+        flipEffect: { slideShadows: true, limitRotation: true }
+    },
+    cards: {
+        effect: 'cards',
+        cardsEffect: { perSlideOffset: 8, perSlideRotate: 2, slideShadows: true }
+    },
+    creative: {
+        effect: 'creative',
+        creativeEffect: {
+            prev: { shadow: true, translate: ['-20%', 0, -1] },
+            next: { translate: ['100%', 0, 0] }
+        }
+    }
+};
+const SINGLE_SLIDE_EFFECTS = ['fade', 'cube', 'flip', 'cards', 'creative'];
+
 function themeicSlide($scope, options = {}) {
 
     let root = $scope[0];
     
     if (!root || typeof Swiper === 'undefined') return;
-
+    console.log(root);
+    
     const {
         clickableSelector = '.themeic-slide-inner',
-        effect = 'slide',
+        dEffect = 'slide',
         loop,
         slideOptions = {}
     } = options;
 
-    const overlay = effect === 'overlay';
+    const slideSettings = $scope.find('[data-slide-settings]').data('slide-settings') || {};
 
+    const overlay = slideSettings.effect === 'overlay';
+    const effect = slideSettings.effect || dEffect;   
     const el = root.querySelector('.swiper');
 
 
@@ -28,10 +62,7 @@ function themeicSlide($scope, options = {}) {
     let loopExtra = readLoopExtra();
     let isDragging = false;
 
-    const isLoop = typeof loop === 'boolean'
-        ? loop
-        : (!!el && el.classList.contains('is-slide-loop'));
-
+    const isLoop = slideSettings.loop;
   
     const manualNav = overlay && isLoop && (prevBtn || nextBtn);
 
@@ -249,3 +280,9 @@ function themeicSlide($scope, options = {}) {
 
     return swiper;
 }
+
+muia.initElementorFrontend({
+    widgets: {
+        'themeic-testimonial.default': themeicSlide
+    }
+});

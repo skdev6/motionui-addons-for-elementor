@@ -112,16 +112,16 @@ window.muia = window.muia || {};
                 CSS_EASES[muiaEase] ||
                 CSS_EASES['expo.out'];
 
-            if ($scope?.length) {
+            // if ($scope?.length) {
 
-                $scope.css({
-                    '--muia-duration': `${muiaDuration}s`,
-                    '--muia-delay': `${muiaDelay}s`,
-                    '--muia-stagger': `${muiaStagger}s`,
-                    '--muia-ease': muiaCSSEase
-                });
+            //     $scope.css({
+            //         '--muia-duration': `${muiaDuration}s`,
+            //         '--muia-delay': `${muiaDelay}s`,
+            //         '--muia-stagger': `${muiaStagger}s`,
+            //         '--muia-ease': muiaCSSEase
+            //     });
 
-            }
+            // }
             return {    
                 muiaDirection, muiaCSSEase, isMobile:isMobile === 'yes',isDesktop:window.innerWidth > 991,
                 muiaTl:{ duration:muiaDuration, delay:muiaDelay, stagger:muiaStagger, ease:muiaEase },

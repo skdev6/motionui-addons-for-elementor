@@ -58,14 +58,14 @@ trait Slide_Controls {
 	 *                       that control; `*_default` keys change defaults.
 	 * @return void
 	 */
-	public function muia_slide_controls( $prefix = 'slide', $args = array() ) {
+	public function muia_slide_controls( $prefix = 'slide', $args = array() ) {   
 
 		$args = wp_parse_args(
 			$args,
 			array(
-				'title'                => esc_html__( 'Slider', 'csf-core' ),
+				'title'                => esc_html__( 'Slide Settings', 'csf-core' ),
 				'condition'            => array(),
-				'wrapper'              => '{{WRAPPER}} .themeic-slide-wrapper',
+				'wrapper'              => '{{WRAPPER}}',
 				'per_view'             => true,
 				'gap'                  => true,
 				'height'               => true,
@@ -228,7 +228,7 @@ trait Slide_Controls {
 		}
 
 		if ( $args['speed'] ) {
-			$this->add_control(
+			$this->add_responsive_control(
 				$prefix . '_speed',
 				array(
 					'label'       => esc_html__( 'Transition Speed', 'csf-core' ),
@@ -338,7 +338,7 @@ trait Slide_Controls {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'title'                   => esc_html__( 'Navigation', 'csf-core' ),
+				'title'                   => esc_html__( 'Slide Navigation', 'csf-core' ),
 				'condition'               => array(),
 				'arrows'                  => true,
 				'pagination'              => true,
@@ -473,11 +473,11 @@ trait Slide_Controls {
 			)
 		);
 
-		// Both classes, to outrank the `.arrow-circle-btn:hover` rule in
+		// Both classes, to outrank the `.themeic-arrow-circle-btn:hover` rule in
 		// _buttons.scss. That stylesheet styles the button with plain
 		// properties, not custom properties, so these write the same.
-		$arrow       = '{{WRAPPER}} .arrow-circle-btn.themeic-slide-btn';
-		$arrow_hover = '{{WRAPPER}} .arrow-circle-btn.themeic-slide-btn:hover, {{WRAPPER}} .arrow-circle-btn.themeic-slide-btn:focus-visible';
+		$arrow       = '{{WRAPPER}} .themeic-arrow-circle-btn.themeic-slide-btn';
+		$arrow_hover = '{{WRAPPER}} .themeic-arrow-circle-btn.themeic-slide-btn:hover, {{WRAPPER}} .themeic-arrow-circle-btn.themeic-slide-btn:focus-visible';
 		$pagination  = '{{WRAPPER}} .themeic-slide-pagination';
 
 		$this->start_controls_section(
@@ -565,9 +565,9 @@ trait Slide_Controls {
 				'selectors' => array( $arrow_hover => 'background-color: {{VALUE}};' ),
 			)
 		);
-
+ 
 		// The border group writes border-color on the non-hover selector, which
-		// outranks the stylesheet's `.arrow-circle-btn:hover` rule. Without a
+		// outranks the stylesheet's `.themeic-arrow-circle-btn:hover` rule. Without a
 		// hover colour here, setting a border would freeze it on hover.
 		$this->add_control(
 			$prefix . '_arrow_border_color_hover',
@@ -728,25 +728,6 @@ trait Slide_Controls {
 	}
 
 	/**
-	 * Extra classes for the `.swiper` track element.
-	 *
-	 * @param string $prefix   Control ID prefix.
-	 * @param array  $settings Widget settings.
-	 * @return string
-	 */
-	public function muia_slide_track_classes( $prefix = 'slide', $settings = array() ) {
-
-		$classes = array();
-
-		// themeicSlide() opts into looping off this class.
-		if ( isset( $settings[ $prefix . '_loop' ] ) && 'yes' === $settings[ $prefix . '_loop' ] ) {
-			$classes[] = 'is-slide-loop';
-		}
-
-		return implode( ' ', $classes );
-	}
-
-	/**
 	 * Render the arrow and pagination row.
 	 *
 	 * themeicSlide() only wires up the modules whose elements exist, so a
@@ -773,11 +754,11 @@ trait Slide_Controls {
 
 			<?php if ( $show_arrows ) : ?>
 
-				<button class="arrow-circle-btn themeic-slide-btn themeic-slide-prev" type="button" aria-label="<?php esc_attr_e( 'Previous slide', 'csf-core' ); ?>">
+				<button class="themeic-arrow-circle-btn themeic-slide-btn themeic-slide-prev" type="button" aria-label="<?php esc_attr_e( 'Previous slide', 'csf-core' ); ?>">
 					<?php $this->muia_slide_arrow_icon( $settings, $prefix . '_prev_icon', 'prev' ); ?>
 				</button>
 
-				<button class="arrow-circle-btn themeic-slide-btn themeic-slide-next" type="button" aria-label="<?php esc_attr_e( 'Next slide', 'csf-core' ); ?>">
+				<button class="themeic-arrow-circle-btn themeic-slide-btn themeic-slide-next" type="button" aria-label="<?php esc_attr_e( 'Next slide', 'csf-core' ); ?>">
 					<?php $this->muia_slide_arrow_icon( $settings, $prefix . '_next_icon', 'next' ); ?>
 				</button>
 

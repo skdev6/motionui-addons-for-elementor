@@ -155,7 +155,6 @@ class Testimonial extends Muia_Base {
         // shown once the view is set to Slide.
         $this->muia_slide_controls( 'muia_slide', [
             'condition'     => [ 'themeic_testimonial_view' => 'slide' ],
-            'wrapper'       => '{{WRAPPER}} .muia-testimonial-slider.themeic-slide-wrapper',
             'height'        => false,
             'thumb_width'   => false,
             'gap_default'   => 24,
@@ -354,6 +353,7 @@ class Testimonial extends Muia_Base {
             'themeic_section_testimonial_layout',
             [
                 'label' => esc_html__( 'Layout', 'motionui-addons-for-elementor' ),
+                'condition'      => [ 'themeic_testimonial_view' => 'grid' ],
             ]
         );
 
@@ -369,8 +369,7 @@ class Testimonial extends Muia_Base {
                 'mobile_default' => 1,
                 'selectors'      => [
                     '{{WRAPPER}} .muia-testimonial-grid' => 'display: grid; grid-template-columns: repeat({{VALUE}}, minmax(0, 1fr));',
-                ],
-                'condition'      => [ 'themeic_testimonial_view' => 'grid' ],
+                ]
             ]
         );
 
@@ -388,13 +387,12 @@ class Testimonial extends Muia_Base {
                 'default'    => [ 'unit' => 'px', 'size' => 24 ],
                 'selectors'  => [
                     '{{WRAPPER}} .muia-testimonial-grid' => 'gap: {{SIZE}}{{UNIT}};',
-                ],
-                'condition'  => [ 'themeic_testimonial_view' => 'grid' ],
+                ]
             ]
         );
 
         $this->end_controls_section();
-    }
+    }  
 
     /**
      * Style controls.
@@ -645,11 +643,10 @@ class Testimonial extends Muia_Base {
      * @param  string $style    Card style key.
      * @return void
      */
-    protected function render_muia_slider( $settings, $items, $style ) {
+    protected function render_muia_slider( $settings, $items, $style ) {  
         ?>
-        <div class="muia-testimonial-slider themeic-slide-wrapper" <?php $this->muia_slide_wrapper_attributes( 'muia_slide', $settings ); ?>>
-
-            <div class="swiper <?php echo esc_attr( $this->muia_slide_track_classes( 'muia_slide', $settings ) ); ?>">
+        <div class="themeic-slide-wrapper" <?php $this->muia_slide_wrapper_attributes( 'muia_slide', $settings ); ?>>
+            <div class="swiper">
                 <div class="swiper-wrapper">
                     <?php foreach ( $items as $item ) : ?>
                         <div class="swiper-slide">
@@ -658,12 +655,10 @@ class Testimonial extends Muia_Base {
                     <?php endforeach; ?>
                 </div>
             </div>
-
             <?php $this->muia_render_slide_nav( 'muia_slide', $settings ); ?>
-
         </div>
         <?php
-    }
+    } 
 
     /**
      * One card, in whichever design is chosen.

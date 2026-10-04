@@ -14,19 +14,18 @@ class Assets {
         wp_register_script( 'scroll-trigger', THEMEIC_MUIA_ASSETS . 'vendor/scroll-trigger/scroll-trigger.min.js', ['gsap'], THEMEIC_MUIA_VERSION, false );
         wp_register_script( 'draw-svg', THEMEIC_MUIA_ASSETS . 'vendor/draw-svg/draw-svg.min.js', ['gsap'], THEMEIC_MUIA_VERSION, false );
         wp_register_script( 'swiper', THEMEIC_MUIA_ASSETS . 'vendor/Swiper/swiper-bundle.min.js', [], THEMEIC_MUIA_VERSION, true );
-        wp_register_script( 'muia-slide', THEMEIC_MUIA_ASSETS . 'js/widgets/slide.js', ['swiper'], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'muia-animated-slider', THEMEIC_MUIA_ASSETS . 'js/widgets/animated-slider.js', ['muia'], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'muia-imga', THEMEIC_MUIA_ASSETS . 'js/widgets/imga.js', ['gsap', 'muia'], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'muia-texta', THEMEIC_MUIA_ASSETS . 'js/widgets/texta.js', ['gsap', 'muia'], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'muia-testimonial', THEMEIC_MUIA_ASSETS . 'js/widgets/muia-testimonial.js', ['swiper', 'muia'], THEMEIC_MUIA_VERSION, true );
-        // A jQuery plugin, so it cannot load before jQuery does.
+        wp_register_script( 'muia-slide', THEMEIC_MUIA_ASSETS . 'js/widgets/slide.js', ['swiper', 'muia'], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'animated-headline', THEMEIC_MUIA_ASSETS . 'vendor/animated-headline/jquery.animatedheadline.min.js', [ 'jquery' ], THEMEIC_MUIA_VERSION, true );
         wp_register_script( 'split-type', THEMEIC_MUIA_ASSETS . 'vendor/split-type/split-type.min.js', [], THEMEIC_MUIA_VERSION, true );
 
 		// CSS Register
 		wp_register_style( 'animated-headline', THEMEIC_MUIA_ASSETS . 'vendor/animated-headline/jquery.animatedheadline.css', [], THEMEIC_MUIA_VERSION );
 		wp_register_style( 'muia-testimonial', THEMEIC_MUIA_ASSETS . 'css/widgets/muia-testimonial.min.css', [], THEMEIC_MUIA_VERSION );
-		wp_register_style( 'muia-slide', THEMEIC_MUIA_ASSETS . 'css/widgets/muia-slide.min.css', [], THEMEIC_MUIA_VERSION ); 
+		wp_register_style( 'muia-slide', THEMEIC_MUIA_ASSETS . 'css/widgets/muia-slide.css', [], THEMEIC_MUIA_VERSION ); 
 
         wp_register_script(
             'muia',
