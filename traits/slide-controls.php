@@ -63,7 +63,7 @@ trait Slide_Controls {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'title'                => esc_html__( 'Slide Settings', 'csf-core' ),
+				'title'                => esc_html__( 'Slide Settings', 'motionui-addons-for-elementor' ),
 				'condition'            => array(),
 				'wrapper'              => '{{WRAPPER}}',
 				'per_view'             => true,
@@ -101,8 +101,8 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_effect',
 				array(
-					'label'       => esc_html__( 'Effect', 'csf-core' ),
-					'description' => esc_html__( 'Overlap stacks the inactive slides behind the active one. The rest are Swiper transitions.', 'csf-core' ),
+					'label'       => esc_html__( 'Effect', 'motionui-addons-for-elementor' ),
+					'description' => esc_html__( 'Overlap stacks the inactive slides behind the active one. The rest are Swiper transitions.', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::SELECT,
 					'default'     => $args['effect_default'],
 					'options'     => $this->muia_slide_effect_options(),
@@ -115,21 +115,21 @@ trait Slide_Controls {
 			$this->add_responsive_control(
 				$prefix . '_per_view',
 				array(
-					'label'       => esc_html__( 'Slides Per View', 'csf-core' ),
-					'description' => esc_html__( 'In overlap mode this sets how wide the active slide is: 3 makes it a third of the widget.', 'csf-core' ),
+					'label'       => esc_html__( 'Slides Per View', 'motionui-addons-for-elementor' ),
+					'description' => esc_html__( 'In overlap mode this sets how wide the active slide is: 3 makes it a third of the widget.', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::SELECT,
 					// Cast: option keys are strings, and widgets pass ints.
 					'default'     => (string) $args['per_view_default'],
 					'options' => [
-						'1' => esc_html__( '1', 'csf-core' ),
-						'2'  => esc_html__( '2', 'csf-core' ),
-						'3' => esc_html__( '3', 'csf-core' ),
-						'4' => esc_html__( '4', 'csf-core' ),
-						'5' => esc_html__( '5', 'csf-core' ),
-						'6' => esc_html__( '6', 'csf-core' ),
-						'7' => esc_html__( '7', 'csf-core' ),
-						'8' => esc_html__( '8', 'csf-core' ),
-						'9' => esc_html__( '9', 'csf-core' ),
+						'1' => esc_html__( '1', 'motionui-addons-for-elementor' ),
+						'2'  => esc_html__( '2', 'motionui-addons-for-elementor' ),
+						'3' => esc_html__( '3', 'motionui-addons-for-elementor' ),
+						'4' => esc_html__( '4', 'motionui-addons-for-elementor' ),
+						'5' => esc_html__( '5', 'motionui-addons-for-elementor' ),
+						'6' => esc_html__( '6', 'motionui-addons-for-elementor' ),
+						'7' => esc_html__( '7', 'motionui-addons-for-elementor' ),
+						'8' => esc_html__( '8', 'motionui-addons-for-elementor' ),
+						'9' => esc_html__( '9', 'motionui-addons-for-elementor' ),
 					],
 					'selectors'   => array(
 						$wrapper => '--slide-per-view: {{VALUE}};',
@@ -142,19 +142,19 @@ trait Slide_Controls {
 			$this->add_responsive_control(
 				$prefix . '_thumb_width',
 				array(
-					'label'       => esc_html__( 'Collapsed Slide Width', 'csf-core' ),
-					'description' => esc_html__( 'Width of the stacked slides, as a percentage of the active one.', 'csf-core' ),
+					'label'       => esc_html__( 'Collapsed Slide Width', 'motionui-addons-for-elementor' ),
+					'description' => esc_html__( 'Width of the stacked slides, as a percentage of the active one.', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::SELECT,
 					'default'     => (string) $args['thumb_width_default'],
 					'options' => [
-						'20'  => esc_html__( '20%', 'csf-core' ),
-						'30' => esc_html__( '30%', 'csf-core' ),
-						'40' => esc_html__( '40%', 'csf-core' ),
-						'50' => esc_html__( '50%', 'csf-core' ),
-						'60' => esc_html__( '60%', 'csf-core' ),
-						'70' => esc_html__( '70%', 'csf-core' ),
-						'80' => esc_html__( '80%', 'csf-core' ),
-						'90' => esc_html__( '90%', 'csf-core' ),
+						'20'  => esc_html__( '20%', 'motionui-addons-for-elementor' ),
+						'30' => esc_html__( '30%', 'motionui-addons-for-elementor' ),
+						'40' => esc_html__( '40%', 'motionui-addons-for-elementor' ),
+						'50' => esc_html__( '50%', 'motionui-addons-for-elementor' ),
+						'60' => esc_html__( '60%', 'motionui-addons-for-elementor' ),
+						'70' => esc_html__( '70%', 'motionui-addons-for-elementor' ),
+						'80' => esc_html__( '80%', 'motionui-addons-for-elementor' ),
+						'90' => esc_html__( '90%', 'motionui-addons-for-elementor' ),
 					],
 					'selectors'   => array(
 						// Unitless: readPx() parses the number and clamps it.
@@ -169,7 +169,7 @@ trait Slide_Controls {
 			$this->add_responsive_control(
 				$prefix . '_gap',
 				array(
-					'label'      => esc_html__( 'Gap Between Slides', 'csf-core' ),
+					'label'      => esc_html__( 'Gap Between Slides', 'motionui-addons-for-elementor' ),
 					'type'       => Controls_Manager::SLIDER,
 					'size_units' => array( 'px', 'rem' ),
 					'range'      => array(
@@ -198,7 +198,7 @@ trait Slide_Controls {
 			$this->add_responsive_control(
 				$prefix . '_height',
 				array(
-					'label'      => esc_html__( 'Slide Height', 'csf-core' ),
+					'label'      => esc_html__( 'Slide Height', 'motionui-addons-for-elementor' ),
 					'type'       => Controls_Manager::SLIDER,
 					'size_units' => array( 'rem', 'px', 'vh' , 'custom'),
 					'range'      => array(
@@ -231,8 +231,8 @@ trait Slide_Controls {
 			$this->add_responsive_control(
 				$prefix . '_speed',
 				array(
-					'label'       => esc_html__( 'Transition Speed', 'csf-core' ),
-					'description' => esc_html__( 'Milliseconds.', 'csf-core' ),
+					'label'       => esc_html__( 'Transition Speed', 'motionui-addons-for-elementor' ),
+					'description' => esc_html__( 'Milliseconds.', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::SLIDER,
 					'size_units'  => array( 'px' ),
 					'range'       => array(
@@ -254,10 +254,10 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_loop',
 				array(
-					'label'        => esc_html__( 'Infinite Loop', 'csf-core' ),
+					'label'        => esc_html__( 'Infinite Loop', 'motionui-addons-for-elementor' ),
 					'type'         => Controls_Manager::SWITCHER,
-					'label_on'     => esc_html__( 'Yes', 'csf-core' ),
-					'label_off'    => esc_html__( 'No', 'csf-core' ),
+					'label_on'     => esc_html__( 'Yes', 'motionui-addons-for-elementor' ),
+					'label_off'    => esc_html__( 'No', 'motionui-addons-for-elementor' ),
 					'return_value' => 'yes',
 					'default'      => $args['loop_default'],
 					'render_type'  => 'template',
@@ -267,8 +267,8 @@ trait Slide_Controls {
 			$this->add_responsive_control(
 				$prefix . '_loop_extra',
 				array(
-					'label'       => esc_html__( 'Extra Looped Slides', 'csf-core' ),
-					'description' => esc_html__( 'How many clones Swiper keeps either side of the track. Leave empty to work it out from Slides Per View.', 'csf-core' ),
+					'label'       => esc_html__( 'Extra Looped Slides', 'motionui-addons-for-elementor' ),
+					'description' => esc_html__( 'How many clones Swiper keeps either side of the track. Leave empty to work it out from Slides Per View.', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::SLIDER,
 					'size_units'  => array( 'custom' ),
 					'range'       => array(
@@ -292,10 +292,10 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_autoplay',
 				array(
-					'label'        => esc_html__( 'Autoplay', 'csf-core' ),
+					'label'        => esc_html__( 'Autoplay', 'motionui-addons-for-elementor' ),
 					'type'         => Controls_Manager::SWITCHER,
-					'label_on'     => esc_html__( 'Yes', 'csf-core' ),
-					'label_off'    => esc_html__( 'No', 'csf-core' ),
+					'label_on'     => esc_html__( 'Yes', 'motionui-addons-for-elementor' ),
+					'label_off'    => esc_html__( 'No', 'motionui-addons-for-elementor' ),
 					'return_value' => 'yes',
 					'default'      => $args['autoplay_default'],
 					'render_type'  => 'template',
@@ -305,8 +305,8 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_autoplay_delay',
 				array(
-					'label'       => esc_html__( 'Autoplay Delay', 'csf-core' ),
-					'description' => esc_html__( 'Seconds each slide stays put.', 'csf-core' ),
+					'label'       => esc_html__( 'Autoplay Delay', 'motionui-addons-for-elementor' ),
+					'description' => esc_html__( 'Seconds each slide stays put.', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::SLIDER,
 					'size_units'  => array( 'custom' ),
 					'range'       => array(
@@ -338,7 +338,7 @@ trait Slide_Controls {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'title'                   => esc_html__( 'Slide Navigation', 'csf-core' ),
+				'title'                   => esc_html__( 'Slide Navigation', 'motionui-addons-for-elementor' ),
 				'condition'               => array(),
 				'arrows'                  => true,
 				'pagination'              => true,
@@ -361,10 +361,10 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_arrows',
 				array(
-					'label'        => esc_html__( 'Arrows', 'csf-core' ),
+					'label'        => esc_html__( 'Arrows', 'motionui-addons-for-elementor' ),
 					'type'         => Controls_Manager::SWITCHER,
-					'label_on'     => esc_html__( 'Show', 'csf-core' ),
-					'label_off'    => esc_html__( 'Hide', 'csf-core' ),
+					'label_on'     => esc_html__( 'Show', 'motionui-addons-for-elementor' ),
+					'label_off'    => esc_html__( 'Hide', 'motionui-addons-for-elementor' ),
 					'return_value' => 'yes',
 					'default'      => $args['arrows_default'],
 					'render_type'  => 'template',
@@ -374,8 +374,8 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_prev_icon',
 				array(
-					'label'       => esc_html__( 'Previous Icon', 'csf-core' ),
-					'description' => esc_html__( 'Leave empty to use the built-in arrow.', 'csf-core' ),
+					'label'       => esc_html__( 'Previous Icon', 'motionui-addons-for-elementor' ),
+					'description' => esc_html__( 'Leave empty to use the built-in arrow.', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::ICONS,
 					'skin'        => 'inline',
 					'label_block' => false,
@@ -386,8 +386,8 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_next_icon',
 				array(
-					'label'       => esc_html__( 'Next Icon', 'csf-core' ),
-					'description' => esc_html__( 'Leave empty to use the built-in arrow.', 'csf-core' ),
+					'label'       => esc_html__( 'Next Icon', 'motionui-addons-for-elementor' ),
+					'description' => esc_html__( 'Leave empty to use the built-in arrow.', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::ICONS,
 					'skin'        => 'inline',
 					'label_block' => false,
@@ -400,10 +400,10 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_pagination',
 				array(
-					'label'        => esc_html__( 'Pagination', 'csf-core' ),
+					'label'        => esc_html__( 'Pagination', 'motionui-addons-for-elementor' ),
 					'type'         => Controls_Manager::SWITCHER,
-					'label_on'     => esc_html__( 'Show', 'csf-core' ),
-					'label_off'    => esc_html__( 'Hide', 'csf-core' ),
+					'label_on'     => esc_html__( 'Show', 'motionui-addons-for-elementor' ),
+					'label_off'    => esc_html__( 'Hide', 'motionui-addons-for-elementor' ),
 					'return_value' => 'yes',
 					'default'      => $args['pagination_default'],
 					'separator'    => 'before',
@@ -414,13 +414,13 @@ trait Slide_Controls {
 			$this->add_control(
 				$prefix . '_pagination_type',
 				array(
-					'label'       => esc_html__( 'Pagination Type', 'csf-core' ),
+					'label'       => esc_html__( 'Pagination Type', 'motionui-addons-for-elementor' ),
 					'type'        => Controls_Manager::SELECT,
 					'default'     => $args['pagination_type_default'],
 					'options'     => array(
-						'progressbar' => esc_html__( 'Progress Bar', 'csf-core' ),
-						'bullets'     => esc_html__( 'Bullets', 'csf-core' ),
-						'fraction'    => esc_html__( 'Fraction', 'csf-core' ),
+						'progressbar' => esc_html__( 'Progress Bar', 'motionui-addons-for-elementor' ),
+						'bullets'     => esc_html__( 'Bullets', 'motionui-addons-for-elementor' ),
+						'fraction'    => esc_html__( 'Fraction', 'motionui-addons-for-elementor' ),
 					),
 					'condition'   => array( $prefix . '_pagination' => 'yes' ),
 					'render_type' => 'template',
@@ -431,19 +431,19 @@ trait Slide_Controls {
 		$this->add_responsive_control(
 			$prefix . '_nav_align',
 			array(
-				'label'     => esc_html__( 'Alignment', 'csf-core' ),
+				'label'     => esc_html__( 'Alignment', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::CHOOSE,
 				'options'   => array(
 					'flex-start' => array(
-						'title' => esc_html__( 'Left', 'csf-core' ),
+						'title' => esc_html__( 'Left', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-text-align-left',
 					),
 					'center'     => array(
-						'title' => esc_html__( 'Center', 'csf-core' ),
+						'title' => esc_html__( 'Center', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-text-align-center',
 					),
 					'flex-end'   => array(
-						'title' => esc_html__( 'Right', 'csf-core' ),
+						'title' => esc_html__( 'Right', 'motionui-addons-for-elementor' ),
 						'icon'  => 'eicon-text-align-right',
 					),
 				),
@@ -468,7 +468,7 @@ trait Slide_Controls {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'title'     => esc_html__( 'Slider Navigation', 'csf-core' ),
+				'title'     => esc_html__( 'Slider Navigation', 'motionui-addons-for-elementor' ),
 				'condition' => array(),
 			)
 		);
@@ -492,7 +492,7 @@ trait Slide_Controls {
 		$this->add_control(
 			$prefix . '_arrows_heading',
 			array(
-				'label' => esc_html__( 'Arrows', 'csf-core' ),
+				'label' => esc_html__( 'Arrows', 'motionui-addons-for-elementor' ),
 				'type'  => Controls_Manager::HEADING,
 			)
 		);
@@ -500,8 +500,8 @@ trait Slide_Controls {
 		$this->add_responsive_control(
 			$prefix . '_arrow_radius',
 			array(
-				'label'       => esc_html__( 'Border Radius', 'csf-core' ),
-				'description' => esc_html__( '50% keeps the button a circle.', 'csf-core' ),
+				'label'       => esc_html__( 'Border Radius', 'motionui-addons-for-elementor' ),
+				'description' => esc_html__( '50% keeps the button a circle.', 'motionui-addons-for-elementor' ),
 				'type'        => Controls_Manager::DIMENSIONS,
 				'size_units'  => array( '%', 'px', 'rem' ),
 				'selectors'   => array(
@@ -520,13 +520,13 @@ trait Slide_Controls {
 
 		$this->start_controls_tab(
 			$prefix . '_arrow_tab_normal',
-			array( 'label' => esc_html__( 'Normal', 'csf-core' ) )
+			array( 'label' => esc_html__( 'Normal', 'motionui-addons-for-elementor' ) )
 		);
 
 		$this->add_control(
 			$prefix . '_arrow_color',
 			array(
-				'label'     => esc_html__( 'Color', 'csf-core' ),
+				'label'     => esc_html__( 'Color', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array( $arrow => 'color: {{VALUE}};' ),
 			)
@@ -535,7 +535,7 @@ trait Slide_Controls {
 		$this->add_control(
 			$prefix . '_arrow_bg',
 			array(
-				'label'     => esc_html__( 'Background Color', 'csf-core' ),
+				'label'     => esc_html__( 'Background Color', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array( $arrow => 'background-color: {{VALUE}};' ),
 			)
@@ -545,13 +545,13 @@ trait Slide_Controls {
 
 		$this->start_controls_tab(
 			$prefix . '_arrow_tab_hover',
-			array( 'label' => esc_html__( 'Hover', 'csf-core' ) )
+			array( 'label' => esc_html__( 'Hover', 'motionui-addons-for-elementor' ) )
 		);
 
 		$this->add_control(
 			$prefix . '_arrow_color_hover',
 			array(
-				'label'     => esc_html__( 'Color', 'csf-core' ),
+				'label'     => esc_html__( 'Color', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array( $arrow_hover => 'color: {{VALUE}};' ),
 			)
@@ -560,7 +560,7 @@ trait Slide_Controls {
 		$this->add_control(
 			$prefix . '_arrow_bg_hover',
 			array(
-				'label'     => esc_html__( 'Background Color', 'csf-core' ),
+				'label'     => esc_html__( 'Background Color', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array( $arrow_hover => 'background-color: {{VALUE}};' ),
 			)
@@ -572,7 +572,7 @@ trait Slide_Controls {
 		$this->add_control(
 			$prefix . '_arrow_border_color_hover',
 			array(
-				'label'     => esc_html__( 'Border Color', 'csf-core' ),
+				'label'     => esc_html__( 'Border Color', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array( $arrow_hover => 'border-color: {{VALUE}};' ),
 			)
@@ -584,7 +584,7 @@ trait Slide_Controls {
 		$this->add_control(
 			$prefix . '_pagination_heading',
 			array(
-				'label'     => esc_html__( 'Pagination', 'csf-core' ),
+				'label'     => esc_html__( 'Pagination', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
 			)
@@ -593,7 +593,7 @@ trait Slide_Controls {
 		$this->add_control(
 			$prefix . '_pagination_color',
 			array(
-				'label'     => esc_html__( 'Track / Inactive Color', 'csf-core' ),
+				'label'     => esc_html__( 'Track / Inactive Color', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
 					$pagination . '.swiper-pagination-progressbar' => 'background-color: {{VALUE}};',
@@ -605,7 +605,7 @@ trait Slide_Controls {
 		$this->add_control(
 			$prefix . '_pagination_active_color',
 			array(
-				'label'     => esc_html__( 'Fill / Active Color', 'csf-core' ),
+				'label'     => esc_html__( 'Fill / Active Color', 'motionui-addons-for-elementor' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
 					$pagination . ' .swiper-pagination-progressbar-fill' => 'background-color: {{VALUE}};',
@@ -618,7 +618,7 @@ trait Slide_Controls {
 		$this->add_responsive_control(
 			$prefix . '_pagination_height',
 			array(
-				'label'      => esc_html__( 'Progress Bar Height', 'csf-core' ),
+				'label'      => esc_html__( 'Progress Bar Height', 'motionui-addons-for-elementor' ),
 				'type'       => Controls_Manager::SLIDER,
 				'size_units' => array( 'px' ),
 				'range'      => array(
@@ -663,16 +663,16 @@ trait Slide_Controls {
 	public function muia_slide_effect_options() {
 
 		return array(
-			'slide'     => esc_html__( 'Slide', 'csf-core' ),
-			'overlay'   => esc_html__( 'Overlap', 'csf-core' ),
-			'fade'      => esc_html__( 'Fade', 'csf-core' ),
-			'cube'      => esc_html__( 'Cube', 'csf-core' ),
-			'coverflow' => esc_html__( 'Coverflow', 'csf-core' ),
-			'flip'      => esc_html__( 'Flip', 'csf-core' ),
-			'cards'     => esc_html__( 'Cards', 'csf-core' ),
-			'creative'  => esc_html__( 'Creative', 'csf-core' ),
+			'slide'     => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
+			// 'overlay'   => esc_html__( 'Overlap', 'motionui-addons-for-elementor' ),
+			'fade'      => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
+			'cube'      => esc_html__( 'Cube', 'motionui-addons-for-elementor' ),
+			'coverflow' => esc_html__( 'Coverflow', 'motionui-addons-for-elementor' ),
+			'flip'      => esc_html__( 'Flip', 'motionui-addons-for-elementor' ),
+			'cards'     => esc_html__( 'Cards', 'motionui-addons-for-elementor' ),
+			'creative'  => esc_html__( 'Creative', 'motionui-addons-for-elementor' ),
 		);
-	}
+	}   
 
 	/**
 	 * The slider options that cannot be expressed as CSS.
@@ -754,11 +754,11 @@ trait Slide_Controls {
 
 			<?php if ( $show_arrows ) : ?>
 
-				<button class="themeic-arrow-circle-btn themeic-slide-btn themeic-slide-prev" type="button" aria-label="<?php esc_attr_e( 'Previous slide', 'csf-core' ); ?>">
+				<button class="themeic-arrow-circle-btn themeic-slide-btn themeic-slide-prev" type="button" aria-label="<?php esc_attr_e( 'Previous slide', 'motionui-addons-for-elementor' ); ?>">
 					<?php $this->muia_slide_arrow_icon( $settings, $prefix . '_prev_icon', 'prev' ); ?>
 				</button>
 
-				<button class="themeic-arrow-circle-btn themeic-slide-btn themeic-slide-next" type="button" aria-label="<?php esc_attr_e( 'Next slide', 'csf-core' ); ?>">
+				<button class="themeic-arrow-circle-btn themeic-slide-btn themeic-slide-next" type="button" aria-label="<?php esc_attr_e( 'Next slide', 'motionui-addons-for-elementor' ); ?>">
 					<?php $this->muia_slide_arrow_icon( $settings, $prefix . '_next_icon', 'next' ); ?>
 				</button>
 
