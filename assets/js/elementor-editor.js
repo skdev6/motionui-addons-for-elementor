@@ -6,62 +6,44 @@
  * muia_btn_btn_effect, pss_button_btn_effect, filter_btn_btn_effect and any
  * future one are all covered without listing them.
  */
+
+console.log("Has Pro");
+
 const pro_select_suffixes = [
     '_btn_effect',
-    // Registered as <prefix>muia_motion_trigger_mode, and every extension
-    // picks its own prefix — img, text, effect_ — so the ending is what
-    // catches all of them.
     'muia_motion_trigger_mode',
-];
+]; 
 
 /** Selects matched by their exact name. */
 const pro_select_fields = [
     'muia_text_ani',
 ];
 
-(function ($) {
+(function ($) {  
     "use strict";
 
-  jQuery(window).on('elementor:init', function () {
-      
-      elementor.hooks.addAction('panel/open_editor/widget', function () {
-          setTimeout(disableOptions, 300);
-      });
+    $(window).on('elementor:init', function () { 
 
-      document.addEventListener('click', function (e) {
-          if ( e.target.closest('.elementor-panel-heading,.elementor-component-tab') ) {
-              setTimeout(disableOptions, 150);
-          }
+        elementor.hooks.addAction('panel/open_editor/widget', function (panel) {
+            processOptions(panel.$el.find('select'));
+        });
 
-        if ( e.target.closest('.elementor-element--promotion') ) {
-            let el = e.target.closest('.elementor-element--promotion');
-            let isMuia = el.querySelector('.themeic-muia-logo');
-            if ( isMuia ) setTimeout( customizeDialog, 50 );
-        }
+        // Delegated: only reacts to selects, not every click
+        $(document).on('mousedown focusin', 'select', function () {
+            processOptions($(this));
+        });
+    });
 
-      }, true);
+    function processOptions($selects) {
+        $selects.find('option').each(function () {
+            const text = this.textContent;
 
-  });
-  function disableOptions(){  
-      // Pro is active: every option is available, so there is nothing to do.
-      if ( window.MotionUIEditor && MotionUIEditor.hasPro ) return;
-
-      var currentView = elementor.getPanelView().getCurrentPageView();
-      if ( ! currentView || ! currentView.$el ) return; // safety check
-
-      var selector = pro_select_fields
-          .map(function (field) { return '[data-setting="' + field + '"]'; })
-          .concat(pro_select_suffixes.map(function (suffix) {
-              return '[data-setting$="' + suffix + '"]';
-          }))
-          .join(',');
-
-      currentView.$el.find(selector).find('option').each(function () {
-          if ( jQuery(this).text().includes('Pro') ) {
-              jQuery(this).prop('disabled', true);
-          }
-      });
-  }
+            if (text.includes('Muia Pro')) {
+                this.textContent = text.replace('Muia Pro', 'Pro');
+                this.disabled = true;
+            }
+        });
+    }
 
 
 function customizeDialog() {

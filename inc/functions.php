@@ -62,7 +62,7 @@ if ( ! function_exists( 'muia_pro_title' ) ) {
 			/* translators: 1: control option label, 2: the Pro marker. */
 			esc_html__( '%1$s %2$s', 'motionui-addons-for-elementor' ),
 			$label,
-			esc_html__( '(Pro ✦)', 'motionui-addons-for-elementor' )
+			esc_html__( '( Muia Pro )', 'motionui-addons-for-elementor' )
 		);
 	}
 }

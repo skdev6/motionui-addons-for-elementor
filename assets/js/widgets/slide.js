@@ -34,7 +34,6 @@ function themeicSlide($scope, options = {}) {
     let root = $scope[0];
     
     if (!root || typeof Swiper === 'undefined') return;
-    console.log(root);
     
     const {
         clickableSelector = '.themeic-slide-inner',

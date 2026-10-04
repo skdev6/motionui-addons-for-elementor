@@ -96,11 +96,11 @@ class Assets {
 		// Bail if required constants are not defined.
 		if ( ! defined( 'THEMEIC_MUIA_ASSETS' ) || ! defined( 'THEMEIC_MUIA_VERSION' ) ) {
 			return;
-		}
+		} 
 		
 		$localize_data = [
 			'placeholder_widgets' => Widgets_Manager::get_pro_widgets(),
-			'hasPro'                  => Motionui::is_active_pro(),
+			'hasPro'                  => Motionui::is_active_pro() ? true : false,
 			'proSelectClass'          => muia_pro_select_class(),
 			'editor_nonce'            => wp_create_nonce('muid_editor_nonce'),
 			'upgradeUrl'=>'https://motionuiaddons.com/',
