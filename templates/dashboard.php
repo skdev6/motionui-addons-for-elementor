@@ -33,6 +33,9 @@ $muia_all_widgets_url = apply_filters( 'muia_all_widgets_url', 'https://themeic.
                 <div id="muia-extensions" class="tab-content">
                     <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/extensions.php'; ?>
                 </div>
+                <div id="muia-global-effects" class="tab-content">
+                    <?php require_once THEMEIC_MUIA_DIR_PATH . 'templates/global-effects.php'; ?>
+                </div>
                 <?php do_action('add_muia_dashboard_page'); ?>
             </div>
             

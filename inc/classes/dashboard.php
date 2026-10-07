@@ -100,7 +100,15 @@ class Dashboard{
         Extensions_Manager::save_extensions(array_keys($filtered_map));
 
     }
-    public static function save_data(){  
+    public static function save_global_effects_data($data){
+
+        // Unlike widgets/extensions, the posted (checked) slugs are the active ones.
+        $active = !empty($data['global_effects']) ? (array) $data['global_effects'] : [];
+
+        Global_Effects_Manager::save_global_effects($active);
+
+    }
+    public static function save_data(){
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( 'Unauthorized' );
         }
@@ -124,10 +132,16 @@ class Dashboard{
         if($type === 'extensions'){
             self::save_extensions_data($final_data);
         }
+        if($type === 'global_effects'){
+            self::save_global_effects_data($final_data);
+        }
         wp_send_json_success(array(  
             'message' => __( 'Settings saved successfully!', 'motionui-addons-for-elementor' ),
             'type'    => $type,
         ));
+    }
+    public static function effect_list($map){
+
     }
 	/**
 	 * Render the toggle cards for one dashboard form.
@@ -223,7 +237,7 @@ class Dashboard{
 			class="<?php echo esc_attr( implode( ' ', $muia_card_classes ) ); ?>"
 			data-title="<?php echo esc_attr( $muia_title ); ?>"
 			data-category="<?php echo esc_attr( $muia_category_names ); ?>"
-		>
+		><div class="th-widget-card-inner">
 
 			<div class="icon-wrap" aria-hidden="true">
 				<?php if ( ! empty( $muia_icon ) ) : ?>
@@ -308,7 +322,9 @@ class Dashboard{
             <?php endif; ?>
 
 
-		</div><!-- .th-widget-card -->
+		</div>  
+        <?php self::effect_list($muia_widget); ?>
+        </div><!-- .th-widget-card -->
 
 		<?php endforeach;
     }

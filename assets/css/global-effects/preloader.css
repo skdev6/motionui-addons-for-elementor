@@ -1,0 +1,25 @@
+.muia-preloader {
+	position: fixed;
+	inset: 0;
+	z-index: 999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fff;
+	transition: opacity .5s ease, visibility .5s ease;
+}
+.muia-preloader.is-hidden {
+	opacity: 0;
+	visibility: hidden;
+}
+.muia-preloader-spinner {
+	width: 44px;
+	height: 44px;
+	border: 3px solid rgba(0, 0, 0, .12);
+	border-top-color: #000;
+	border-radius: 50%;
+	animation: muia-preloader-spin .8s linear infinite;
+}
+@keyframes muia-preloader-spin {
+	to { transform: rotate(360deg); }
+}
