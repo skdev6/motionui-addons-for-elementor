@@ -13,6 +13,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Themeic\MotionUI_Addons\Inc\Extensions;
+
 return array(
 	'smooth-scroll'   => array(
 		'title'       => __( 'Smooth Scroll', 'motionui-addons-for-elementor' ),
@@ -23,6 +25,21 @@ return array(
 		'icon'        => 'eicon-scroll',
 		'demo'        => '',
 		'tutorial'    => '',
+		'settings' => [
+			'duration' => [
+				'type' => 'number',
+				'default' => 0.7
+			], 
+			'ease'  => [
+				'type' => 'number',
+				'default' => 'power3.out',
+				'options' => Extensions::get_ease_options()
+			],
+			'delay' => [
+				'type' => 'number',
+				'default' => 0.7
+			],
+		]
 	),
 	'preloader'       => array(
 		'title'       => __( 'Preloader', 'motionui-addons-for-elementor' ),
@@ -44,6 +61,21 @@ return array(
 				'3-dot-shape'=> get_muia_demo_url( '' ),
 				'circle-shape'=> get_muia_demo_url( '' ),
 				'bar-2-spage'=> get_muia_demo_url( '' )
+			],
+		],
+		'settings' => [
+			'duration' => [
+				'type' => 'number',
+				'default' => 0.7
+			], 
+			'ease'  => [
+				'type' => 'number',
+				'default' => 'power3.out',
+				'options' => Extensions::get_ease_options()
+			],
+			'delay' => [
+				'type' => 'number',
+				'default' => 0.7
 			],
 		]
 	),
@@ -67,6 +99,21 @@ return array(
 				'wave-shape'=> get_muia_demo_url( '' ),
 				'slide-wave'=> get_muia_demo_url( '' ),
 				'center-wave'=> get_muia_demo_url( '' )
+			],
+		],
+		'settings' => [
+			'duration' => [
+				'type' => 'number',
+				'default' => 0.7
+			], 
+			'ease'  => [
+				'type' => 'number',
+				'default' => 'power3.out',
+				'options' => Extensions::get_ease_options()
+			],
+			'delay' => [
+				'type' => 'number',
+				'default' => 0.7
 			],
 		]
 	),
