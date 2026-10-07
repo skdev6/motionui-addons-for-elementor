@@ -112,6 +112,11 @@
         $form.find('.muia-enable-all').prop('checked', totalItems === checkedItems);
     });
 
+    // Picking a different sub-effect is a change too, so unlock Save.
+    $(document).on('change', '.muia-dashboard-form .muia-effect-list input[type="radio"]', function() {
+        $(this).closest('.muia-dashboard-form').find('[type="submit"]').removeAttr('disabled');
+    });
+
     // Card filtering: the category select and the search box both narrow the
     // same area, so each change re-runs both rules rather than one hiding what
     // the other just showed.

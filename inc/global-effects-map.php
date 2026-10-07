@@ -31,19 +31,19 @@ return array(
 		'is_pro'      => false,
 		'is_upcoming' => false,
 		'icon'        => 'eicon-loading',
-		'demo'        => get_muia_demo_url( '/all-preloader' ),
+		'demo'        => get_muia_demo_url( '' ),
 		'tutorial'    => '',
 		'pro_effects' => ['loading-reveal', 'bar-2-spage'],
 		'effects' => [
 			'classic' => [
-				'loading-reveal'=> get_muia_demo_url( '/loading-reveal' ),
-				'loading-bar'=> get_muia_demo_url( '/loading-bar' )
-				'loading-dance'=> get_muia_demo_url( '/loading-dance' )
+				'loading-reveal'=> get_muia_demo_url( '' ),
+				'loading-bar'=> get_muia_demo_url( '' ),
+				'loading-dance'=> get_muia_demo_url( '' )
 			],
 			'shapes' => [
-				'3-dot-shape'=> get_muia_demo_url( '/loading-reveal' ),
-				'circle-shape'=> get_muia_demo_url( '/loading-bar' )
-				'bar-2-spage'=> get_muia_demo_url( '/loading-dance' )
+				'3-dot-shape'=> get_muia_demo_url( '' ),
+				'circle-shape'=> get_muia_demo_url( '' ),
+				'bar-2-spage'=> get_muia_demo_url( '' )
 			],
 		]
 	),
@@ -59,14 +59,14 @@ return array(
 		'pro_effects' => ['slide-up', 'center-wave'],
 		'effects' => [
 			'slide' => [
-				'slide-prallax'=> get_muia_demo_url( '/slide-prallax' ),
-				'slide-up'=> get_muia_demo_url( '/slide-up' )
+				'slide-prallax'=> get_muia_demo_url( '' ),
+				'slide-up'=> get_muia_demo_url( '' ),
 				'slide-down'=> get_muia_demo_url( '/slide-down' )
 			],
 			'shapes' => [
-				'wave-shape'=> get_muia_demo_url( '/loading-reveal' ),
-				'slide-wave'=> get_muia_demo_url( '/loading-bar' )
-				'center-wave'=> get_muia_demo_url( '/loading-dance' )
+				'wave-shape'=> get_muia_demo_url( '' ),
+				'slide-wave'=> get_muia_demo_url( '' ),
+				'center-wave'=> get_muia_demo_url( '' )
 			],
 		]
 	),

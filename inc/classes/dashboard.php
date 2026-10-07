@@ -105,7 +105,9 @@ class Dashboard{
         // Unlike widgets/extensions, the posted (checked) slugs are the active ones.
         $active = !empty($data['global_effects']) ? (array) $data['global_effects'] : [];
 
-        Global_Effects_Manager::save_global_effects($active);
+        $choices = !empty($data['global_effect_choice']) ? (array) $data['global_effect_choice'] : [];
+
+        Global_Effects_Manager::save_global_effects($active, $choices);
 
     }
     public static function save_data(){
@@ -135,13 +137,91 @@ class Dashboard{
         if($type === 'global_effects'){
             self::save_global_effects_data($final_data);
         }
-        wp_send_json_success(array(  
+        $response = array(
             'message' => __( 'Settings saved successfully!', 'motionui-addons-for-elementor' ),
             'type'    => $type,
-        ));
-    }
-    public static function effect_list($map){
+        );
 
+        // Return what was actually stored (invalid/locked picks are dropped on save).
+        if($type === 'global_effects'){
+            $response['choices'] = get_option(Global_Effects_Manager::CHOICE_DB_KEY, []);
+        }
+
+        wp_send_json_success($response);
+    }
+    /**
+     * Radio list of the sub-effects an entry offers (e.g. preloader styles).
+     *
+     * Prints nothing for entries without an `effects` map. Radios post as
+     * global_effect_choice[<slug>] — the field save_global_effects_data() reads.
+     *
+     * @param array  $map  Catalog entry.
+     * @param string $slug Entry slug, used for the radio group name and IDs.
+     */
+    public static function effect_list($map, $slug = ''){
+
+        $slug = sanitize_key( $slug );
+
+        if ( empty( $slug ) || empty( $map['effects'] ) || ! is_array( $map['effects'] ) ) {
+            return;
+        }
+
+        $pro_effects   = isset( $map['pro_effects'] ) ? (array) $map['pro_effects'] : [];
+        $selected      = isset( $map['selected_effect'] ) ? $map['selected_effect'] : '';
+        $is_active_pro = Motionui::is_active_pro();
+        ?>
+        <div class="muia-effect-list">
+            <?php foreach ( $map['effects'] as $group => $items ) :
+                if ( ! is_array( $items ) || empty( $items ) ) {
+                    continue;
+                }
+                ?>
+                <div class="muia-effect-group">
+                    <h5 class="muia-effect-group-title"><?php echo esc_html( ucwords( str_replace( '-', ' ', $group ) ) ); ?></h5>
+                    <ul class="muia-effect-items">
+                        <?php foreach ( $items as $effect_slug => $demo_url ) :
+                            $effect_slug = sanitize_key( $effect_slug );
+                            $is_pro      = in_array( $effect_slug, $pro_effects, true );
+                            $is_lock     = $is_pro && ! $is_active_pro;
+                            $input_id    = 'effect-' . $slug . '-' . $effect_slug;
+                            $label       = ucwords( str_replace( '-', ' ', $effect_slug ) );
+                            ?>
+                            <li class="muia-effect-item<?php echo $is_lock ? ' is-locked' : ''; ?>">
+                                <input
+                                    type="radio"
+                                    id="<?php echo esc_attr( $input_id ); ?>"
+                                    name="global_effect_choice[<?php echo esc_attr( $slug ); ?>]"
+                                    value="<?php echo esc_attr( $effect_slug ); ?>"
+                                    <?php checked( $selected, $effect_slug ); ?>
+                                    <?php disabled( $is_lock, true ); ?>
+                                />
+                                <label for="<?php echo esc_attr( $input_id ); ?>" class="muia-effect-label">
+                                    <span class="muia-effect-radio" aria-hidden="true"></span>
+                                    <span class="muia-effect-name"><?php echo esc_html( $label ); ?></span>
+                                </label>
+                                <?php if ( $is_pro ) : ?>
+                                    <span class="<?php echo $is_active_pro ? 'actived-pro-badge ' : ''; ?>muia-badge muia-badge-pro">
+                                        <?php esc_html_e( 'Pro', 'motionui-addons-for-elementor' ); ?>
+                                    </span>
+                                <?php endif; ?>
+                                <?php if ( ! empty( $demo_url ) ) : ?>
+                                    <a
+                                        href="<?php echo esc_url( $demo_url ); ?>"
+                                        class="th-doc-link muia-effect-demo"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i class="th-icon-link" aria-hidden="true"></i>
+                                        <?php esc_html_e( 'Demo', 'motionui-addons-for-elementor' ); ?>
+                                    </a>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php
     }
 	/**
 	 * Render the toggle cards for one dashboard form.
@@ -323,7 +403,7 @@ class Dashboard{
 
 
 		</div>  
-        <?php self::effect_list($muia_widget); ?>
+        <?php self::effect_list($muia_widget, $muia_widget_slug); ?>
         </div><!-- .th-widget-card -->
 
 		<?php endforeach;

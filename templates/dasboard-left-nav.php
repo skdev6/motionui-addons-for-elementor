@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <li>
             <a href="#muia-global-effects">
                 <i class="eicon-global-settings"></i>
-                <?php esc_html_e('Global Effects', 'motionui-addons-for-elementor'); ?>
+                <?php esc_html_e('Global Motion', 'motionui-addons-for-elementor'); ?>
             </a>
         </li>
         <?php do_action('add_muia_dashboard_menu'); ?>
