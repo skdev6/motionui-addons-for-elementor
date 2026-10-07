@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Themeic\MotionUI_Addons\Inc\Extensions;
+use Themeic\MotionUI_Addons\Inc\Extensions\Motion;
 
 return array(
 	'smooth-scroll'   => array(
@@ -21,21 +21,28 @@ return array(
 		'description' => __( 'Eased, inertia-style scrolling across the whole site.', 'motionui-addons-for-elementor' ),
 		'is_active'   => false,
 		'is_pro'      => false,
-		'is_upcoming' => false,
+		'is_upcoming' => true,
 		'icon'        => 'eicon-scroll',
 		'demo'        => '',
 		'tutorial'    => '',
 		'settings' => [
 			'duration' => [
 				'type' => 'number',
-				'default' => 0.7
+				'default' => 0.7,
+				'min' => 0,
+				'max' => 3,
+				'step' => 0.1
 			], 
 			'ease'  => [
-				'type' => 'number',
+				'type' => 'select',
 				'default' => 'power3.out',
-				'options' => Extensions::get_ease_options()
+				'options' => Motion::get_ease_options()
 			],
 			'delay' => [
+				'type' => 'number',
+				'default' => 0.7
+			],
+			'random' => [
 				'type' => 'number',
 				'default' => 0.7
 			],
@@ -46,7 +53,7 @@ return array(
 		'description' => __( 'Show a loading screen until the page has finished loading.', 'motionui-addons-for-elementor' ),
 		'is_active'   => false,
 		'is_pro'      => false,
-		'is_upcoming' => false,
+		'is_upcoming' => true,
 		'icon'        => 'eicon-loading',
 		'demo'        => get_muia_demo_url( '' ),
 		'tutorial'    => '',
@@ -69,9 +76,9 @@ return array(
 				'default' => 0.7
 			], 
 			'ease'  => [
-				'type' => 'number',
+				'type' => 'select',
 				'default' => 'power3.out',
-				'options' => Extensions::get_ease_options()
+				'options' => Motion::get_ease_options()
 			],
 			'delay' => [
 				'type' => 'number',
@@ -84,7 +91,7 @@ return array(
 		'description' => __( 'Fade between pages when visitors follow internal links.', 'motionui-addons-for-elementor' ),
 		'is_active'   => false,
 		'is_pro'      => false,
-		'is_upcoming' => false,
+		'is_upcoming' => true,
 		'icon'        => 'eicon-page-transition',
 		'demo'        => '',
 		'tutorial'    => '',
@@ -107,9 +114,9 @@ return array(
 				'default' => 0.7
 			], 
 			'ease'  => [
-				'type' => 'number',
+				'type' => 'select',
 				'default' => 'power3.out',
-				'options' => Extensions::get_ease_options()
+				'options' => Motion::get_ease_options()
 			],
 			'delay' => [
 				'type' => 'number',

@@ -112,8 +112,8 @@
         $form.find('.muia-enable-all').prop('checked', totalItems === checkedItems);
     });
 
-    // Picking a different sub-effect is a change too, so unlock Save.
-    $(document).on('change', '.muia-dashboard-form .muia-effect-list input[type="radio"]', function() {
+    // Picking a different sub-effect or editing a setting is a change too, so unlock Save.
+    $(document).on('change input', '.muia-dashboard-form .muia-effect-list input[type="radio"], .muia-dashboard-form .muia-effect-settings .muia-form-control', function() {
         $(this).closest('.muia-dashboard-form').find('[type="submit"]').removeAttr('disabled');
     });
 

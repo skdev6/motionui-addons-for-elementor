@@ -107,7 +107,9 @@ class Dashboard{
 
         $choices = !empty($data['global_effect_choice']) ? (array) $data['global_effect_choice'] : [];
 
-        Global_Effects_Manager::save_global_effects($active, $choices);
+        $settings = !empty($data['global_effect_settings']) ? (array) $data['global_effect_settings'] : [];
+
+        Global_Effects_Manager::save_global_effects($active, $choices, $settings);
 
     }
     public static function save_data(){
@@ -145,6 +147,7 @@ class Dashboard{
         // Return what was actually stored (invalid/locked picks are dropped on save).
         if($type === 'global_effects'){
             $response['choices'] = get_option(Global_Effects_Manager::CHOICE_DB_KEY, []);
+            $response['settings'] = get_option(Global_Effects_Manager::SETTINGS_DB_KEY, []);
         }
 
         wp_send_json_success($response);
@@ -218,6 +221,71 @@ class Dashboard{
                             </li>
                         <?php endforeach; ?>
                     </ul>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php
+    }
+    /**
+     * Settings fields for an entry (duration, ease, delay, …).
+     *
+     * Prints nothing for entries without a `settings` map. Fields post as
+     * global_effect_settings[<slug>][<key>] — what save_global_effects_data()
+     * reads. A field with `options` renders as a select, whatever its type.
+     *
+     * @param array  $map  Catalog entry.
+     * @param string $slug Entry slug, used for field names and IDs.
+     */
+    public static function effect_settings($map, $slug = ''){
+
+        $slug = sanitize_key( $slug );
+
+        if ( empty( $slug ) || empty( $map['settings'] ) || ! is_array( $map['settings'] ) ) {
+            return;
+        }
+        ?>
+        <div class="muia-effect-settings">
+            <?php foreach ( $map['settings'] as $key => $field ) :
+                $key = sanitize_key( $key );
+                if ( empty( $key ) || ! is_array( $field ) ) {
+                    continue;
+                }
+
+                $value    = isset( $field['value'] ) ? $field['value'] : ( isset( $field['default'] ) ? $field['default'] : '' );
+                $type     = isset( $field['type'] ) ? $field['type'] : 'text';
+                $options  = ! empty( $field['options'] ) && is_array( $field['options'] ) ? $field['options'] : [];
+                $label    = isset( $field['label'] ) ? $field['label'] : ucwords( str_replace( ['-', '_'], ' ', $key ) );
+                $input_id = 'effect-setting-' . $slug . '-' . $key;
+                $name     = 'global_effect_settings[' . $slug . '][' . $key . ']';
+                ?>
+                <div class="muia-effect-setting">
+                    <label for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $label ); ?></label>
+                    <?php if ( ! empty( $options ) ) : ?>
+                        <select
+                            class="muia-form-control"
+                            id="<?php echo esc_attr( $input_id ); ?>"
+                            name="<?php echo esc_attr( $name ); ?>"
+                        >
+                            <?php foreach ( $options as $option_value => $option_label ) : ?>
+                                <option value="<?php echo esc_attr( $option_value ); ?>" <?php selected( (string) $value, (string) $option_value ); ?>>
+                                    <?php echo esc_html( $option_label ); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php else : ?>
+                        <input
+                            class="muia-form-control"
+                            type="<?php echo 'number' === $type ? 'number' : 'text'; ?>"
+                            <?php if ( 'number' === $type ) : ?>
+                                step="<?php echo isset( $field['step'] ) && is_numeric( $field['step'] ) ? esc_attr( $field['step'] ) : 'any'; ?>"
+                                <?php echo isset( $field['min'] ) && is_numeric( $field['min'] ) ? 'min="' . esc_attr( $field['min'] ) . '"' : ''; ?>
+                                <?php echo isset( $field['max'] ) && is_numeric( $field['max'] ) ? 'max="' . esc_attr( $field['max'] ) . '"' : ''; ?>
+                            <?php endif; ?>
+                            id="<?php echo esc_attr( $input_id ); ?>"
+                            name="<?php echo esc_attr( $name ); ?>"
+                            value="<?php echo esc_attr( $value ); ?>"
+                        />
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -404,6 +472,7 @@ class Dashboard{
 
 		</div>  
         <?php self::effect_list($muia_widget, $muia_widget_slug); ?>
+        <?php self::effect_settings($muia_widget, $muia_widget_slug); ?>
         </div><!-- .th-widget-card -->
 
 		<?php endforeach;

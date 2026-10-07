@@ -575,3 +575,31 @@ select.muia-form-control:focus, input.muia-form-control:focus {
     font-size: 12px;
     white-space: nowrap;
 }
+
+/* Effect settings (global effects: fields under a card) */
+.muia-effect-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 12px;
+    width: 100%;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--themeic-color-surface);
+    display: none;   
+}
+.muia-effect-setting {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.muia-effect-setting label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    opacity: .6;
+}
+.muia-effect-setting .muia-form-control {
+    width: 100%;
+    box-sizing: border-box;
+}

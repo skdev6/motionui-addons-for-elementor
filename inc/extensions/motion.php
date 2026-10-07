@@ -265,7 +265,7 @@ class Motion {
 	 *
 	 * @return array<string, string>
 	 */
-	private static function get_ease_options() {
+	public static function get_ease_options() {
 		return array(
 			// Expo.
 			'expo.out'   => esc_html__( 'Expo Out', 'motionui-addons-for-elementor' ),

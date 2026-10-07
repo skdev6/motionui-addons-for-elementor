@@ -41,6 +41,14 @@ class Global_Effects_Manager {
 	const CHOICE_DB_KEY = 'muia_global_effect_choices';
 
 	/**
+	 * Database option key for the user's settings values
+	 * (effect slug => setting key => value).
+	 *
+	 * @var string
+	 */
+	const SETTINGS_DB_KEY = 'muia_global_effect_settings';
+
+	/**
 	 * Register the front-end hooks for every active effect.
 	 *
 	 * @return void
@@ -94,12 +102,17 @@ class Global_Effects_Manager {
 				}
 			}
 
-			// Tell the scripts which variant the site picked. Attached to the
-			// last handle so it prints after its dependencies.
-			if ( $last_js && ! empty( $effect['selected_effect'] ) ) {
+			// Tell the scripts which variant and settings the site picked.
+			// Attached to the last handle so it prints after its dependencies.
+			if ( $last_js ) {
+				$config = array(
+					'effect'   => $effect['selected_effect'] ?? '',
+					'settings' => wp_list_pluck( (array) ( $effect['settings'] ?? array() ), 'value' ),
+				);
+
 				wp_add_inline_script(
 					$last_js,
-					'window.muiaGlobalEffect = window.muiaGlobalEffect || {}; window.muiaGlobalEffect[' . wp_json_encode( $slug ) . '] = ' . wp_json_encode( $effect['selected_effect'] ) . ';',
+					'window.muiaGlobalEffect = window.muiaGlobalEffect || {}; window.muiaGlobalEffect[' . wp_json_encode( $slug ) . '] = ' . wp_json_encode( $config ) . ';',
 					'before'
 				);
 			}
@@ -142,16 +155,29 @@ class Global_Effects_Manager {
 	public static function global_effects_map() {
 		$active  = get_option( self::DB_KEY, null );
 		$choices = get_option( self::CHOICE_DB_KEY, array() );
+		$saved_settings = get_option( self::SETTINGS_DB_KEY, array() );
 		$map     = self::local_global_effects_map();
 
 		if ( ! is_array( $choices ) ) {
 			$choices = array();
+		}
+		if ( ! is_array( $saved_settings ) ) {
+			$saved_settings = array();
 		}
 
 		foreach ( $map as $key => $effect ) {
 			// Never saved: keep the shipped is_active default.
 			if ( is_array( $active ) ) {
 				$map[ $key ]['is_active'] = in_array( $key, $active, true );
+			}
+
+			// Overlay the user's value on each setting, falling back to its default.
+			foreach ( (array) ( $effect['settings'] ?? array() ) as $field_key => $field ) {
+				$value = $saved_settings[ $key ][ $field_key ] ?? null;
+
+				$map[ $key ]['settings'][ $field_key ]['value'] = null !== $value
+					? self::sanitize_setting( $field, $value )
+					: ( $field['default'] ?? '' );
 			}
 
 			if ( empty( $effect['effects'] ) ) {
@@ -166,6 +192,49 @@ class Global_Effects_Manager {
 		}
 
 		return $map;
+	}
+
+	/**
+	 * Clean one settings value against its field definition.
+	 *
+	 * A field with `options` is a select and must hold one of them; otherwise
+	 * `type` decides. Anything invalid falls back to the field's default.
+	 *
+	 * @param  array $field Field definition from the map.
+	 * @param  mixed $value Raw value.
+	 * @return string|float|int
+	 */
+	public static function sanitize_setting( $field, $value ) {
+		$default = $field['default'] ?? '';
+
+		if ( ! is_scalar( $value ) ) {
+			return $default;
+		}
+
+		if ( ! empty( $field['options'] ) && is_array( $field['options'] ) ) {
+			$value = (string) $value;
+			return array_key_exists( $value, $field['options'] ) ? $value : $default;
+		}
+
+		if ( ( $field['type'] ?? 'text' ) === 'number' ) {
+			if ( ! is_numeric( $value ) ) {
+				return $default;
+			}
+
+			$value = $value + 0;
+
+			// Clamp to the declared range, so a hand-edited form can't exceed it.
+			if ( isset( $field['min'] ) && is_numeric( $field['min'] ) ) {
+				$value = max( $value, $field['min'] + 0 );
+			}
+			if ( isset( $field['max'] ) && is_numeric( $field['max'] ) ) {
+				$value = min( $value, $field['max'] + 0 );
+			}
+
+			return $value;
+		}
+
+		return sanitize_text_field( (string) $value );
 	}
 
 	/**
@@ -271,9 +340,12 @@ class Global_Effects_Manager {
 	 * @param  array $effects Array of active effect slugs.
 	 * @return void
 	 */
-	public static function save_global_effects( $effects = array(), $choices = array() ) {
+	public static function save_global_effects( $effects = array(), $choices = array(), $settings = array() ) {
 		if ( ! is_array( $effects ) ) {
 			$effects = array();
+		}
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
 		}
 		if ( ! is_array( $choices ) ) {
 			$choices = array();
@@ -295,7 +367,18 @@ class Global_Effects_Manager {
 			}
 		}
 
+		// Keep only declared settings of real entries, each cleaned by its field type.
+		$clean_settings = array();
+		foreach ( $map as $key => $effect ) {
+			foreach ( (array) ( $effect['settings'] ?? array() ) as $field_key => $field ) {
+				if ( isset( $settings[ $key ][ $field_key ] ) ) {
+					$clean_settings[ $key ][ $field_key ] = self::sanitize_setting( $field, $settings[ $key ][ $field_key ] );
+				}
+			}
+		}
+
 		update_option( self::DB_KEY, $effects );
 		update_option( self::CHOICE_DB_KEY, $clean );
+		update_option( self::SETTINGS_DB_KEY, $clean_settings );
 	}
 }
