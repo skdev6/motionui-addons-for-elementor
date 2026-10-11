@@ -65,4 +65,14 @@ return array(
 		'demo'        => get_muia_demo_url( '' ),
 		'tutorial'    => get_muia_tuto_url( '' ),
 	),
+	'custom-css'   => array(
+		'title'       => __( 'Custom CSS', 'motionui-addons-for-elementor' ),
+		'description' => __( 'Add scroll-based animations to widgets.', 'motionui-addons-for-elementor' ),
+		'is_active'   => true,
+		'is_pro'      => false,
+		'is_upcoming' => false,
+		'icon'        => 'eicon-custom-css',
+		'demo'        => get_muia_demo_url( '' ),
+		'tutorial'    => get_muia_tuto_url( '' ),
+	),
 );

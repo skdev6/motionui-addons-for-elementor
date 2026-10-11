@@ -46,6 +46,7 @@ class Extensions_Manager {
 		$is_motion_active   = isset( $extensions['motion-effects']['is_active'] ) && $extensions['motion-effects']['is_active'] === true;
 		$is_image_active    = isset( $extensions['image-animation']['is_active'] )  && $extensions['image-animation']['is_active']  === true;
 		$is_position_active = isset( $extensions['advance-position']['is_active'] ) && $extensions['advance-position']['is_active'] === true;
+		$is_css_active      = isset( $extensions['custom-css']['is_active'] ) && $extensions['custom-css']['is_active'] === true;
 
 		// Enqueue editor CSS.
 		add_action( 'elementor/editor/after_enqueue_styles', array( __CLASS__, 'enqueue_editor_css' ) );
@@ -96,6 +97,15 @@ class Extensions_Manager {
 		if ( $is_position_active ) {
 			add_action( 'elementor/element/common/_section_style/after_section_end',    array( Extensions\Advance_Position::class, 'register_controls' ), 1 );
 			add_action( 'elementor/element/container/section_layout/after_section_end', array( Extensions\Advance_Position::class, 'register_controls' ), 1 );
+		}
+
+		// Custom CSS extension.
+		if ( $is_css_active ) {
+
+			Extensions\Custom_CSS::init();
+
+			add_action( 'elementor/element/common/_section_style/after_section_end',    array( Extensions\Custom_CSS::class, 'register_controls' ), 1 );
+			add_action( 'elementor/element/container/section_layout/after_section_end', array( Extensions\Custom_CSS::class, 'register_controls' ), 1 );
 		}
 	}
 
