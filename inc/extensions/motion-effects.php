@@ -17,31 +17,81 @@ class Motion_Effects{
 			array(
 				'label' => sprintf(
 					'<div class="el-editor-logo-wrap"><i class="themeic-muia-logo"></i>%s</div>',
-					__( 'MotionUI Effects', 'motionui-addons-for-elementor' )
+					__( 'Motion Library', 'motionui-addons-for-elementor' )
 				),
 				'tab' => Controls_Manager::TAB_ADVANCED,
 			)
 		);
-		if(Motionui::is_active_pro()){
-			self::get_controls($element);
-		}else{
-			$element->add_control(
-				'muia_pro_motion_effect_notice',
-				array(
-					'type' => Controls_Manager::RAW_HTML,
-					'raw'  => muia_get_pronotice_html(),
-				)
-			);
-		}
+		self::get_controls($element);
 		$element->end_controls_section();
 	}
 	public static function get_controls($element){
+		$element->add_control(
+            'muia_motion_effect_enable',
+            [
+                'label'              => __( 'Enable', 'happy-elementor-addons' ),
+                'type'               => \Elementor\Controls_Manager::SWITCHER,
+                'prefix_class'       => 'muia-img-ani-',
+                'render_type'        => 'template',
+                'return_value'       => 'yes',
+                'style_transfer'     => false,
+                'frontend_available' => true,
+                'assets'             => [
+                    'scripts' => [
+                        [
+                            'name'       => 'elementor-frontend',
+                            'conditions' => [
+                                'terms' => [
+                                    [
+                                        'name'     => 'muia_motion_effect_enable',
+                                        'operator' => '===',
+                                        'value'    => 'yes'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            'name'       => 'gsap',
+                            'conditions' => [
+                                'terms' => [
+                                    [
+                                        'name'     => 'muia_motion_effect_enable',
+                                        'operator' => '===',
+                                        'value'    => 'yes'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            'name'       => 'scroll-trigger',
+                            'conditions' => [
+                                'terms' => [
+                                    [
+                                        'name'     => 'muia_motion_effect_enable',
+                                        'operator' => '===',
+                                        'value'    => 'yes'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            'name'       => 'muia-imga',
+                            'conditions' => [
+                                'terms' => [
+                                    [
+                                        'name'     => 'muia_motion_effect_enable',
+                                        'operator' => '===',
+                                        'value'    => 'yes'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        );
 		self::custom_motion_controls($element);
-		self::_get_motions_controls($element, [
-			'condition' => array(
-				'muia_custom_ani_enable!' => 'yes',
-			),
-		]);
+		self::_get_motions_controls($element);
 		$element->add_control(
 			'muia_animate_for_child',
 			array(
@@ -635,7 +685,6 @@ class Motion_Effects{
 					'fade'    => esc_html__( 'Fade',     'motionui-addons-for-elementor' ),
 					'slide'   => esc_html__( 'Slide',    'motionui-addons-for-elementor' ),
 					'zoom'    => esc_html__( 'Zoom',     'motionui-addons-for-elementor' ),
-					'zoom_center'    => esc_html__( 'Zoom Center', 'motionui-addons-for-elementor' ),
 					'flip'    => esc_html__( 'Flip',     'motionui-addons-for-elementor' ),
 					'rotate'  => esc_html__( 'Rotate',   'motionui-addons-for-elementor' ),
 					'skew'    => esc_html__( 'Skew',     'motionui-addons-for-elementor' ),
@@ -643,6 +692,7 @@ class Motion_Effects{
 					'elastic' => esc_html__( 'Elastic',  'motionui-addons-for-elementor' ),
 					'blur'    => esc_html__( 'Blur',     'motionui-addons-for-elementor' ),
 					'clip'    => esc_html__( 'Clip',     'motionui-addons-for-elementor' ),
+					'custom'    => esc_html__( 'Clip',     'motionui-addons-for-elementor' ),
 				),
 				'default'            => '',
 				'prefix_class'       => 'has-muia-motion-effect visibility__hidden muia-motion-effect-',
