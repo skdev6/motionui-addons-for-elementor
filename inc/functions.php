@@ -321,3 +321,66 @@ if ( ! function_exists( 'get_muia_tuto_url' ) ) {
 		return muia_is_absolute_url( $url ) ? $url : muia_brand_url( $url );
 	}
 }
+
+if ( ! function_exists( 'muia_template_shortcode' ) ) {
+	/**
+	 * [muia_template id="123"] — renders any post built with Elementor.
+	 *
+	 * Any post type: a saved template, a page, a post, a custom type. Only
+	 * published ones, though, unless the viewer can edit that post — so drafts
+	 * still preview for whoever builds them, but no author can embed someone
+	 * else's private or draft content on a public page.
+	 *
+	 * A post that (directly or through others) contains itself would loop
+	 * forever, so one already being rendered renders nothing the second time.
+	 *
+	 * @param array $atts Shortcode attributes: `id`, the post ID.
+	 * @return string Elementor markup with its CSS, or '' when it can't render.
+	 */
+	function muia_template_shortcode( $atts ) {
+
+		static $rendering = array();
+
+		$atts = shortcode_atts( array( 'id' => 0 ), $atts, 'muia_template' );
+		$id   = absint( $atts['id'] );
+
+		if ( ! $id || ! class_exists( '\Elementor\Plugin' ) ) {
+			return '';
+		}
+
+		$post = get_post( $id );
+
+		if ( ! $post ) {
+			return '';
+		}
+
+		if ( 'publish' !== $post->post_status && ! current_user_can( 'edit_post', $id ) ) {
+			return '';
+		}
+
+		if ( post_password_required( $post ) ) {
+			return '';
+		}
+
+		if ( isset( $rendering[ $id ] ) ) {
+			return '';
+		}
+
+		$rendering[ $id ] = true;
+
+		// true: print the post's own CSS with it, so it is styled wherever the
+		// shortcode lands, Elementor page or not.
+		$html = \Elementor\Plugin::instance()->frontend->get_builder_content_for_display( $id, true );
+
+		unset( $rendering[ $id ] );
+
+		return $html;
+	}
+}
+
+add_action(
+	'init',
+	function () {
+		add_shortcode( 'muia_template', 'muia_template_shortcode' );
+	}
+);
