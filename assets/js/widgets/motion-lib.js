@@ -1,10 +1,14 @@
 ;(function ($) {
     'use strict';
 
+
+    function motionLib(){
+
+    }
     
     muia.initElementorFrontend({
         extensions: {
-            'has-muia-motion-effect': textAni
+            'muia-motion-lib-yes': motionLib
         }
     });
 

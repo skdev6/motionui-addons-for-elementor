@@ -89,6 +89,7 @@ class Extensions_Manager {
 
 		// Scroll Animation extension.
 		if ( $is_motion_active ) {
+			Extensions\Motion_Effects::init();
 			add_action( 'elementor/element/common/_section_style/after_section_end',    array( Extensions\Motion_Effects::class, 'register_controls' ), 1 );
 			add_action( 'elementor/element/container/section_layout/after_section_end', array( Extensions\Motion_Effects::class, 'register_controls' ), 1 );
 		}

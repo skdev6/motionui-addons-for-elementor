@@ -318,7 +318,7 @@ window.muia = window.muia || {};
                     );
 
                     if (hasExtension || elementorFrontend.isEditMode()) {
-
+                        
                         elementorFrontend.elementsHandler.addHandler(
                             ExtensionHandler,
                             {
@@ -337,6 +337,8 @@ window.muia = window.muia || {};
 
     }
     window.muia.initElementorFrontend = initElementorFrontend;
+    window.muia.isMobile = ()=> window.innerWidth < 767;
+    
     initElementorFrontend({
         widgets:{
             'themeic-typing-heading-motion.default':typingHeading
