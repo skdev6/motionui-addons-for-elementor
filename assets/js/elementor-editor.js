@@ -7,7 +7,6 @@
  * future one are all covered without listing them.
  */
 
-console.log("Has Pro");
 
 const pro_select_suffixes = [
     '_btn_effect',
