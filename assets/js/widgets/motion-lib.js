@@ -320,8 +320,6 @@
         // immediately), then reveal — otherwise the end state flashes.
         build(this, $scope, targets, settings);
 
-        $scope.removeClass('visibility__hidden');
-
         // clearProps for what the tweens wrote inline — killing a timeline
         // does not put those back.
         return function () {
