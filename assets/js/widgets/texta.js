@@ -101,6 +101,9 @@
                 opacity: isMask ? 1 : 0
             });
 
+            const masks = isMask ? $(wrap).find('.muia-text-mask').toArray() : [];
+            let unmasked = false;
+
             handler.addTimeline(gsap.timeline({
                 defaults: { ...settings.muiaTl, delay: 0 },
                 delay: settings.muiaTl.delay,
@@ -108,6 +111,17 @@
                     trigger: wrap,
                     ...settings.muiaTrigger,
                     invalidateOnRefresh: true
+                },
+                
+                onUpdate: function () {
+                    if (!masks.length) return;
+
+                    const done = this.progress() === 1;
+
+                    if (done !== unmasked) {
+                        unmasked = done;
+                        gsap.set(masks, { overflow: done ? 'visible' : 'hidden' });
+                    }
                 }
             }))
             .to(texts, {
