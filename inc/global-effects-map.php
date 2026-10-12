@@ -24,7 +24,9 @@ return array(
 		'is_upcoming' => false,
 		'icon'        => 'eicon-scroll',
 		'demo'        => '',
-		'tutorial'    => ''
+		'tutorial'    => '',
+		'css'         => [ 'lenis' ],
+		'js'          => [ 'lenis', 'muia-global-smooth-scroll' ],
 	),
 	'preloader'       => array(
 		'title'       => __( 'Preloader', 'motionui-addons-for-elementor' ),
