@@ -225,7 +225,9 @@
 
         if (!motion || !Object.keys(motion.from).length) return;
 
-        gsap.set(targets, { transition: 'none' });
+        // Put the From state on right away, synchronously, so the element can
+        // be revealed straight after the build with nothing to wait for.
+        gsap.set(targets.toArray(), { transition: 'none', ...motion.from });
 
         const to = {
             ...motion.to,
@@ -238,14 +240,16 @@
         handler.addTimeline(gsap.timeline({
             defaults: { ...settings.muiaTl, delay: 0 },
             delay: settings.muiaTl.delay,
+            // No invalidateOnRefresh: a to() re-records its start on
+            // invalidate, and after it has played that start would be the
+            // end state, so reversing would go nowhere.
             scrollTrigger: {
                 trigger: $scope,
-                ...settings.muiaTrigger,
-                invalidateOnRefresh: true
+                ...settings.muiaTrigger
             },
             onStart: function () { gsap.set(targets, { willChange: 'transform, opacity' }); },
             onComplete: function () { gsap.set(targets, { willChange: 'auto' }); }
-        })).fromTo(targets.toArray(), motion.from, to);
+        })).to(targets.toArray(), to);
     }
 
     // Preset by name, run on the shared timeline.
@@ -258,8 +262,8 @@
      * Custom: From / To values come straight from the CSS variables the
      * custom builder controls write on the wrapper.
      *
-     * Values are functions so invalidateOnRefresh re-reads them, which keeps a
-     * resize across breakpoints in step with the responsive controls.
+     * Values are read when the animation is built, so they follow the
+     * breakpoint the page loaded at (and every rebuild in the editor).
      */
     function buildCustom(handler, $scope, targets, settings) {
 
@@ -305,20 +309,21 @@
     Object.keys(PRESETS).forEach(name => { BUILDERS[ name ] = buildPreset; });
 
     function motionLib($scope, settings) {
-        $scope.removeClass('visibility__hidden');
 
         const build = BUILDERS[ settings.muia_motion_effects_name ];
 
-        // Switched off for phones: show the element as it is, no motion.
         if (!build || (muia.isMobileDevice() && !settings.isMobile)) {
+            $scope.removeClass('visibility__hidden');
             return;
         }
 
         const targets = getTargets($scope, settings);
 
-        // Build first so the From state is already applied (fromTo renders
-        // immediately), then reveal — otherwise the end state flashes.
+        // The build sets the From state synchronously, so revealing right
+        // after it never shows the end state — no timeout needed.
         build(this, $scope, targets, settings);
+
+        $scope.removeClass('visibility__hidden');
 
         // clearProps for what the tweens wrote inline — killing a timeline
         // does not put those back.
