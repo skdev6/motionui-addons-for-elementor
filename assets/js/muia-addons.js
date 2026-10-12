@@ -337,7 +337,7 @@ window.muia = window.muia || {};
 
     }
     window.muia.initElementorFrontend = initElementorFrontend;
-    window.muia.isMobile = ()=> window.innerWidth < 767;
+    window.muia.isMobileDevice = ()=> window.innerWidth < 767;
     
     initElementorFrontend({
         widgets:{
