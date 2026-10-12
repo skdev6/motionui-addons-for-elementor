@@ -98,6 +98,9 @@ class Motion_Effects {
 			$element,
 			array(
 				'name'      => 'motion_effect',
+				'remove' => ['center-h'],
+				'title_v_center' => 'Center',
+				'default'   => 'bottom',
 				'condition' => array_merge(
 					$enabled,
 					array( 'muia_motion_effects_name!' => array( '', 'custom' ) )
@@ -178,7 +181,7 @@ class Motion_Effects {
 			'muia_motion_effects_name',
 			array(
 				'label'              => esc_html__( 'Animation', 'motionui-addons-for-elementor' ),
-				'type'               => Controls_Manager::SELECT2,
+				'type'               => Controls_Manager::SELECT,
 				'frontend_available' => true,
 				'render_type'        => 'template',
 				'options'            => muia_pro_options ( array(

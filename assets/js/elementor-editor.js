@@ -28,6 +28,14 @@ const pro_select_fields = [
             processOptions(panel.$el.find('select'));
         });
 
+        // Sections render their controls when opened, after the hook above,
+        // so a saved Pro value in a closed section is caught here.
+        elementor.channels.editor.on('section:activated', function (sectionName, editor) {
+            if (editor && editor.$el) {
+                processOptions(editor.$el.find('select'));
+            }
+        });
+
         // Delegated: only reacts to selects, not every click
         $(document).on('mousedown focusin', 'select', function () {
             processOptions($(this));
@@ -43,6 +51,63 @@ const pro_select_fields = [
                 this.disabled = true;
             }
         });
+
+        $selects.each(function () {
+            resetLockedValue(this);
+        });
+    }
+
+    /**
+     * A value saved while Pro was active (or picked before the option was
+     * locked) stays selected after Pro goes away. Move it to the control's
+     * default — or the first free option, if the default is Pro too — and
+     * trigger change so Elementor saves it, not just the dropdown.
+     */
+    function resetLockedValue(select) {
+        const selected = select.options[select.selectedIndex];
+
+        if (!selected || !selected.disabled) {
+            return;
+        }
+
+        const name = select.getAttribute('data-setting');
+        const defaultValue = getControlDefault(name);
+
+        const usable = (value) => Array.prototype.some.call(select.options, (option) =>
+            option.value === value && !option.disabled
+        );
+
+        let value = (typeof defaultValue === 'string' && usable(defaultValue)) ? defaultValue : null;
+
+        if (value === null) {
+            const firstFree = Array.prototype.find.call(select.options, (option) => !option.disabled);
+            if (!firstFree) {
+                return;
+            }
+            value = firstFree.value;
+        }
+
+        $(select).val(value).trigger('change');
+    }
+
+    /**
+     * Default of a control on the element being edited, read from the
+     * element's settings model, which carries the registered controls.
+     */
+    function getControlDefault(name) {
+        if (!name) {
+            return undefined;
+        }
+
+        try {
+            const page = elementor.getPanelView().getCurrentPageView();
+            const model = page.model || (page.getOption && page.getOption('editedElementView') && page.getOption('editedElementView').model);
+            const controls = model && model.get('settings') && model.get('settings').controls;
+
+            return controls && controls[name] ? controls[name].default : undefined;
+        } catch (e) {
+            return undefined;
+        }
     }
 
 
