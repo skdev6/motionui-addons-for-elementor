@@ -24,36 +24,14 @@ return array(
 		'is_upcoming' => false,
 		'icon'        => 'eicon-scroll',
 		'demo'        => '',
-		'tutorial'    => '',
-		'settings' => [
-			'duration' => [
-				'type' => 'number',
-				'default' => 0.7,
-				'min' => 0,
-				'max' => 3,
-				'step' => 0.1
-			], 
-			'ease'  => [
-				'type' => 'select',
-				'default' => 'power3.out',
-				'options' => Motion::get_ease_options()
-			],
-			'delay' => [
-				'type' => 'number',
-				'default' => 0.7
-			],
-			'random' => [
-				'type' => 'number',
-				'default' => 0.7
-			],
-		]
+		'tutorial'    => ''
 	),
 	'preloader'       => array(
 		'title'       => __( 'Preloader', 'motionui-addons-for-elementor' ),
 		'description' => __( 'Show a loading screen until the page has finished loading.', 'motionui-addons-for-elementor' ),
 		'is_active'   => false,
 		'is_pro'      => false,
-		'is_upcoming' => false,
+		'is_upcoming' => true,
 		'icon'        => 'eicon-loading',
 		'demo'        => get_muia_demo_url( '' ),
 		'tutorial'    => '',
@@ -91,7 +69,7 @@ return array(
 		'description' => __( 'Fade between pages when visitors follow internal links.', 'motionui-addons-for-elementor' ),
 		'is_active'   => false,
 		'is_pro'      => false,
-		'is_upcoming' => false,
+		'is_upcoming' => true,
 		'icon'        => 'eicon-page-transition',
 		'demo'        => '',
 		'tutorial'    => '',
