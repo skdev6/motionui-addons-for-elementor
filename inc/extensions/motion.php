@@ -171,25 +171,6 @@ class Motion {
 				'frontend_available' => true,
 			)
 		);
-		if(muia_has_pro()){  
-			// Animate with scroll (optional).
-			if ( $args['with_scroll'] ) {
-				$element->add_control(
-					$prefix . 'muia_motion_with_scroll',
-					array(
-						'label'              => esc_html__( 'Animate With Scroll', 'motionui-addons-for-elementor' ),
-						'type'               => Controls_Manager::SWITCHER,
-						'label_on'           => esc_html__( 'Yes', 'motionui-addons-for-elementor' ),
-						'label_off'          => esc_html__( 'No', 'motionui-addons-for-elementor' ),
-						'return_value'       => 'yes',
-						'default'            => 'no',
-						'frontend_available' => true,
-						'condition'          => $condition,
-					)
-				);
-			}
-			
-		}
 		// Trigger class name and child selector (optional).
 		if ( $args['ani_class'] ) {
 			$element->add_control(

@@ -181,7 +181,7 @@ class Motion_Effects {
 				'type'               => Controls_Manager::SELECT2,
 				'frontend_available' => true,
 				'render_type'        => 'template',
-				'options'            => array(
+				'options'            => muia_pro_options ( array(
 					''        => esc_html__( 'None', 'motionui-addons-for-elementor' ),
 					'fade'    => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
 					'slide'   => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
@@ -193,8 +193,10 @@ class Motion_Effects {
 					'elastic' => esc_html__( 'Elastic', 'motionui-addons-for-elementor' ),
 					'blur'    => esc_html__( 'Blur', 'motionui-addons-for-elementor' ),
 					'clip'    => esc_html__( 'Clip', 'motionui-addons-for-elementor' ),
-					'custom'  => esc_html__( 'Custom', 'motionui-addons-for-elementor' ),
-				),
+					
+				), array(
+					'custom'  => esc_html__( 'Custom', 'motionui-addons-for-elementor' )
+				)),
 				'default'            => '',
 				'prefix_class'       => 'visibility__hidden muia-motion-effect-',
 				'condition'          => $condition,
@@ -243,7 +245,8 @@ class Motion_Effects {
 		$element->add_control(
 			'muia_animate_for_child',
 			array(
-				'label'              => __( 'Animate for Child', 'motionui-addons-for-elementor' ),
+				'label'              => __( 'Animate Inner Elements', 'motionui-addons-for-elementor' ),
+				'description'        => esc_html__( 'Animate elements inside this one instead of the whole block.', 'motionui-addons-for-elementor' ),
 				'type'               => Controls_Manager::SWITCHER,
 				'return_value'       => 'yes',
 				'frontend_available' => true,
@@ -255,10 +258,10 @@ class Motion_Effects {
 		$element->add_control(
 			'muia_child_selector',
 			array(
-				'label'             => esc_html__( 'Child Class Name', 'motionui-addons-for-elementor' ),
+				'label'             => esc_html__( 'Inner Element Selector', 'motionui-addons-for-elementor' ),
 				'type'              => Controls_Manager::TEXT,
-				'description'       => esc_html__( 'Optional. Enter a CSS selector to target a child element for animation. If left empty, the current widget element will be used.', 'motionui-addons-for-elementor' ),
-				'placeholder'       => esc_html__( 'class-name, class-2', 'motionui-addons-for-elementor' ),
+				'description'       => esc_html__( 'CSS selector of the inner elements to animate, e.g. ".card" or ".title, .text". Several matches animate one after another using Stagger. Leave empty to animate the whole block.', 'motionui-addons-for-elementor' ),
+				'placeholder'       => '.class-name, .class-2',
 				'sanitize_callback' => 'sanitize_text_field',
 				'frontend_available' => true,
 				'render_type'       => 'template',
