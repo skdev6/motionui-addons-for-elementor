@@ -144,15 +144,11 @@ class Motion {
 				'type'               => Controls_Manager::SELECT,
 				'condition'          => $trigger_condition,
 				'default'            => 'appearance', 
-				'options'            => muia_pro_options(  
-					[
-						'appearance' => esc_html__( 'On Appearance', 'motionui-addons-for-elementor' ),
-					],
-					[
-						'reverse' => esc_html__( 'On Reverse', 'motionui-addons-for-elementor' ),
-						'scroll'     => esc_html__( 'On Scroll', 'motionui-addons-for-elementor' ),
-					]
-				),
+				'options'            => [
+					'appearance' => esc_html__( 'On Appearance', 'motionui-addons-for-elementor' ),
+					'reverse' => esc_html__( 'On Reverse', 'motionui-addons-for-elementor' ),
+					'scroll'     => esc_html__( 'On Scroll', 'motionui-addons-for-elementor' ),
+				],
 				'frontend_available' => true,
 			)
 		);
