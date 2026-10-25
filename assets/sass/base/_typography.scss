@@ -12,21 +12,21 @@ body{
         font-size: 1rem;
     }
 }
-.title-h1,.title-h2,.title-h3,.title-h4,.title-h5,.title-h6,h1,h2,h3,h4,h5,h6{
+.title-h1,.title-h2,.title-h3,.title-h4,.title-h5,.title-h6,.themeic-das-wrap h1,.themeic-das-wrap h2,.themeic-das-wrap h3,.themeic-das-wrap h4,.themeic-das-wrap h5,.themeic-das-wrap h6{
     font-weight: 400;
     margin-top: 0;
     margin-bottom: .8rem;
     color: var(--themeic-color-content-primary);
     line-height:122%;  
 }
-.title-h1,.title-h2,.title-h3,.title-h4,.title-h5,.title-h6,h1,h2,h3,h4,h5,h6{
+.title-h1,.title-h2,.title-h3,.title-h4,.title-h5,.title-h6,.themeic-das-wrap h1,.themeic-das-wrap h2,.themeic-das-wrap h3,.themeic-das-wrap h4,.themeic-das-wrap h5,.themeic-das-wrap h6{
     font-family: var(--themeic-ff-headings);
 }
 .auto-title-space{
     margin-bottom:.9em; 
 }
 
-.title-h1,h1{
+.title-h1,.themeic-das-wrap h1{
     font-size: 3rem;
     @include xl{
         font-size: 8rem; // 128px
@@ -35,7 +35,7 @@ body{
         font-size: 4rem; 
     }
 }
-.title-h2,h2{
+.title-h2,.themeic-das-wrap h2{
     font-size: 2.8rem;
     @include xl{
         font-size: 4.5rem; // 72px
@@ -44,7 +44,7 @@ body{
         font-size:2.3rem;
     }
 }
-.title-h3,h3{ 
+.title-h3,.themeic-das-wrap h3{ 
     font-size: 2.8rem;
     @include xl{
         font-size:3.25rem; // 52px
@@ -53,19 +53,19 @@ body{
         font-size:2.3rem;
     }
 }
-.title-h4,h4,.comment-reply-title,.comments-title{  
+.title-h4,.themeic-das-wrap h4,.comment-reply-title,.comments-title{  
     font-size:1.625rem;
     @include xl{
         font-size: 2rem; // 32px
     }
 }
-.title-h5,h5{
+.title-h5,.themeic-das-wrap h5{
     font-size: 1.55rem;
     @include xl{
         font-size: 1.75rem; // 28px
     }
 }
-.title-h6,h6,.comments-area .comment-author{
+.title-h6,.themeic-das-wrap h6,.comments-area .comment-author{
     font-size: 1.125rem;
     @include xl{
         font-size:1.25rem; // 20px

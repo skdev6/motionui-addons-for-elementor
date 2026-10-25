@@ -1,0 +1,174 @@
+/* Theme Builder popup layout only — buttons, fields and the popup shell come from the MotionUI design system. */
+.muia-tb-card {
+	width: 90%;
+	max-width: 460px;
+	max-height: 90vh;
+	overflow-y: auto;
+	text-align: left;
+}
+
+.muia-tb-card-wide {
+	max-width: 760px;
+}
+
+.muia-tb-card label {
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 600;
+}
+
+.muia-tb-card .muia-form-control {
+	width: 100%;
+	max-width: none;
+	margin-bottom: 16px;
+}
+
+.muia-tb-card .muia-tb-notice:empty {
+	display: none;
+}
+
+.muia-tb-card .muia-tb-notice.is-error {
+	color: #b91c1c;
+}
+
+.muia-tb-card .muia-tb-notice.is-warning {
+	color: #92400e;
+}
+
+.muia-tb-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 16px;
+}
+
+.muia-tb-condition-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.muia-tb-condition-row .muia-form-control,
+.muia-tb-condition-row .muia-tb-picker {
+	flex: 1 1 150px;
+	min-width: 0;
+	margin: 0;
+}
+
+.muia-tb-condition-row .muia-tb-type {
+	flex: 0 0 110px;
+}
+
+.muia-tb-picker {
+	position: relative;
+}
+.muia-tb-chosen {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 19px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    color: #000000;
+}  
+.muia-tb-chosen:empty {
+	display: none;
+}
+
+.muia-tb-clear, .muia-tb-remove {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: #696969;
+    font-size: 16px;
+}  
+
+.muia-tb-remove {
+	flex: 0 0 40px;
+	height: 40px;
+}
+
+.muia-tb-results {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	left: 0;
+	z-index: 5;
+	max-height: 200px;
+	margin: 4px 0 0;
+	padding: 0;
+	overflow-y: auto;
+	list-style: none;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+}
+
+.muia-tb-results:empty {
+	display: none;
+}
+.muia-tb-results{
+	padding: 10px;
+	border-radius: var(--round-sm); 
+}
+.muia-tb-results li{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--themeic-color-content-primary);
+    text-decoration: none;
+    padding: .938rem 1.875rem;
+    line-height: 140%;
+    border-radius: var(--round-sm);
+    border: 1px solid rgba(0,0,0,0);
+    font-weight: 500;
+}
+.muia-tb-results li:hover { 
+    background-color: var(--themeic-color-surface);
+}
+.muia-tb-results li:hover {
+	background: #f3f4f6;
+}
+
+.muia-tb-results li.is-empty {
+	cursor: default;
+	opacity: 0.6;
+}
+
+.muia-tb-add-condition {
+	margin-top: 4px;
+}
+.muia-tb-conditions-popup h2 {
+    font-size: 26px;
+}
+.muia-tb-conditions-popup p {
+    font-size: 16px;
+    margin-bottom: 28px;
+}  
+.muia-tb-card .themeic-das-header {
+	margin-bottom: 20px;
+	padding: 0;
+	text-align: left;
+}
+
+.muia-tb-card h2 {
+	text-align: left;
+}
+.muia-tb-conditions-popup .muia-close-btn{
+	position: initial;
+} 
+.muia-tb-conditions-popup .themeic-das-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 21px;
+    margin-bottom: 23px;
+} 
+.muia-tb-results li.is-all {
+	font-weight: 600;
+}
+
+.muia-tb-results li.active {
+	color: var(--themeic-color-brand);
+	background: #f0eefe;
+}

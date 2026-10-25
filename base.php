@@ -3,6 +3,7 @@
 namespace Themeic\MotionUI_Addons;
 
 use Themeic\MotionUI_Addons\Inc\Classes as MotionUiClasses;
+use Themeic\MotionUI_Addons\Theme_Builder\Theme_Builder;
 
 defined( 'ABSPATH' ) || die();
 
@@ -40,6 +41,9 @@ class Base {
         // Include Essential Files
         $this->autoload();
         $this->init();
+
+        // Theme Builder: header & footer templates built with Elementor.
+        Theme_Builder::boot();
     }
     /**
      * Initialize Plugin Hooks
@@ -134,6 +138,15 @@ class Base {
         // Targeted include for widgets inside the widgets folder
         if(strpos($class_name, 'Themeic\MotionUI_Addons\Widgets') === 0){
             $file_dir = THEMEIC_MUIA_DIR_PATH . '/' . $file_name . '.php';
+            if(!class_exists($class_name) && is_readable($file_dir)){
+                include_once $file_dir;
+            }
+        }
+        // Targeted include for the Theme Builder module (inc/theme-builder/, keeps file name case)
+        $theme_builder_ns = __NAMESPACE__ . '\\Theme_Builder\\';
+        if(strpos($class_name, $theme_builder_ns) === 0){
+            $relative_path = str_replace('\\', '/', substr($class_name, strlen($theme_builder_ns)));
+            $file_dir = THEMEIC_MUIA_DIR_PATH . 'inc/theme-builder/' . $relative_path . '.php';
             if(!class_exists($class_name) && is_readable($file_dir)){
                 include_once $file_dir;
             }
