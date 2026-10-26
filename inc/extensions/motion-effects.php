@@ -116,6 +116,7 @@ class Motion_Effects {
 				'with_scroll'       => true,
 				'prefix'            => 'effect_',
 				'stagger'           => true,
+				'default_ease'      => 'power3.out',
 				'stagger_condition' => array(
 					'muia_child_selector!' => '',
 				),
