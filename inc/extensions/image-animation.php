@@ -29,7 +29,7 @@ class Image_Animation{
         $element->add_control(
             'muia_img_enable',
             [
-                'label'              => __( 'Enable', 'happy-elementor-addons' ),
+                'label'              => __( 'Enable', 'motionui-addons-for-elementor' ),
                 'type'               => \Elementor\Controls_Manager::SWITCHER,
                 'prefix_class'       => 'muia-img-ani-',
                 'render_type'        => 'template',

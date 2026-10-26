@@ -185,7 +185,6 @@ class Motion_Effects {
 				'frontend_available' => true,
 				'render_type'        => 'template',
 				'options'            => muia_pro_options ( array(
-					''        => esc_html__( 'None', 'motionui-addons-for-elementor' ),
 					'fade'    => esc_html__( 'Fade', 'motionui-addons-for-elementor' ),
 					'slide'   => esc_html__( 'Slide', 'motionui-addons-for-elementor' ),
 					'zoom'    => esc_html__( 'Zoom', 'motionui-addons-for-elementor' ),
@@ -200,7 +199,7 @@ class Motion_Effects {
 				), array(
 					'custom'  => esc_html__( 'Custom', 'motionui-addons-for-elementor' )
 				)),
-				'default'            => '',
+				'default'            => 'fade',
 				'prefix_class'       => 'visibility__hidden muia-motion-effect-',
 				'condition'          => $condition,
 			)

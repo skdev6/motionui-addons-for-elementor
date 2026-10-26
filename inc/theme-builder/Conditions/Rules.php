@@ -802,7 +802,7 @@ class Rules {
 	/**
 	 * Post types users target content on.
 	 *
-	 * `public` alone is not the test: Elementor's library, Templately's library
+	 * `public` alone is not the test: Elementor's library
 	 * and similar builder types are public so their previews resolve. The
 	 * discriminator is `show_ui && show_in_nav_menus` — content types users link
 	 * to are in nav menus, container types are not — plus a blocklist.
@@ -891,7 +891,6 @@ class Rules {
 			'elementor_library',
 			'e-landing-page',
 			'e-floating-buttons',
-			'templately_library',
 			'elementor-hf',
 			'wp_block',
 			'wp_template',
